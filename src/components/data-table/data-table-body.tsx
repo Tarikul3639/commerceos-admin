@@ -50,7 +50,11 @@ export function DataTableBody<TData extends RowData>({
             className="transition-colors hover:bg-muted/40"
           >
             {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id} className="px-4 py-3 align-middle">
+              <TableCell
+                key={cell.id}
+                style={{ width: `${cell.column.getSize()}px` }}
+                className="min-w-0 overflow-hidden px-4 py-3 align-middle"
+              >
                 <table.FlexRender cell={cell} />
               </TableCell>
             ))}

@@ -133,6 +133,8 @@ export function DataTable<TData extends RowData>({
       columnVisibility: initialColumnVisibility,
     },
 
+    columnResizeMode: "onChange",
+
     onPaginationChange,
     onGlobalFilterChange: search?.onChange,
 
@@ -144,7 +146,7 @@ export function DataTable<TData extends RowData>({
   const visibleColumnCount = table.getVisibleLeafColumns().length
 
   return (
-    <div className="flex h-full min-w-0 flex-col overflow-hidden rounded-lg ring ring-foreground/8 bg-card shadow-sm">
+    <div className="flex h-full min-w-0 flex-col overflow-hidden rounded-lg bg-card shadow-sm ring ring-foreground/8">
       {/* Table Toolbar */}
       <DataTableToolbar
         table={table}
@@ -158,7 +160,12 @@ export function DataTable<TData extends RowData>({
 
       {/* Table */}
       <div className="flex min-h-0 flex-1 flex-col overflow-x-auto">
-        <Table className="h-full min-w-max">
+        <Table
+          className="h-full min-w-full table-fixed"
+          style={{
+            width: `${table.getTotalSize()}px`,
+          }}
+        >
           <DataTableHeader
             table={table}
             columnCount={visibleColumnCount}

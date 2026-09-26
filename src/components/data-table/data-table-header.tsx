@@ -4,17 +4,11 @@ import type { DataTableFeatures } from "./data-table-features"
 import { DataTableFetching } from "./data-table-fetching"
 
 interface DataTableHeaderProps<TData extends RowData> {
-  /** TanStack Table instance. */
   table: ReactTable<DataTableFeatures, TData>
-
-  /** Indicates that existing table data is being refreshed. */
   isFetching?: boolean
-
-  /** Number of visible columns spanned by the fetching indicator. */
   columnCount: number
 }
 
-/** Renders the table header and fetching indicator. */
 export function DataTableHeader<TData extends RowData>({
   table,
   isFetching = false,
@@ -27,10 +21,19 @@ export function DataTableHeader<TData extends RowData>({
           {headerGroup.headers.map((header) => (
             <TableHead
               key={header.id}
-              className="h-11 px-4 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+              style={{ width: `${header.getSize()}px` }}
+              className="relative h-11 min-w-0 overflow-hidden px-4 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
             >
               {header.isPlaceholder ? null : (
                 <table.FlexRender header={header} />
+              )}
+
+              {header.column.getCanResize() && (
+                <div
+                  onMouseDown={header.getResizeHandler()}
+                  onTouchStart={header.getResizeHandler()}
+                  className="absolute top-0 right-0 h-full w-1 cursor-col-resize bg-accent/20 select-none"
+                />
               )}
             </TableHead>
           ))}

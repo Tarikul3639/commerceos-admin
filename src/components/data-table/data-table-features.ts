@@ -12,6 +12,9 @@ import {
   sortFn_alphanumeric,
   sortFn_text,
   sortFn_datetime,
+
+  columnSizingFeature,
+  columnResizingFeature,
 } from "@tanstack/react-table"
 
 export const features = tableFeatures({
@@ -27,6 +30,9 @@ export const features = tableFeatures({
   rowSelectionFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
+
+  columnSizingFeature,
+  columnResizingFeature,
 
   sortFns: {
     sortFn_text,
