@@ -13,7 +13,7 @@ export function PermissionsContent() {
         isFetching,
     } = useGetRolesPermissionsQuery()
 
-    rolesPermissions = rolePermissions
+    // rolesPermissions = rolePermissions
 
     return (
         <PageContainer

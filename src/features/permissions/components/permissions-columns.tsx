@@ -1,7 +1,7 @@
-import { Pencil } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
 import { createColumnHelper } from "@tanstack/react-table"
 import { DataTableFeatures } from "@/components/data-table"
+import { EditPermissionsDialog } from "./edit-permissions-dialog"
 import type { RolePermissions } from "../types/permissions.types"
 
 export const columnHelper = createColumnHelper<
@@ -17,11 +17,7 @@ export const columns = columnHelper.columns([
         cell: (info) => {
             const role = info.getValue()
 
-            return (
-                <span className="block truncate text-sm">
-                    {role || "—"}
-                </span>
-            )
+            return <span className="block truncate text-sm">{role || "—"}</span>
         },
     }),
 
@@ -46,21 +42,15 @@ export const columns = columnHelper.columns([
         minSize: 12,
         maxSize: 12,
         cell: ({ row }) => {
+            const [isOpen, setIsOpen] = useState(false)
             const role = row.original.role
 
             return (
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                        // open edit permissions
-                        console.log("Edit permissions:", role)
-                    }}
-                    className="h-8 w-8 p-0 data-[state=open]:bg-accent"
-                >
-                    <Pencil className="size-4" />
-                    <span className="sr-only">Edit {role} permissions</span>
-                </Button>
+                <EditPermissionsDialog
+                    open={isOpen}
+                    onOpenChange={setIsOpen}
+                    rolePermissions={row.original}
+                />
             )
         },
     }),

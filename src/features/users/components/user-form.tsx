@@ -60,7 +60,7 @@ export function UserForm({
             <div className="flex flex-col gap-4 sm:flex-row">
                 {/* Name */}
                 <Field>
-                    <FieldLabel htmlFor="name">Name</FieldLabel>
+                    <FieldLabel htmlFor="name">Full Name</FieldLabel>
 
                     <Input
                         id="name"
@@ -119,7 +119,7 @@ export function UserForm({
 
             {/* Email */}
             <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email">Email Address</FieldLabel>
 
                 <Input
                     id="email"
@@ -136,7 +136,7 @@ export function UserForm({
 
             {/* Phone */}
             <Field>
-                <FieldLabel htmlFor="phone">Phone</FieldLabel>
+                <FieldLabel htmlFor="phone">Phone Number</FieldLabel>
 
                 <Input
                     id="phone"

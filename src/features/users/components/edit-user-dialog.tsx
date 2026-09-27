@@ -113,6 +113,10 @@ export function EditUserDialog({
                 </form>
 
                 <DialogFooter className="flex-row justify-end">
+                    <span className="hidden sm:flex flex-1 text-sm text-muted-foreground">
+                        Some changes may require the user to log in again to take effect.
+                    </span>
+
                     <Button
                         type="button"
                         variant="outline"
@@ -122,7 +126,11 @@ export function EditUserDialog({
                         Cancel
                     </Button>
 
-                    <Button type="submit" form="edit-user-form" disabled={isSubmitting}>
+                    <Button
+                        type="submit"
+                        form="edit-user-form"
+                        disabled={isSubmitting}
+                    >
                         {isUpdating ? (
                             <>
                                 <Loader2 className="animate-spin" />

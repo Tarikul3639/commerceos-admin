@@ -91,13 +91,22 @@ export function CreateUserDialog() {
                 </DialogHeader>
 
                 <form id="create-user-form" onSubmit={form.handleSubmit(onSubmit)}>
-                    <UserForm
-                        form={form}
-                        isSubmitting={isSubmitting}
-                    />
+                    <UserForm form={form} isSubmitting={isSubmitting} />
                 </form>
 
                 <DialogFooter className="flex-row justify-end">
+                    <span className="hidden sm:flex mr-1 text-sm text-muted-foreground">
+                        All fields are required except for phone and avatar.
+                    </span>
+
+                    <Button
+                        variant="outline"
+                        onClick={() => setOpen(false)}
+                        disabled={isSubmitting}
+                    >
+                        Cancel
+                    </Button>
+
                     <Button type="submit" form="create-user-form" disabled={isSubmitting}>
                         {isCreating ? (
                             <>
