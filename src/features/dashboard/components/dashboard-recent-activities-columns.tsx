@@ -1,8 +1,6 @@
 import type { RecentActivity } from "../dashboard.types"
-import {
-  type DataTableFeatures,
-  DataTableAvatar,
-} from "@/components/data-table"
+import { type DataTableFeatures } from "@/components/data-table"
+import { AppImage } from "@/components/media"
 import { createColumnHelper } from "@tanstack/react-table"
 
 export const columnHelper = createColumnHelper<
@@ -37,7 +35,7 @@ export const columns = columnHelper.columns([
 
       return user ? (
         <div className="flex min-w-0 gap-1.5">
-          <DataTableAvatar
+          <AppImage
             name={user.name || user.email}
             image={user.avatar}
             className="mr-2 h-8 w-8"

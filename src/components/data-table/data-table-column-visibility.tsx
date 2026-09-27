@@ -67,7 +67,6 @@ export function DataTableColumnVisibility<TData extends RowData>({
               </DropdownMenuCheckboxItem>
             )
           })}
-        <DropdownMenuSeparator />
       </DropdownMenuContent>
     </DropdownMenu>
   )

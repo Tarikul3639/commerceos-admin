@@ -64,7 +64,11 @@ export function AppBarChart({
         {isLoading ? (
           <Skeleton className="w-full" />
         ) : (
-          <ChartContainer config={config} className="h-full w-full" style={{ height }}>
+          <ChartContainer
+            config={config}
+            className="h-full w-full"
+            style={{ height }}
+          >
             <BarChart
               accessibilityLayer
               data={data}

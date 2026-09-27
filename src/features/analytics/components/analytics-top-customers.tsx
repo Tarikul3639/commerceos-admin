@@ -11,7 +11,9 @@ interface AnalyticsTopCustomersProps {
   isFetching?: boolean
 }
 
-export function AnalyticsTopCustomers({ customers = [] }: AnalyticsTopCustomersProps ) {
+export function AnalyticsTopCustomers({
+  customers = [],
+}: AnalyticsTopCustomersProps) {
   customers = topCustomers
 
   return (

@@ -109,11 +109,7 @@ export function SidebarProfileMenu({
         title="Are you sure you want to logout?"
         description="You will be signed out of your account and redirected to the login page."
         confirmLabel="Logout"
-        loadingLabel="Logging out..."
-        variant="destructive"
-        icon={<LogOut className="size-5 text-destructive" />}
         onConfirm={handleLogout}
-        isLoading={isLoggingOut}
       />
     </>
   )

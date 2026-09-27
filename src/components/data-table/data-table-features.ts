@@ -12,7 +12,6 @@ import {
   sortFn_alphanumeric,
   sortFn_text,
   sortFn_datetime,
-
   columnSizingFeature,
   columnResizingFeature,
 } from "@tanstack/react-table"

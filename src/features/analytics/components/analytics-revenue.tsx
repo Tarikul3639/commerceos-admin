@@ -1,12 +1,6 @@
 "use client"
 
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import {
   Card,
@@ -56,9 +50,7 @@ export function AnalyticsRevenue({
   return (
     <Card className="min-w-0 overflow-hidden py-0">
       <CardHeader className="px-3 py-3 sm:px-4 sm:py-3.5">
-        <CardTitle className="text-sm sm:text-base">
-          Revenue Overview
-        </CardTitle>
+        <CardTitle className="text-sm sm:text-base">Revenue Overview</CardTitle>
 
         <CardDescription className="text-xs sm:text-sm">
           Daily revenue performance

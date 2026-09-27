@@ -1,6 +1,13 @@
 "use client"
 
-import { CartesianGrid, Line, LineChart, XAxis, YAxis, LabelList } from "recharts"
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+  LabelList,
+} from "recharts"
 
 import {
   Card,
@@ -127,12 +134,7 @@ export function AnalyticsSalesVsPurchaseChart({
                 strokeWidth={2}
                 activeDot={{ r: 4 }}
               >
-                {!isMobile && (
-                  <LabelList
-                    dataKey="orders"
-                    position="top"
-                  />
-                )}
+                {!isMobile && <LabelList dataKey="orders" position="top" />}
               </Line>
 
               <Line

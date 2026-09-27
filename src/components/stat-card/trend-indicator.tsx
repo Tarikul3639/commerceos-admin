@@ -33,8 +33,7 @@ export function TrendIndicator({
     <div
       className={cn(
         "inline-flex min-w-0 items-center gap-0.5 text-[11px] font-medium sm:gap-1 sm:text-xs",
-        resolvedDirection === "up" &&
-        "text-emerald-600 dark:text-emerald-500",
+        resolvedDirection === "up" && "text-emerald-600 dark:text-emerald-500",
         resolvedDirection === "down" && "text-destructive",
         resolvedDirection === "neutral" && "text-muted-foreground",
         className

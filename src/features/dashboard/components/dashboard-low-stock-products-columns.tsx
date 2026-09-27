@@ -1,10 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table"
 
 import type { LowStockProduct } from "../dashboard.types"
-import {
-  type DataTableFeatures,
-  DataTableAvatar,
-} from "@/components/data-table"
+import { type DataTableFeatures } from "@/components/data-table"
+import { AppImage } from "@/components/media"
 
 export const columnHelper = createColumnHelper<
   DataTableFeatures,
@@ -19,7 +17,7 @@ export const columns = columnHelper.columns([
 
       return (
         <div className="flex min-w-0 gap-1.5">
-          <DataTableAvatar
+          <AppImage
             name={product.productName}
             image={product.productImage}
             className="mr-2 h-8 w-8"

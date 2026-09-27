@@ -96,7 +96,7 @@ export function DashboardOrderStatus({
     "selected period"
 
   return (
-    <Card className="min-w-0 overflow-hidden gap-3">
+    <Card className="min-w-0 gap-3 overflow-hidden">
       <CardHeader className="gap-0 px-3 sm:px-4">
         <CardTitle className="text-sm sm:text-base">Order Status</CardTitle>
 
@@ -107,7 +107,7 @@ export function DashboardOrderStatus({
 
       <CardContent className="flex flex-1 px-3 pb-3 sm:px-4 sm:pb-4">
         {isLoading ? (
-          <Skeleton className="h-56 mx-4" />
+          <Skeleton className="mx-4 h-56" />
         ) : (
           <ChartContainer config={orderStatusConfig} className="h-60 w-full">
             <BarChart
@@ -144,7 +144,7 @@ export function DashboardOrderStatus({
         )}
       </CardContent>
 
-      <CardFooter className="flex-col gap-2 text-sm px-3 sm:px-4">
+      <CardFooter className="flex-col gap-2 px-3 text-sm sm:px-4">
         <div className="flex items-center gap-2 leading-none font-medium">
           Total Orders: {currentOrders.totalOrders.toLocaleString("en-BD")}
         </div>

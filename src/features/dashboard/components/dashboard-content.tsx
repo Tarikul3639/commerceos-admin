@@ -36,24 +36,14 @@ export function DashboardContent() {
   return (
     <div className="grid min-w-0 gap-3">
       {/* Dashboard Header */}
-      <DashboardHeader
-        query={query}
-        onQueryChange={setQuery}
-      />
+      <DashboardHeader query={query} onQueryChange={setQuery} />
 
       {/* Key Business Metrics */}
-      <DashboardStats
-        data={overview}
-        isLoading={loading}
-        isError={isError}
-      />
+      <DashboardStats data={overview} isLoading={loading} isError={isError} />
 
       {/* Financial Overview */}
       <div className="grid min-w-0 gap-4">
-        <DashboardSalesSummary
-          sales={overview?.sales}
-          isLoading={loading}
-        />
+        <DashboardSalesSummary sales={overview?.sales} isLoading={loading} />
       </div>
 
       {/* Order & Customer Overview */}
@@ -72,10 +62,7 @@ export function DashboardContent() {
 
       {/* Stock Overview */}
       <div className="grid min-w-0 gap-4">
-        <DashboardStockOverview
-          stock={overview?.stock}
-          isLoading={loading}
-        />
+        <DashboardStockOverview stock={overview?.stock} isLoading={loading} />
       </div>
 
       {/* Recent Orders */}

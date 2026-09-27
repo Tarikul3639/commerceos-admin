@@ -9,7 +9,14 @@ import {
 } from "lucide-react"
 
 import { Pie, PieChart, ResponsiveContainer } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card"
 
 import {
   ChartContainer,
@@ -50,8 +57,8 @@ export function DashboardStockOverview({
 
   const healthyCount = Math.max(
     currentStock.totalProducts -
-    currentStock.lowStockCount -
-    currentStock.outOfStockCount,
+      currentStock.lowStockCount -
+      currentStock.outOfStockCount,
     0
   )
 
@@ -85,15 +92,13 @@ export function DashboardStockOverview({
     <Card className="min-w-0 gap-3 overflow-hidden">
       <CardHeader className="gap-0 px-3 sm:px-4">
         <CardTitle>Stock Overview</CardTitle>
-        <CardDescription>
-          Overview of product stock status
-        </CardDescription>
+        <CardDescription>Overview of product stock status</CardDescription>
       </CardHeader>
 
       <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4">
         <div className="grid items-center lg:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)]">
           {/* Chart */}
-          <div className="relative h-60 flex min-w-0 items-center justify-center">
+          <div className="relative flex h-60 min-w-0 items-center justify-center">
             {isLoading ? (
               <Skeleton className="size-60 rounded-full" />
             ) : (
@@ -160,9 +165,9 @@ export function DashboardStockOverview({
                 icon={CircleDollarSign}
                 label="Stock Value"
                 description="Current inventory value"
-                value={`৳${Number(
-                  currentStock.totalStockValue
-                ).toLocaleString("en-BD")}`}
+                value={`৳${Number(currentStock.totalStockValue).toLocaleString(
+                  "en-BD"
+                )}`}
               />
 
               <StockItem
@@ -200,12 +205,7 @@ interface StockItemProps {
   value: string
 }
 
-function StockItem({
-  icon: Icon,
-  label,
-  description,
-  value,
-}: StockItemProps) {
+function StockItem({ icon: Icon, label, description, value }: StockItemProps) {
   return (
     <div className="grid grid-cols-[1fr_auto] items-center gap-6">
       <div className="flex min-w-0 items-center gap-2">
@@ -220,9 +220,7 @@ function StockItem({
         </div>
       </div>
 
-      <span className="text-xs font-medium tabular-nums">
-        {value}
-      </span>
+      <span className="text-xs font-medium tabular-nums">{value}</span>
     </div>
   )
 }

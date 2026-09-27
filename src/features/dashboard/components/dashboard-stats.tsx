@@ -55,7 +55,6 @@ export function DashboardStats({
             icon={<ShoppingBag className="size-4" />}
             description="All products in stock"
           />
-
         </>
       )}
     </StatCardGrid>

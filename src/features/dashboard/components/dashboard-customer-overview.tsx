@@ -109,8 +109,9 @@ export function DashboardCustomerOverview({
             </span>
 
             <span
-              className={`text-xl font-semibold tracking-tight sm:text-2xl ${growth >= 0 ? "text-green-600" : "text-red-600"
-                }`}
+              className={`text-xl font-semibold tracking-tight sm:text-2xl ${
+                growth >= 0 ? "text-green-600" : "text-red-600"
+              }`}
             >
               {growth >= 0 ? "+" : ""}
               {growth.toFixed(1)}%
@@ -119,7 +120,7 @@ export function DashboardCustomerOverview({
         </div>
       </CardContent>
 
-      <CardFooter className="flex-col gap-2 text-sm px-3 sm:px-4">
+      <CardFooter className="flex-col gap-2 px-3 text-sm sm:px-4">
         <div className="flex items-center gap-2 leading-none font-medium">
           {activeCustomers.toLocaleString("en-BD")} active customers
         </div>

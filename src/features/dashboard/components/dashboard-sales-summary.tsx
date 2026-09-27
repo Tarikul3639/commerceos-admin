@@ -32,7 +32,7 @@ export function DashboardSalesSummary({
       </CardHeader>
 
       <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4">
-        <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {/* Total Sales */}
           <SalesMetric
             icon={TakaIcon}

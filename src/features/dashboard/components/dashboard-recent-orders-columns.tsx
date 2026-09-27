@@ -1,10 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table"
 
 import type { RecentOrder } from "../dashboard.types"
-import {
-  type DataTableFeatures,
-  DataTableAvatar,
-} from "@/components/data-table"
+import { type DataTableFeatures } from "@/components/data-table"
+import { AppImage } from "@/components/media"
 
 export const columnHelper = createColumnHelper<DataTableFeatures, RecentOrder>()
 
@@ -33,7 +31,7 @@ export const columns = columnHelper.columns([
       const customer = info.getValue()
       return (
         <div className="flex min-w-0 gap-1.5">
-          <DataTableAvatar
+          <AppImage
             name={customer.name}
             image={customer.image}
             className="mr-2 h-8 w-8"

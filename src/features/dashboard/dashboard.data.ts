@@ -163,7 +163,7 @@ export const recentOrders: RecentOrder[] = [
     status: "PROCESSING",
     paymentStatus: "PAID",
     createdAt: "2026-09-21T07:20:18.900Z",
-  }
+  },
 ]
 
 export const lowStockProducts: LowStockProduct[] = [

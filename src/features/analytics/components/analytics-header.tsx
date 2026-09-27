@@ -32,9 +32,9 @@ export function AnalyticsHeader({
   const dateRange: DateRange | undefined =
     query.startDate || query.endDate
       ? {
-        from: query.startDate ? new Date(query.startDate) : undefined,
-        to: query.endDate ? new Date(query.endDate) : undefined,
-      }
+          from: query.startDate ? new Date(query.startDate) : undefined,
+          to: query.endDate ? new Date(query.endDate) : undefined,
+        }
       : undefined
 
   const handlePeriodChange = (period: AnalyticsQuery["period"]) => {
