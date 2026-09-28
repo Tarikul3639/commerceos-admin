@@ -82,6 +82,7 @@ export const baseApi = createApi({
     "Permissions",
     "Dashboard",
     "Analytics",
+    "Category",
     "Product",
     "Supplier",
     "Purchase",

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { EditCategoryContent } from "@/features/categories/components/edit-category-content"
+import { EditCategoryContent } from "@/features/categories/components/create-category-dialog"
 
 export const metadata: Metadata = {
   title: "Edit category",
