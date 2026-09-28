@@ -69,6 +69,12 @@ interface DataTableProps<TData extends RowData> {
   /** Indicates that existing data is being refreshed. */
   isFetching?: boolean
 
+  /** Indicates that an error occurred while fetching data. */
+  isError?: boolean
+
+  /** Error object from the data fetching operation. */
+  error?: unknown
+
   /** Initial column visibility state. */
   initialColumnVisibility?: ColumnVisibilityState
 
@@ -86,19 +92,24 @@ export function DataTable<TData extends RowData>({
   title = "Data Table",
   description,
   search,
+
   columnVisibility = false,
+  initialColumnVisibility,
+
   toolbarActions,
   toolbarClassName,
 
   pagination: controlledPagination,
   onPaginationChange: controlledOnPaginationChange,
+  totalRows,
   showPagination = true,
   manualPagination = false,
 
-  totalRows,
   isLoading = false,
   isFetching = false,
-  initialColumnVisibility,
+
+  isError = false,
+  error,
 
   emptyText,
   emptyIcon,
@@ -175,6 +186,8 @@ export function DataTable<TData extends RowData>({
           <DataTableBody
             table={table}
             isLoading={isLoading}
+            isError={isError}
+            error={error}
             columnCount={visibleColumnCount}
             skeletonRows={pagination.pageSize}
             emptyText={emptyText}

@@ -2,7 +2,9 @@ import type { LucideIcon } from "lucide-react"
 
 import {
   BarChart3,
+  Bell,
   Boxes,
+  ChartNoAxesCombined,
   ClipboardList,
   LayoutDashboard,
   Package,
@@ -14,8 +16,6 @@ import {
   UserCog,
   Users,
   Warehouse,
-  Bell,
-  ChartNoAxesCombined,
 } from "lucide-react"
 
 import { Permission } from "@/config/permissions.config"
@@ -39,7 +39,6 @@ export const navigation: NavigationGroup[] = [
 
   {
     title: "Overview",
-
     items: [
       {
         title: "Dashboard",
@@ -47,7 +46,6 @@ export const navigation: NavigationGroup[] = [
         icon: LayoutDashboard,
         permission: Permission.DASHBOARD_READ,
       },
-
       {
         title: "Analytics",
         href: "/dashboard/analytics",
@@ -63,7 +61,6 @@ export const navigation: NavigationGroup[] = [
 
   {
     title: "Management",
-
     items: [
       {
         title: "Users",
@@ -71,61 +68,57 @@ export const navigation: NavigationGroup[] = [
         icon: Users,
         permission: Permission.USER_READ,
       },
-
       {
         title: "Permissions",
         href: "/dashboard/permissions",
         icon: UserCog,
         permission: Permission.PERMISSION_READ,
       },
-
       {
         title: "Customers",
         href: "/dashboard/customers",
         icon: Users,
         permission: Permission.CUSTOMER_READ,
       },
+    ],
+  },
 
-      {
-        title: "Categories",
-        href: "/dashboard/categories",
-        icon: Boxes,
-        permission: Permission.CATEGORY_READ,
-      },
+  // ─────────────────────────────────────────────
+  // Catalog
+  // ─────────────────────────────────────────────
 
-      {
-        title: "Brands",
-        href: "/dashboard/brands",
-        icon: Tags,
-        permission: Permission.BRAND_READ,
-      },
-
-      {
-        title: "Attributes",
-        href: "/dashboard/attributes",
-        icon: Tags,
-        permission: Permission.ATTRIBUTE_READ,
-      },
-
+  {
+    title: "Catalog",
+    items: [
       {
         title: "Products",
         href: "/dashboard/products",
         icon: Package,
         permission: Permission.PRODUCT_READ,
       },
-
+      {
+        title: "Categories",
+        href: "/dashboard/categories",
+        icon: Boxes,
+        permission: Permission.CATEGORY_READ,
+      },
+      {
+        title: "Brands",
+        href: "/dashboard/brands",
+        icon: Tags,
+        permission: Permission.BRAND_READ,
+      },
+      {
+        title: "Attributes",
+        href: "/dashboard/attributes",
+        icon: Tags,
+        permission: Permission.ATTRIBUTE_READ,
+      },
       {
         title: "Discounts",
         href: "/dashboard/discounts",
         icon: Tags,
         permission: Permission.DISCOUNT_READ,
-      },
-
-      {
-        title: "Orders",
-        href: "/dashboard/orders",
-        icon: ShoppingCart,
-        permission: Permission.ORDER_READ,
       },
     ],
   },
@@ -136,7 +129,6 @@ export const navigation: NavigationGroup[] = [
 
   {
     title: "Inventory",
-
     items: [
       {
         title: "Warehouses",
@@ -144,33 +136,23 @@ export const navigation: NavigationGroup[] = [
         icon: Warehouse,
         permission: Permission.WAREHOUSE_READ,
       },
-
       {
         title: "Stock",
         href: "/dashboard/stocks",
         icon: Boxes,
         permission: Permission.STOCK_READ,
       },
-
       {
         title: "Stock Movements",
         href: "/dashboard/stock-movements",
         icon: ClipboardList,
         permission: Permission.STOCK_MOVEMENT_READ,
       },
-
       {
         title: "Stock Transfers",
         href: "/dashboard/stock-transfers",
         icon: Truck,
         permission: Permission.STOCK_TRANSFER_READ,
-      },
-
-      {
-        title: "Suppliers",
-        href: "/dashboard/suppliers",
-        icon: Store,
-        permission: Permission.SUPPLIER_READ,
       },
     ],
   },
@@ -181,13 +163,18 @@ export const navigation: NavigationGroup[] = [
 
   {
     title: "Purchasing",
-
     items: [
       {
         title: "Purchases",
         href: "/dashboard/purchases",
         icon: ClipboardList,
         permission: Permission.PURCHASE_READ,
+      },
+      {
+        title: "Suppliers",
+        href: "/dashboard/suppliers",
+        icon: Store,
+        permission: Permission.SUPPLIER_READ,
       },
     ],
   },
@@ -198,7 +185,6 @@ export const navigation: NavigationGroup[] = [
 
   {
     title: "Sales",
-
     items: [
       {
         title: "Orders",
@@ -206,7 +192,6 @@ export const navigation: NavigationGroup[] = [
         icon: ShoppingCart,
         permission: Permission.ORDER_READ,
       },
-
       {
         title: "Carts",
         href: "/dashboard/carts",
@@ -222,7 +207,6 @@ export const navigation: NavigationGroup[] = [
 
   {
     title: "Marketing",
-
     items: [
       {
         title: "Banners",
@@ -239,7 +223,6 @@ export const navigation: NavigationGroup[] = [
 
   {
     title: "System",
-
     items: [
       {
         title: "Activity Logs",
@@ -247,19 +230,17 @@ export const navigation: NavigationGroup[] = [
         icon: ClipboardList,
         permission: Permission.ACTIVITY_LOG_READ,
       },
-
-      {
-        title: "Settings",
-        href: "/dashboard/settings",
-        icon: Settings,
-        permission: Permission.SETTING_READ,
-      },
-
       {
         title: "Notifications",
         href: "/dashboard/notifications",
         icon: Bell,
         permission: Permission.NOTIFICATION_READ,
+      },
+      {
+        title: "Settings",
+        href: "/dashboard/settings",
+        icon: Settings,
+        permission: Permission.SETTING_READ,
       },
     ],
   },

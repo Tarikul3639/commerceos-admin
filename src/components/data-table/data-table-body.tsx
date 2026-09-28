@@ -6,6 +6,7 @@ import { TableBody, TableCell, TableRow } from "@/components/ui/table"
 
 import type { DataTableFeatures } from "./data-table-features"
 
+import { DataTableError } from "./data-table-error"
 import { DataTableEmpty } from "./data-table-empty"
 import { DataTableSkeleton } from "./data-table-skeleton"
 
@@ -15,6 +16,12 @@ interface DataTableBodyProps<TData extends RowData> {
 
   /** Indicates the initial data loading state. */
   isLoading: boolean
+
+  /** Indicates that an error occurred while fetching data. */
+  isError?: boolean
+
+  /** Error object from the data fetching operation. */
+  error?: unknown
 
   /** Number of columns in the table. */
   columnCount: number
@@ -33,6 +40,10 @@ interface DataTableBodyProps<TData extends RowData> {
 export function DataTableBody<TData extends RowData>({
   table,
   isLoading,
+
+  isError,
+  error,
+
   columnCount,
   skeletonRows,
 
@@ -43,6 +54,8 @@ export function DataTableBody<TData extends RowData>({
     <TableBody>
       {isLoading ? (
         <DataTableSkeleton rows={skeletonRows} columns={columnCount} />
+      ) : isError ? (
+        <DataTableError colSpan={columnCount} error={error} />
       ) : table.getRowModel().rows.length ? (
         table.getRowModel().rows.map((row) => (
           <TableRow
