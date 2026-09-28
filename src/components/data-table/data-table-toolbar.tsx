@@ -56,31 +56,39 @@ export function DataTableToolbar<TData extends RowData>({
     >
       {/* Table information */}
       <div className="min-w-0">
-        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+        <h2 className="text-sm font-semibold text-foreground">
+          {title}
+        </h2>
 
         {description && (
-          <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {description}
+          </p>
         )}
       </div>
 
       {/* Table controls */}
-      <div className="flex flex-wrap items-center gap-2">
-        {/* Search */}
-        {search && (
-          <DataTableSearch
-            value={search.value}
-            onChange={search.onChange}
-            placeholder={search.placeholder}
-            className={search.className}
-          />
-        )}
+      {(actions || search || columnVisibility) && (
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Search */}
+          {search && (
+            <DataTableSearch
+              value={search.value}
+              onChange={search.onChange}
+              placeholder={search.placeholder}
+              className={search.className}
+            />
+          )}
 
-        {/* Column visibility */}
-        {columnVisibility && <DataTableColumnVisibility table={table} />}
+          {/* Column visibility */}
+          {columnVisibility && (
+            <DataTableColumnVisibility table={table} />
+          )}
 
-        {/* Custom actions */}
-        {actions}
-      </div>
+          {/* Custom actions */}
+          {actions}
+        </div>
+      )}
     </div>
   )
 }

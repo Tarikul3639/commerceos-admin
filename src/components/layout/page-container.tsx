@@ -35,20 +35,20 @@ export function PageContainer({
   }
 
   return (
-    <main className={cn("flex flex-1 flex-col gap-3 px-1", className)}>
+    <main className={cn("flex flex-1 flex-col gap-3", className)}>
       {/* Page Header */}
       {(pageTitle || pageDescription || infoContent || pageHeaderAction) && (
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
-            <div>
+            <div className="flex flex-col gap-1 min-w-0">
               {pageTitle && (
-                <h1 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">
                   {pageTitle}
                 </h1>
               )}
 
               {pageDescription && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground truncate">
                   {pageDescription}
                 </p>
               )}

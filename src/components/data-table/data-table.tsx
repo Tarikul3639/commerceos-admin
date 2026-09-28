@@ -1,5 +1,6 @@
 import { useState } from "react"
 import type { LucideIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 import {
   type ColumnDef,
@@ -19,6 +20,9 @@ import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"
 
 interface DataTableProps<TData extends RowData> {
+  /** Optional className for the table container. */
+  className?: string
+
   /** Defines the table columns. */
   columns: ColumnDef<DataTableFeatures, TData>[]
 
@@ -87,6 +91,7 @@ interface DataTableProps<TData extends RowData> {
 
 /** Generic reusable data table component. */
 export function DataTable<TData extends RowData>({
+  className,
   columns,
   data,
   title = "Data Table",
@@ -157,7 +162,7 @@ export function DataTable<TData extends RowData>({
   const visibleColumnCount = table.getVisibleLeafColumns().length
 
   return (
-    <div className="flex h-full min-w-0 flex-col overflow-hidden rounded-lg bg-card shadow-sm ring ring-foreground/8">
+    <div className={cn("flex h-full mt-3 min-w-0 flex-col overflow-hidden rounded-lg bg-card shadow-sm ring ring-foreground/8", className)}>
       {/* Table Toolbar */}
       <DataTableToolbar
         table={table}
