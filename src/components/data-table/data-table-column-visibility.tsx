@@ -1,6 +1,6 @@
 "use client"
 
-import { Columns3 } from "lucide-react"
+import { SlidersHorizontal, ChevronsUpDown } from "lucide-react"
 import { type RowData, type ReactTable } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 
@@ -29,16 +29,18 @@ interface DataTableColumnVisibilityProps<TData extends RowData> {
 /** Renders a reusable column visibility control. */
 export function DataTableColumnVisibility<TData extends RowData>({
   table,
-  label = "Columns",
+  label = "View",
   className,
 }: DataTableColumnVisibilityProps<TData>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button type="button" variant="outline" className={className}>
-          <Columns3 className="size-4" />
+        <Button type="button" size="sm" variant="outline" className={className}>
+          <SlidersHorizontal />
 
           <span>{label}</span>
+
+          <ChevronsUpDown className="text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
 

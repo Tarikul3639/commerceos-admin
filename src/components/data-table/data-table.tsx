@@ -49,6 +49,9 @@ interface DataTableProps<TData extends RowData> {
   /** Custom toolbar actions. */
   toolbarActions?: React.ReactNode
 
+  /** Custom toolbar filters. */
+  toolbarFilters?: React.ReactNode
+
   /** Toolbar className. */
   toolbarClassName?: string
 
@@ -101,6 +104,7 @@ export function DataTable<TData extends RowData>({
   columnVisibility = false,
   initialColumnVisibility,
 
+  toolbarFilters,
   toolbarActions,
   toolbarClassName,
 
@@ -172,6 +176,7 @@ export function DataTable<TData extends RowData>({
         className={toolbarClassName}
         columnVisibility={columnVisibility}
         actions={toolbarActions}
+        filters={toolbarFilters}
       />
 
       {/* Table */}

@@ -86,6 +86,7 @@ export const baseApi = createApi({
     "Brand",
     "Category",
     "Attribute",
+    "Discount",
     "Product",
     "Supplier",
     "Purchase",

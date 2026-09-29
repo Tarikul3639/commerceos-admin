@@ -1,3 +1,4 @@
+import { GripVertical } from "lucide-react"
 import { type RowData, type ReactTable } from "@tanstack/react-table"
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import type { DataTableFeatures } from "./data-table-features"
@@ -22,7 +23,7 @@ export function DataTableHeader<TData extends RowData>({
             <TableHead
               key={header.id}
               style={{ width: `${header.getSize()}px` }}
-              className="relative h-11 min-w-0 overflow-hidden px-4 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+              className="relative h-11 min-w-0 overflow-hidden px-4 text-xs font-semibold tracking-wide text-accent-foreground bg-accent uppercase"
             >
               {header.isPlaceholder ? null : (
                 <table.FlexRender header={header} />
@@ -32,8 +33,10 @@ export function DataTableHeader<TData extends RowData>({
                 <div
                   onMouseDown={header.getResizeHandler()}
                   onTouchStart={header.getResizeHandler()}
-                  className="absolute top-0 right-0 h-full w-1 cursor-col-resize bg-accent/20 select-none"
-                />
+                  className="absolute top-1/2 right-0 z-10 flex h-6 w-3 -translate-y-1/2 cursor-col-resize items-center justify-center select-none"
+                >
+                  <GripVertical className="size-3 text-muted-foreground/50" />
+                </div>
               )}
             </TableHead>
           ))}

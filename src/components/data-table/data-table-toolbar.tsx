@@ -29,6 +29,9 @@ interface DataTableToolbarProps<TData extends RowData> {
   /** Shows or hides the column visibility button. */
   columnVisibility?: boolean
 
+  /** Custom toolbar filters. */
+  filters?: ReactNode
+
   /** Custom actions displayed after the fixed controls. */
   actions?: ReactNode
 
@@ -43,6 +46,7 @@ export function DataTableToolbar<TData extends RowData>({
   description,
   search,
   columnVisibility = false,
+  filters,
   actions,
   className,
 }: DataTableToolbarProps<TData>) {
@@ -68,7 +72,7 @@ export function DataTableToolbar<TData extends RowData>({
       </div>
 
       {/* Table controls */}
-      {(actions || search || columnVisibility) && (
+      {(filters || actions || search || columnVisibility) && (
         <div className="flex flex-wrap items-center gap-2">
           {/* Search */}
           {search && (
@@ -79,6 +83,9 @@ export function DataTableToolbar<TData extends RowData>({
               className={search.className}
             />
           )}
+
+          {/* Filters */}
+          {filters}
 
           {/* Column visibility */}
           {columnVisibility && (
