@@ -8,6 +8,7 @@ import {
   ClipboardList,
   LayoutDashboard,
   Package,
+  Ruler,
   Settings,
   ShoppingCart,
   Store,
@@ -107,6 +108,11 @@ export const navigation: NavigationGroup[] = [
         href: "/dashboard/brands",
         icon: Tags,
         permission: Permission.BRAND_READ,
+      },
+      {
+        title: "Size Charts",
+        href: "/dashboard/size-charts",
+        icon: Ruler,
       },
       {
         title: "Discounts",
