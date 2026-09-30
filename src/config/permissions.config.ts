@@ -55,14 +55,6 @@ export enum Permission {
   BRAND_DELETE = "BRAND_DELETE",
 
   // ─────────────────────────────────────────────
-  // ATTRIBUTE
-  // ─────────────────────────────────────────────
-
-  ATTRIBUTE_CREATE = "ATTRIBUTE_CREATE",
-  ATTRIBUTE_READ = "ATTRIBUTE_READ",
-  ATTRIBUTE_UPDATE = "ATTRIBUTE_UPDATE",
-  ATTRIBUTE_DELETE = "ATTRIBUTE_DELETE",
-
   // ─────────────────────────────────────────────
   // PRODUCT
   // ─────────────────────────────────────────────

@@ -33,28 +33,23 @@ export interface ProductImage {
     updatedAt: string
 }
 
-export interface VariantAttribute {
-    attributeId: string
-    attributeName: string
-    attributeValueId: string
-    attributeValue: string
-}
-
 export interface ProductVariant {
     id: string
     sku: string
     barcode: string | null
-    purchasePrice: string
-    sellingPrice: string
+    color: string | null
+    colorHex: string | null
+    size: string | null
     image: string | null
     publicId: string | null
     isActive: boolean
-    attributes: VariantAttribute[]
     createdAt: string
     updatedAt: string
 }
 
 export interface ProductDetails extends Product {
+    purchasePrice: string
+    sellingPrice: string
     images: ProductImage[]
     variants: ProductVariant[]
 }
@@ -94,6 +89,8 @@ export interface CreateProductRequest {
     name: string
     description?: string
     categoryId: string
+    purchasePrice: number
+    sellingPrice: number
     brandId?: string
     thumbnail?: string
     publicId?: string
@@ -104,6 +101,8 @@ export interface UpdateProductRequest {
     name?: string
     description?: string | null
     categoryId?: string
+    purchasePrice?: number
+    sellingPrice?: number
     brandId?: string | null
     thumbnail?: string | null
     publicId?: string | null
@@ -125,21 +124,21 @@ export interface UpdateProductImageRequest {
 export interface CreateProductVariantRequest {
     sku: string
     barcode?: string
-    purchasePrice: number
-    sellingPrice: number
+    color?: string
+    colorHex?: string
+    size?: string
     image?: string
     publicId?: string
     isActive?: boolean
-    attributeValueIds?: string[]
 }
 
 export interface UpdateProductVariantRequest {
     sku?: string
     barcode?: string | null
-    purchasePrice?: number
-    sellingPrice?: number
+    color?: string | null
+    colorHex?: string | null
+    size?: string | null
     image?: string | null
     publicId?: string | null
     isActive?: boolean
-    attributeValueIds?: string[]
 }

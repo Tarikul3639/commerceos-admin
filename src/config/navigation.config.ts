@@ -109,12 +109,6 @@ export const navigation: NavigationGroup[] = [
         permission: Permission.BRAND_READ,
       },
       {
-        title: "Attributes",
-        href: "/dashboard/attributes",
-        icon: Tags,
-        permission: Permission.ATTRIBUTE_READ,
-      },
-      {
         title: "Discounts",
         href: "/dashboard/discounts",
         icon: Tags,
