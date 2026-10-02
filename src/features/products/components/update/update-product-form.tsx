@@ -41,10 +41,10 @@ export function UpdateProductForm({ product }: { product: ProductDetails }) {
     resolver: zodResolver(productFormSchema),
     defaultValues: {
       name: product.name,
-      slug: product.slug,
       sku: product.sku,
       barcode: product.barcode ?? "",
       description: product.description ?? "",
+      subDescription: product.subDescription ?? "",
       purchasePrice: Number(product.purchasePrice),
       sellingPrice: Number(product.sellingPrice),
       categoryId: product.category.id,
@@ -70,10 +70,10 @@ export function UpdateProductForm({ product }: { product: ProductDetails }) {
         id: product.id,
         data: {
           name: values.name,
-          slug: values.slug,
           sku: values.sku,
           barcode: values.barcode || null,
           description: values.description || null,
+          subDescription: values.subDescription || null,
           purchasePrice: values.purchasePrice,
           sellingPrice: values.sellingPrice,
           categoryId: values.categoryId,

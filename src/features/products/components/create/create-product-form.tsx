@@ -28,10 +28,10 @@ export function CreateProductForm() {
     resolver: zodResolver(productFormSchema),
     defaultValues: {
       name: "",
-      slug: "",
       sku: "",
       barcode: "",
       description: "",
+      subDescription: "",
       purchasePrice: 0,
       sellingPrice: 0,
       categoryId: "",
@@ -48,7 +48,6 @@ export function CreateProductForm() {
     try {
       const data: CreateProductRequest = {
         name: values.name,
-        slug: values.slug,
         sku: values.sku,
         purchasePrice: values.purchasePrice,
         sellingPrice: values.sellingPrice,
@@ -66,6 +65,10 @@ export function CreateProductForm() {
 
       if (values.description) {
         data.description = values.description
+      }
+
+      if (values.subDescription) {
+        data.subDescription = values.subDescription
       }
 
       if (values.brandId) {

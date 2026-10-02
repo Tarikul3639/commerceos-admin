@@ -56,9 +56,11 @@ export const columns = columnHelper.columns([
               {product.name}
             </Link>
 
-            <p className="truncate text-xs text-muted-foreground">
-              {product.slug}
-            </p>
+            {product.subDescription && (
+              <p className="truncate text-xs text-muted-foreground">
+                {product.subDescription}
+              </p>
+            )}
           </div>
         </div>
       )

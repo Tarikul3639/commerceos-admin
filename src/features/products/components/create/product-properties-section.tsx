@@ -98,9 +98,46 @@ export function ProductPropertiesSection({ control, disabled = false }: Props) {
           </CollapsibleTrigger>
         </CardHeader>
 
-        <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+        <CollapsibleContent className="mt-3 overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
           <CardContent className="pt-0">
             <FieldGroup className="grid gap-5 md:grid-cols-2">
+              <Controller
+                name="sku"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>SKU</FieldLabel>
+                    <Input
+                      {...field}
+                      placeholder="SKU-001"
+                      disabled={disabled}
+                    />
+                    {fieldState.error && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="barcode"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>Barcode</FieldLabel>
+                    <Input
+                      {...field}
+                      value={field.value ?? ""}
+                      placeholder="e.g. 1234567890123"
+                      disabled={disabled}
+                    />
+                    {fieldState.error && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
               <Controller
                 name="categoryId"
                 control={control}

@@ -54,14 +54,6 @@ export const columns = (discountId: string) =>
     },
 
     {
-      accessorKey: "slug",
-      header: "Slug",
-      cell: ({ row }) => (
-        <span className="text-muted-foreground">{row.original.slug}</span>
-      ),
-    },
-
-    {
       accessorKey: "image",
       header: "Image",
       cell: ({ row }) => {

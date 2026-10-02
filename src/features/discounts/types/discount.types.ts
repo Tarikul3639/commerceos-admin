@@ -34,7 +34,6 @@ export interface DiscountWithPagination {
 export interface DiscountProduct {
   id: string
   name: string
-  slug: string
   image: string | null
 }
 

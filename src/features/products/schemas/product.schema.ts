@@ -3,14 +3,10 @@ import { z } from "zod"
 export const productFormSchema = z
   .object({
     name: z.string().min(1).max(255),
-    slug: z
-      .string()
-      .min(1)
-      .max(255)
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     sku: z.string().min(1, "SKU is required").max(255),
     barcode: z.string().optional(),
     description: z.string().optional(),
+    subDescription: z.string().optional(),
     purchasePrice: z.number().min(0),
     sellingPrice: z.number().min(0),
     stock: z.number().int().min(0),

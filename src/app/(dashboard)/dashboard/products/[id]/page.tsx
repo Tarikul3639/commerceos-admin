@@ -1,12 +1,15 @@
-import type { Metadata } from "next"
-
 import { ProductDetailsContent } from "@/features/products/components/details/product-details-content"
 
-export const metadata: Metadata = {
-  title: "Product details",
-  description: "View product details from your catalog.",
+interface ProductDetailsPageProps {
+  params: Promise<{
+    id: string
+  }>
 }
 
-export default function ProductDetailsPage() {
-  return <ProductDetailsContent />
+export default async function ProductDetailsPage({
+  params,
+}: ProductDetailsPageProps) {
+  const { id } = await params
+
+  return <ProductDetailsContent productId={id} />
 }

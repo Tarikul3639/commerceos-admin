@@ -60,7 +60,7 @@ export function ProductPricingSection({
           </CollapsibleTrigger>
         </CardHeader>
 
-        <CollapsibleContent className="overflow-hidden transition-all duration-300 data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+        <CollapsibleContent className="mt-3 overflow-hidden transition-all duration-300 data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
           <CardContent className="pt-0">
             <FieldGroup className="grid gap-5 md:grid-cols-3">
               <Controller

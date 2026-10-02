@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/collapsible"
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -85,66 +84,23 @@ export function ProductDetailsSection({
               />
 
               <Controller
-                name="slug"
+                name="subDescription"
                 control={control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Slug</FieldLabel>
-
-                    <Input
+                    <FieldLabel>Short description</FieldLabel>
+                    <Textarea
                       {...field}
-                      placeholder="product-slug"
+                      placeholder="A brief product summary..."
+                      className="min-h-20 resize-none"
                       disabled={disabled}
                     />
-
-                    <FieldDescription>
-                      Used in the product URL.
-                    </FieldDescription>
-
                     {fieldState.error && (
                       <FieldError errors={[fieldState.error]} />
                     )}
                   </Field>
                 )}
               />
-
-              <FieldGroup className="grid gap-4 md:grid-cols-2">
-                <Controller
-                  name="sku"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>SKU</FieldLabel>
-                      <Input
-                        {...field}
-                        placeholder="SKU-001"
-                        disabled={disabled}
-                      />
-                      {fieldState.error && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="barcode"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Barcode</FieldLabel>
-                      <Input
-                        {...field}
-                        value={field.value ?? ""}
-                        placeholder="e.g. 1234567890123"
-                        disabled={disabled}
-                      />
-                      {fieldState.error && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </FieldGroup>
 
               <Controller
                 name="description"
