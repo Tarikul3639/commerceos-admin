@@ -8,15 +8,12 @@ import {
   ClipboardList,
   LayoutDashboard,
   Package,
-  Ruler,
   Settings,
   ShoppingCart,
   Store,
   Tags,
-  Truck,
   UserCog,
   Users,
-  Warehouse,
 } from "lucide-react"
 
 import { Permission } from "@/config/permissions.config"
@@ -110,11 +107,6 @@ export const navigation: NavigationGroup[] = [
         permission: Permission.BRAND_READ,
       },
       {
-        title: "Size Charts",
-        href: "/dashboard/size-charts",
-        icon: Ruler,
-      },
-      {
         title: "Discounts",
         href: "/dashboard/discounts",
         icon: Tags,
@@ -131,28 +123,10 @@ export const navigation: NavigationGroup[] = [
     title: "Inventory",
     items: [
       {
-        title: "Warehouses",
-        href: "/dashboard/warehouses",
-        icon: Warehouse,
-        permission: Permission.WAREHOUSE_READ,
-      },
-      {
         title: "Stock",
         href: "/dashboard/stocks",
         icon: Boxes,
         permission: Permission.STOCK_READ,
-      },
-      {
-        title: "Stock Movements",
-        href: "/dashboard/stock-movements",
-        icon: ClipboardList,
-        permission: Permission.STOCK_MOVEMENT_READ,
-      },
-      {
-        title: "Stock Transfers",
-        href: "/dashboard/stock-transfers",
-        icon: Truck,
-        permission: Permission.STOCK_TRANSFER_READ,
       },
     ],
   },

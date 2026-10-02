@@ -60,14 +60,10 @@ export function DataTableToolbar<TData extends RowData>({
     >
       {/* Table information */}
       <div className="min-w-0">
-        <h2 className="text-sm font-semibold text-foreground">
-          {title}
-        </h2>
+        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
 
         {description && (
-          <p className="mt-1 text-xs text-muted-foreground">
-            {description}
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground">{description}</p>
         )}
       </div>
 
@@ -88,9 +84,7 @@ export function DataTableToolbar<TData extends RowData>({
           {filters}
 
           {/* Column visibility */}
-          {columnVisibility && (
-            <DataTableColumnVisibility table={table} />
-          )}
+          {columnVisibility && <DataTableColumnVisibility table={table} />}
 
           {/* Custom actions */}
           {actions}

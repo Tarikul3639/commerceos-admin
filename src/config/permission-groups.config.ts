@@ -42,25 +42,11 @@ export const permissionGroups: PermissionGroup = {
     Delete: Permission.CATEGORY_DELETE,
   },
 
-  Warehouses: {
-    Read: Permission.WAREHOUSE_READ,
-    Create: Permission.WAREHOUSE_CREATE,
-    Update: Permission.WAREHOUSE_UPDATE,
-    Delete: Permission.WAREHOUSE_DELETE,
-  },
-
   Stock: {
     Read: Permission.STOCK_READ,
     Create: Permission.STOCK_CREATE,
     Update: Permission.STOCK_UPDATE,
     Delete: Permission.STOCK_DELETE,
-  },
-
-  StockTransfers: {
-    Read: Permission.STOCK_TRANSFER_READ,
-    Create: Permission.STOCK_TRANSFER_CREATE,
-    Update: Permission.STOCK_TRANSFER_UPDATE,
-    Delete: Permission.STOCK_TRANSFER_DELETE,
   },
 
   Users: {

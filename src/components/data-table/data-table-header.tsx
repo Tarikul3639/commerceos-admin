@@ -23,7 +23,7 @@ export function DataTableHeader<TData extends RowData>({
             <TableHead
               key={header.id}
               style={{ width: `${header.getSize()}px` }}
-              className="relative h-11 min-w-0 overflow-hidden px-4 text-xs font-semibold tracking-wide text-accent-foreground bg-accent uppercase"
+              className="relative h-11 min-w-0 overflow-hidden bg-accent px-4 text-xs font-semibold tracking-wide text-accent-foreground uppercase"
             >
               {header.isPlaceholder ? null : (
                 <table.FlexRender header={header} />

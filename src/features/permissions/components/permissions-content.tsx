@@ -17,8 +17,11 @@ export function PermissionsContent() {
 
   return (
     <PageContainer
-      pageTitle="Permissions"
-      pageDescription="Manage permissions for different roles."
+      title="Permissions"
+      breadcrumbs={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Permissions" },
+      ]}
     >
       <DataTable
         title="Roles Permissions"

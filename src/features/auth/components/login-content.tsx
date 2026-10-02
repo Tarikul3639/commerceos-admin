@@ -76,8 +76,8 @@ export function LoginContent() {
             </h1>
 
             <p className="mt-5 max-w-lg text-base leading-7 text-primary-foreground/75">
-              Manage products, orders, inventory, customers, suppliers,
-              warehouses, and your entire business operation.
+              Manage products, orders, stock, customers, suppliers, and your
+              entire business operation.
             </p>
           </div>
 

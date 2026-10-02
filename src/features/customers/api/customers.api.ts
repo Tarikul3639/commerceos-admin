@@ -20,10 +20,7 @@ export const customersApi = baseApi.injectEndpoints({
       invalidatesTags: [{ type: "Customer", id: "LIST" }],
     }),
 
-    getCustomers: builder.query<
-      CustomersResponse,
-      CustomerQueryParams | void
-    >({
+    getCustomers: builder.query<CustomersResponse, CustomerQueryParams | void>({
       query: (params) => ({
         url: "/customers",
         method: "GET",
@@ -33,12 +30,12 @@ export const customersApi = baseApi.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-            ...result.data.map(({ id }) => ({
-              type: "Customer" as const,
-              id,
-            })),
-            { type: "Customer" as const, id: "LIST" },
-          ]
+              ...result.data.map(({ id }) => ({
+                type: "Customer" as const,
+                id,
+              })),
+              { type: "Customer" as const, id: "LIST" },
+            ]
           : [{ type: "Customer" as const, id: "LIST" }],
     }),
 
@@ -48,9 +45,7 @@ export const customersApi = baseApi.injectEndpoints({
         method: "GET",
       }),
 
-      providesTags: (_result, _error, id) => [
-        { type: "Customer", id },
-      ],
+      providesTags: (_result, _error, id) => [{ type: "Customer", id }],
     }),
 
     updateCustomer: builder.mutation<

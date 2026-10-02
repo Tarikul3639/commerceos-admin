@@ -74,15 +74,6 @@ export enum Permission {
   DISCOUNT_DELETE = "DISCOUNT_DELETE",
 
   // ─────────────────────────────────────────────
-  // WAREHOUSE
-  // ─────────────────────────────────────────────
-
-  WAREHOUSE_CREATE = "WAREHOUSE_CREATE",
-  WAREHOUSE_READ = "WAREHOUSE_READ",
-  WAREHOUSE_UPDATE = "WAREHOUSE_UPDATE",
-  WAREHOUSE_DELETE = "WAREHOUSE_DELETE",
-
-  // ─────────────────────────────────────────────
   // STOCK
   // ─────────────────────────────────────────────
 
@@ -90,21 +81,6 @@ export enum Permission {
   STOCK_READ = "STOCK_READ",
   STOCK_UPDATE = "STOCK_UPDATE",
   STOCK_DELETE = "STOCK_DELETE",
-
-  // ─────────────────────────────────────────────
-  // STOCK MOVEMENT
-  // ─────────────────────────────────────────────
-
-  STOCK_MOVEMENT_READ = "STOCK_MOVEMENT_READ",
-
-  // ─────────────────────────────────────────────
-  // STOCK TRANSFER
-  // ─────────────────────────────────────────────
-
-  STOCK_TRANSFER_CREATE = "STOCK_TRANSFER_CREATE",
-  STOCK_TRANSFER_READ = "STOCK_TRANSFER_READ",
-  STOCK_TRANSFER_UPDATE = "STOCK_TRANSFER_UPDATE",
-  STOCK_TRANSFER_DELETE = "STOCK_TRANSFER_DELETE",
 
   // ─────────────────────────────────────────────
   // PURCHASE

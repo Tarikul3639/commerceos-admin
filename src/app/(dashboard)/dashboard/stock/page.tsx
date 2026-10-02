@@ -4,7 +4,7 @@ import { StockContent } from "@/features/stock/components/stock-content"
 
 export const metadata: Metadata = {
   title: "Stock",
-  description: "Monitor inventory stock levels.",
+  description: "Monitor product stock levels.",
 }
 
 export default function StockPage() {

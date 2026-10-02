@@ -1,144 +1,126 @@
 export interface ProductCategory {
-    id: string
-    name: string
-    slug: string
+  id: string
+  name: string
+  slug: string
 }
 
 export interface ProductBrand {
-    id: string
-    name: string
-    slug: string
+  id: string
+  name: string
+  slug: string
+  website: string | null
+}
+
+export interface ProductColor {
+  name: string
+  hex: string
+}
+
+export interface ProductImageResponseDto {
+  id: string
+  imageUrl: string
+  publicId: string
+  sortOrder: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AddProductImageDto {
+  id?: string
+  imageUrl: string
+  publicId: string
+  sortOrder?: number
+}
+
+export interface UpdateProductImageDto {
+  id?: string
+  imageUrl?: string
+  publicId?: string
+  sortOrder?: number
 }
 
 export interface Product {
-    id: string
-    name: string
-    slug: string
-    description: string | null
-    thumbnail: string | null
-    isActive: boolean
-    category: ProductCategory
-    brand: ProductBrand | null
-    variantCount: number
-    createdAt: string
-    updatedAt: string
-}
-
-export interface ProductImage {
-    id: string
-    imageUrl: string
-    publicId: string
-    sortOrder: number
-    createdAt: string
-    updatedAt: string
-}
-
-export interface ProductVariant {
-    id: string
-    sku: string
-    barcode: string | null
-    color: string | null
-    colorHex: string | null
-    size: string | null
-    image: string | null
-    publicId: string | null
-    isActive: boolean
-    createdAt: string
-    updatedAt: string
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  sku: string
+  barcode: string | null
+  purchasePrice: string
+  sellingPrice: string
+  stock: number
+  colors: ProductColor[] | null
+  sizes: string[]
+  isActive: boolean
+  deletedAt: string | null
+  category: ProductCategory
+  brand: ProductBrand | null
+  image?: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 export interface ProductDetails extends Product {
-    purchasePrice: string
-    sellingPrice: string
-    images: ProductImage[]
-    variants: ProductVariant[]
+  images: ProductImageResponseDto[]
+  discounts?: unknown[]
 }
 
 export interface ProductQueryParams {
-    search?: string
-    categoryId?: string
-    brandId?: string
-    isActive?: string
-    page?: number
-    limit?: number
+  search?: string
+  categoryId?: string
+  brandId?: string
+  isActive?: boolean
+  page?: number
+  limit?: number
 }
 
 export interface PaginationMeta {
-    total: number
-    page: number
-    limit: number
-    totalPages: number
-    hasNextPage: boolean
-    hasPreviousPage: boolean
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+  hasNextPage: boolean
+  hasPreviousPage: boolean
 }
 
 export interface ProductsResponse {
-    data: Product[]
-    meta: PaginationMeta
-}
-
-export interface ProductResponse {
-    data: Product
-}
-
-export interface ProductDetailsResponse {
-    data: ProductDetails
+  data: Product[]
+  meta: PaginationMeta
 }
 
 export interface CreateProductRequest {
-    name: string
-    description?: string
-    categoryId: string
-    purchasePrice: number
-    sellingPrice: number
-    brandId?: string
-    thumbnail?: string
-    publicId?: string
-    isActive?: boolean
+  name: string
+  slug: string
+  sku: string
+  barcode?: string
+  description?: string
+  purchasePrice: number
+  sellingPrice: number
+  stock?: number
+  sizes?: string[]
+  colors?: ProductColor[]
+  categoryId: string
+  brandId?: string
+  publicId?: string
+  images?: AddProductImageDto[]
+  isActive?: boolean
 }
 
 export interface UpdateProductRequest {
-    name?: string
-    description?: string | null
-    categoryId?: string
-    purchasePrice?: number
-    sellingPrice?: number
-    brandId?: string | null
-    thumbnail?: string | null
-    publicId?: string | null
-    isActive?: boolean
-}
-
-export interface AddProductImageRequest {
-    imageUrl: string
-    publicId: string
-    sortOrder?: number
-}
-
-export interface UpdateProductImageRequest {
-    imageUrl?: string
-    publicId?: string
-    sortOrder?: number
-}
-
-export interface CreateProductVariantRequest {
-    sku: string
-    barcode?: string
-    color?: string
-    colorHex?: string
-    size?: string
-    image?: string
-    publicId?: string
-    isActive?: boolean
-}
-
-export interface UpdateProductVariantRequest {
-    sku?: string
-    barcode?: string | null
-    color?: string | null
-    colorHex?: string | null
-    size?: string | null
-    image?: string | null
-    publicId?: string | null
-    isActive?: boolean
+  name?: string
+  slug?: string
+  categoryId?: string
+  brandId?: string | null
+  description?: string | null
+  sku?: string
+  barcode?: string | null
+  purchasePrice?: number
+  sellingPrice?: number
+  stock?: number
+  sizes?: string[]
+  colors?: ProductColor[]
+  publicId?: string | null
+  images?: UpdateProductImageDto[]
+  imageIdsToDelete?: string[]
+  isActive?: boolean
 }

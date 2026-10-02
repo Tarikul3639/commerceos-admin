@@ -38,21 +38,17 @@ export function CustomersContent() {
       "updatedAt",
     ]),
 
-    sortOrder: parseAsStringEnum<CustomerSortOrder>([
-      "asc",
-      "desc",
-    ]),
+    sortOrder: parseAsStringEnum<CustomerSortOrder>(["asc", "desc"]),
   })
 
   // Fetch customers using the current URL query parameters.
-  const { data, isLoading, isFetching } =
-    useGetCustomersQuery({
-      page: params.page,
-      limit: params.limit,
-      search: params.search || undefined,
-      sortBy: params.sortBy ?? undefined,
-      sortOrder: params.sortOrder ?? undefined,
-    })
+  const { data, isLoading, isFetching } = useGetCustomersQuery({
+    page: params.page,
+    limit: params.limit,
+    search: params.search || undefined,
+    sortBy: params.sortBy ?? undefined,
+    sortOrder: params.sortOrder ?? undefined,
+  })
 
   const customers = data?.data ?? []
   const meta = data?.meta
@@ -65,14 +61,10 @@ export function CustomersContent() {
 
   // Update URL parameters when the table pagination changes.
   const handlePaginationChange = (
-    updater:
-      | PaginationState
-      | ((prev: PaginationState) => PaginationState)
+    updater: PaginationState | ((prev: PaginationState) => PaginationState)
   ) => {
     const nextPagination =
-      typeof updater === "function"
-        ? updater(pagination)
-        : updater
+      typeof updater === "function" ? updater(pagination) : updater
 
     setParams({
       page: nextPagination.pageIndex + 1,
@@ -82,13 +74,13 @@ export function CustomersContent() {
 
   return (
     <PageContainer
-      pageTitle="Customers"
-      pageDescription="Manage your customers and their information."
+      title="Customers"
+      breadcrumbs={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Customers" },
+      ]}
       pageHeaderAction={
-        <CreateCustomerDialog
-          open={isOpen}
-          onOpenChange={setIsOpen}
-        />
+        <CreateCustomerDialog open={isOpen} onOpenChange={setIsOpen} />
       }
     >
       <DataTable

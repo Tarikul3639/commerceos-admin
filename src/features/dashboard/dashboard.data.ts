@@ -9,7 +9,6 @@ import type {
 
 export const stockSummary: StockSummary = {
   totalProducts: 1250,
-  totalVariants: 3840,
   totalStockQuantity: 45820,
   totalStockValue: "8450000",
   lowStockCount: 42,
@@ -168,7 +167,6 @@ export const recentOrders: RecentOrder[] = [
 
 export const lowStockProducts: LowStockProduct[] = [
   {
-    variantId: "variant_001",
     sku: "IPH15-BLK-128",
     productId: "product_001",
     productName: "iPhone 15",
@@ -177,7 +175,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 3,
   },
   {
-    variantId: "variant_002",
     sku: "SAM-S24-BLK-256",
     productId: "product_002",
     productName: "Samsung Galaxy S24",
@@ -186,7 +183,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 5,
   },
   {
-    variantId: "variant_003",
     sku: "MAC-AIR-M2-256",
     productId: "product_003",
     productName: "MacBook Air M2",
@@ -195,7 +191,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 2,
   },
   {
-    variantId: "variant_004",
     sku: "SONY-WH1000XM5",
     productId: "product_004",
     productName: "Sony WH-1000XM5",
@@ -203,7 +198,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 4,
   },
   {
-    variantId: "variant_005",
     sku: "LOG-MX-MASTER3",
     productId: "product_005",
     productName: "Logitech MX Master 3S",
@@ -211,7 +205,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 6,
   },
   {
-    variantId: "variant_006",
     sku: "AIRPODS-PRO-2",
     productId: "product_006",
     productName: "AirPods Pro 2",
@@ -220,7 +213,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 1,
   },
   {
-    variantId: "variant_007",
     sku: "NINT-NSWITCH-2026",
     productId: "product_007",
     productName: "Nintendo Switch OLED",
@@ -229,7 +221,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 2,
   },
   {
-    variantId: "variant_008",
     sku: "DELL-XPS-13-2026",
     productId: "product_008",
     productName: "Dell XPS 13 2026",
@@ -238,7 +229,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 3,
   },
   {
-    variantId: "variant_009",
     sku: "HP-SPECTRE-X360",
     productId: "product_009",
     productName: "HP Spectre x360",
@@ -246,7 +236,6 @@ export const lowStockProducts: LowStockProduct[] = [
     quantity: 5,
   },
   {
-    variantId: "variant_010",
     sku: "GOOG-PIXEL-7-PRO",
     productId: "product_010",
     productName: "Google Pixel 7 Pro",

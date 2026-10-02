@@ -90,10 +90,8 @@ export const baseApi = createApi({
     "Supplier",
     "Purchase",
     "Order",
-    "Inventory",
+    "Stock",
     "Employee",
-    "Warehouse",
-    "SizeChart",
   ],
 
   endpoints: () => ({}),

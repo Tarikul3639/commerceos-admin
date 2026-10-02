@@ -21,7 +21,7 @@ export type Customer = {
   createdAt: string
   updatedAt: string
 }
- 
+
 export type CustomersResponse = PaginatedResponse<Customer>
 
 export type CreateCustomer = {

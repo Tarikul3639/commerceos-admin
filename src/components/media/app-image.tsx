@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 interface AppImageProps {
   name?: string | null
   image?: string | null
+  images?: string[]
   clickable?: boolean
   className?: string
 }
@@ -16,10 +17,26 @@ interface AppImageProps {
 export function AppImage({
   name,
   image,
+  images = [],
   clickable = true,
   className,
 }: AppImageProps) {
   const { open } = useImageViewer()
+
+  const viewerImages = images.length ? images : image ? [image] : []
+
+  const handleImageClick = () => {
+    if (!clickable || !viewerImages.length) {
+      return
+    }
+
+    open(
+      viewerImages.map((src) => ({
+        src,
+        alt: name ?? "Image",
+      }))
+    )
+  }
 
   const initials = name
     ?.trim()
@@ -29,24 +46,11 @@ export function AppImage({
     .slice(0, 2)
     .toUpperCase()
 
-  const handleImageClick = () => {
-    if (!clickable || !image) {
-      return
-    }
-
-    open([
-      {
-        src: image,
-        alt: name ?? "Image",
-      },
-    ])
-  }
-
   return (
     <Avatar
       className={cn(
         "shrink-0 overflow-hidden",
-        clickable && image && "cursor-pointer",
+        clickable && viewerImages.length > 0 && "cursor-pointer",
         className
       )}
       onClick={handleImageClick}
@@ -55,11 +59,11 @@ export function AppImage({
         <AvatarImage
           src={image}
           alt={name ?? "Image"}
-          className="size-full object-cover"
+          className="size-full rounded-none object-cover"
         />
       )}
 
-      <AvatarFallback className="text-[length:inherit] text-inherit">
+      <AvatarFallback className="rounded-none text-[length:inherit] text-inherit">
         {initials || <ImageIcon className="size-[1em] text-muted-foreground" />}
       </AvatarFallback>
     </Avatar>

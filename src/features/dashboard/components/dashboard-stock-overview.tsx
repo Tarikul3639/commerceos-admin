@@ -148,13 +148,6 @@ export function DashboardStockOverview({
               />
 
               <StockItem
-                icon={Layers3}
-                label="Variants"
-                description="Product variants"
-                value={currentStock.totalVariants.toLocaleString("en-BD")}
-              />
-
-              <StockItem
                 icon={Package}
                 label="Stock Qty"
                 description="Available units"

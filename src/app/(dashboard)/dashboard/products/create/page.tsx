@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { CreateProductContent } from "@/features/products/components/create-product-content"
+import { CreateProductContent } from "@/features/products/components/create/create-product-content"
 
 export const metadata: Metadata = {
   title: "Create product",

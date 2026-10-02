@@ -75,8 +75,11 @@ export function UsersContent() {
 
   return (
     <PageContainer
-      pageTitle="Users"
-      pageDescription="Manage your users and their access."
+      title="Users"
+      breadcrumbs={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Users" },
+      ]}
       pageHeaderAction={<CreateUserDialog />}
     >
       <DataTable

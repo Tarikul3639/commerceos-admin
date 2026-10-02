@@ -27,8 +27,7 @@ export function UpdateCategoryDialog({
   open,
   onOpenChange,
 }: UpdateCategoryDialogProps) {
-  const [updateCategory, { isLoading }] =
-    useUpdateCategoryMutation()
+  const [updateCategory, { isLoading }] = useUpdateCategoryMutation()
 
   const handleSubmit = async (data: CategoryFormValues) => {
     if (!category) {
@@ -50,8 +49,7 @@ export function UpdateCategoryDialog({
       onOpenChange(false)
     } catch (error) {
       toast.error("Failed to update category", {
-        description:
-          getErrorMessage(error) || "Something went wrong.",
+        description: getErrorMessage(error) || "Something went wrong.",
       })
     }
   }

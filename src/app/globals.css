@@ -491,7 +491,7 @@ textarea[data-slot="textarea"]:not(
 }
 
 [data-slot="card"] {
-  border-radius: calc(var(--radius) - 4px);
+  border-radius: calc(var(--radius) - 1px);
   border-width: 0;
 }
 

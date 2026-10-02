@@ -8,9 +8,17 @@ import { NuqsAdapter } from "nuqs/adapters/next/app"
 import { cn } from "@/lib/utils"
 import { Metadata } from "next"
 
-const geistMonoGeistMono = Geist_Mono({subsets:['latin'],weight:['100','200','300','400','500','600','700','800','900'],variable:'--font-geist-mono'});
+const geistMonoGeistMono = Geist_Mono({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-geist-mono",
+})
 
-const geistGeist = Geist({subsets:['latin'],weight:['100','200','300','400','500','600','700','800','900'],variable:'--font-geist'});
+const geistGeist = Geist({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-geist",
+})
 
 export const metadata: Metadata = {
   title: "CommerceOS",
@@ -57,10 +65,12 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={cn(
-              "antialiased",
-              fontMono.variable,
-              inter.variable
-            , geistGeist.variable, geistMonoGeistMono.variable)}
+        "antialiased",
+        fontMono.variable,
+        inter.variable,
+        geistGeist.variable,
+        geistMonoGeistMono.variable
+      )}
     >
       <body>
         <NuqsAdapter>

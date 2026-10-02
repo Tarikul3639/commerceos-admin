@@ -166,7 +166,12 @@ export function DataTable<TData extends RowData>({
   const visibleColumnCount = table.getVisibleLeafColumns().length
 
   return (
-    <div className={cn("flex h-full mt-3 min-w-0 flex-col overflow-hidden rounded-lg bg-card shadow-sm ring ring-foreground/8", className)}>
+    <div
+      className={cn(
+        "mt-3 flex h-full min-w-0 flex-col overflow-hidden rounded-lg bg-card shadow-sm ring ring-foreground/8",
+        className
+      )}
+    >
       {/* Table Toolbar */}
       <DataTableToolbar
         table={table}

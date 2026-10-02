@@ -13,7 +13,7 @@ export function StoreProvider({ children }: StoreProviderProps) {
   return (
     <Provider store={store}>
       {children}
-      <Toaster richColors position="top-center" />
+      <Toaster richColors position="top-right" />
     </Provider>
   )
 }

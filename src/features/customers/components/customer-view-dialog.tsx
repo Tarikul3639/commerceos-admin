@@ -160,7 +160,7 @@ export function CustomerViewDialog({
                 </div>
               </div>
 
-              <div className="min-w-0 flex items-center gap-2.5">
+              <div className="flex min-w-0 items-center gap-2.5">
                 <Clock3 className="size-4 text-muted-foreground" />
 
                 <div className="space-y-1">

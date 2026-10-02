@@ -37,8 +37,11 @@ export function CategoriesContent() {
 
   return (
     <PageContainer
-      pageTitle="Categories"
-      pageDescription="Manage your product categories."
+      title="Categories"
+      breadcrumbs={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Categories" },
+      ]}
       pageHeaderAction={
         <CreateCategoryDialog
           open={isCreateDialogOpen}

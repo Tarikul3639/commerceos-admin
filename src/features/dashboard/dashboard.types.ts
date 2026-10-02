@@ -14,7 +14,6 @@ export interface SalesSummary {
 
 export interface StockSummary {
   totalProducts: number
-  totalVariants: number
   totalStockQuantity: number
   totalStockValue: string
   lowStockCount: number
@@ -39,7 +38,6 @@ export interface CustomerSummary {
 }
 
 export interface LowStockProduct {
-  variantId: string
   sku: string
   productId: string
   productName: string

@@ -1,13 +1,26 @@
 import { cn } from "@/lib/utils"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Fragment } from "react"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+
+interface BreadcrumbItem {
+  label: string
+  href?: string
+}
 
 interface PageContainerProps {
   children: React.ReactNode
   access?: boolean
   accessFallback?: React.ReactNode
 
-  pageTitle?: string
-  pageDescription?: string
+  title?: string
+  breadcrumbs?: BreadcrumbItem[]
   infoContent?: React.ReactNode
   pageHeaderAction?: React.ReactNode
 
@@ -19,8 +32,8 @@ export function PageContainer({
   access = true,
   accessFallback,
 
-  pageTitle,
-  pageDescription,
+  title,
+  breadcrumbs,
   infoContent,
   pageHeaderAction,
 
@@ -35,22 +48,39 @@ export function PageContainer({
   }
 
   return (
-    <main className={cn("flex flex-1 flex-col gap-3", className)}>
+    <main className={cn("flex flex-1 flex-col gap-5 sm:gap-6", className)}>
       {/* Page Header */}
-      {(pageTitle || pageDescription || infoContent || pageHeaderAction) && (
+      {(title || breadcrumbs || infoContent || pageHeaderAction) && (
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
-            <div className="flex flex-col gap-1 min-w-0">
-              {pageTitle && (
-                <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">
-                  {pageTitle}
+            <div className="flex min-w-0 flex-col gap-2">
+              {title && (
+                <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                  {title}
                 </h1>
               )}
 
-              {pageDescription && (
-                <p className="text-sm text-muted-foreground truncate">
-                  {pageDescription}
-                </p>
+              {breadcrumbs && (
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    {breadcrumbs.map((item, index) => (
+                      <Fragment key={item.label}>
+                        <BreadcrumbItem>
+                          {item.href ? (
+                            <BreadcrumbLink href={item.href}>
+                              {item.label}
+                            </BreadcrumbLink>
+                          ) : (
+                            <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                          )}
+                        </BreadcrumbItem>
+                        {index < breadcrumbs.length - 1 && (
+                          <BreadcrumbSeparator />
+                        )}
+                      </Fragment>
+                    ))}
+                  </BreadcrumbList>
+                </Breadcrumb>
               )}
             </div>
 

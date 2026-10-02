@@ -4,7 +4,7 @@ import {
   ShoppingCart,
   Users,
   UsersRound,
-  Warehouse,
+  Boxes,
 } from "lucide-react"
 
 import { StatCard, StatCardGrid } from "@/components/stat-card"
@@ -44,7 +44,7 @@ export function DashboardStats({
             title="Stock Value"
             value={`${Number(data.stock.totalStockValue).toLocaleString()}`}
             isAmount
-            icon={<Warehouse className="size-4" />}
+            icon={<Boxes className="size-4" />}
             description="Value of current stock.
 "
           />

@@ -28,7 +28,6 @@ export interface TopProduct {
   productId: string
   productName: string
   productImage?: string | null
-  variantId?: string
   sku?: string
   totalSold: number
   totalRevenue: string
