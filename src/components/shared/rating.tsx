@@ -10,6 +10,8 @@ interface RatingProps {
     showValue?: boolean
     showCount?: boolean
     size?: "xs" | "sm" | "md" | "lg"
+    readOnly?: boolean
+    onChange?: (value: number) => void
     className?: string
 }
 
@@ -19,6 +21,8 @@ export function Rating({
     showValue = true,
     showCount = true,
     size = "sm",
+    readOnly = true,
+    onChange,
     className,
 }: RatingProps) {
     let starSize: string
@@ -40,20 +44,54 @@ export function Rating({
             starSize = "h-4 w-4"
     }
 
+    const handleChange = (rating: number) => {
+        if (readOnly) {
+            return
+        }
+
+        onChange?.(rating)
+    }
+
     return (
         <div className={cn("flex items-center gap-2", className)}>
             <div className="flex items-center gap-0.5">
-                {Array.from({ length: 5 }).map((_, index) => (
-                    <Star
-                        key={index}
-                        className={cn(
-                            starSize,
-                            index < Math.round(value)
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-muted-foreground"
-                        )}
-                    />
-                ))}
+                {Array.from({ length: 5 }).map((_, index) => {
+                    const rating = index + 1
+                    const active = rating <= Math.round(value)
+
+                    if (!readOnly) {
+                        return (
+                            <button
+                                key={rating}
+                                type="button"
+                                onClick={() => handleChange(rating)}
+                                className="rounded-sm p-0.5 transition-colors hover:bg-muted"
+                                aria-label={`${rating} star`}
+                            >
+                                <Star
+                                    className={cn(
+                                        starSize,
+                                        active
+                                            ? "fill-yellow-400 text-yellow-400"
+                                            : "text-muted-foreground"
+                                    )}
+                                />
+                            </button>
+                        )
+                    }
+
+                    return (
+                        <Star
+                            key={rating}
+                            className={cn(
+                                starSize,
+                                active
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-muted-foreground"
+                            )}
+                        />
+                    )
+                })}
             </div>
 
             {showValue && (

@@ -1,11 +1,10 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { Rating } from "@/components/shared/rating"
-import { Pencil } from "lucide-react"
+import { WriteReviewDialog } from "./write-review-dialog"
 
 import type { ProductReview } from "../../types/product.types"
 
@@ -23,7 +22,7 @@ export function ProductReviews({
     return (
         <div>
             <div className="grid grid-cols-1 md:grid-cols-[1fr_1.4fr_1fr]">
-                <div className="flex flex-col items-center justify-center md:border-b p-3 text-center md:p-4">
+                <div className="flex flex-col items-center justify-center md:border-b px-1 py-3 text-center md:p-4">
                     <p className="text-xs font-medium">Average rating</p>
 
                     <p className="mt-2 text-4xl font-bold tracking-tight">
@@ -77,10 +76,7 @@ export function ProductReviews({
                 </div>
 
                 <div className="flex items-center justify-center p-10 md:border-l md:p-4">
-                    <Button type="button" size="sm">
-                        <Pencil className="size-3.5 mr-1" />
-                        Write your review
-                    </Button>
+                    <WriteReviewDialog />
                 </div>
             </div>
 
@@ -110,25 +106,28 @@ interface ProductReviewItemProps {
 
 function ProductReviewItem({ review }: ProductReviewItemProps) {
     return (
-        <div className="flex gap-3 p-3 md:gap-4 md:p-5">
+        <div className="flex gap-3 px-1 py-3 sm:p-3 md:gap-4 md:p-5">
             <Avatar className="size-8 shrink-0">
                 <AvatarImage src={review.avatarUrl ?? undefined} />
-                <AvatarFallback className="text-[10px]">
+                <AvatarFallback className="text-xs">
                     C
                 </AvatarFallback>
             </Avatar>
 
-            <div className="flex flex-col items-start gap-3">
+            <div className="flex flex-col items-start gap-1">
                 <div>
-                    <p className="text-xs font-semibold">Customer</p>
+                    <p className="text-sm font-semibold">Customer</p>
 
-                    <p className="mt-0.5 text-[10px] text-muted-foreground">
+                    <p className="mt-0.5 text-xs text-muted-foreground capitalize">
                         {new Date(review.createdAt).toLocaleDateString(
                             "en-GB",
                             {
                                 day: "2-digit",
                                 month: "short",
                                 year: "numeric",
+                                hour12: true,
+                                hour: "2-digit",
+                                minute: "2-digit",
                             }
                         )}
                     </p>

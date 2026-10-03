@@ -76,7 +76,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
     return (
         <Card>
             <Tabs defaultValue="description">
-                <CardHeader className="pb-0">
+                <CardHeader className="pb-0 px-3 flex w-full justify-center sm:justify-start">
                     <TabsList className="h-9 rounded-md bg-muted p-1">
                         <TabsTrigger
                             value="description"
@@ -94,7 +94,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                     </TabsList>
                 </CardHeader>
 
-                <CardContent className="p-0">
+                <CardContent className="p-1">
                     <TabsContent
                         value="description"
                         className="mt-0"

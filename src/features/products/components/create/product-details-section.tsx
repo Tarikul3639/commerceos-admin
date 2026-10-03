@@ -25,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { RichTextEditor } from "@/components/shared/rich-text-editor"
 
 import type { ProductFormValues } from "../../schemas/product.schema"
 
@@ -89,12 +90,14 @@ export function ProductDetailsSection({
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>Short description</FieldLabel>
+
                     <Textarea
                       {...field}
                       placeholder="A brief product summary..."
                       className="min-h-20 resize-none"
                       disabled={disabled}
                     />
+
                     {fieldState.error && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -109,10 +112,9 @@ export function ProductDetailsSection({
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>Description</FieldLabel>
 
-                    <Textarea
-                      {...field}
-                      placeholder="Write something about this product..."
-                      className="min-h-32 resize-none"
+                    <RichTextEditor
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
                       disabled={disabled}
                     />
 
