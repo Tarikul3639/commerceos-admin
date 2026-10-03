@@ -41,6 +41,9 @@ export function CreateProductForm() {
       colors: [],
       images: [],
       isActive: true,
+      discountValue: "",
+      discountStartDate: "",
+      discountEndDate: "",
     },
   })
 
@@ -61,6 +64,13 @@ export function CreateProductForm() {
           sortOrder,
         })),
         isActive: values.isActive,
+        ...(values.discountValue !== "" && {
+          discount: {
+            value: Number(values.discountValue),
+            startDate: values.discountStartDate || null,
+            endDate: values.discountEndDate || null,
+          },
+        }),
       }
 
       if (values.description) {

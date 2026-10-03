@@ -1,8 +1,3 @@
-export enum DiscountType {
-  PERCENTAGE = "PERCENTAGE",
-  FIXED = "FIXED",
-}
-
 export interface PaginationMeta {
   total: number
   page: number
@@ -12,16 +7,26 @@ export interface PaginationMeta {
   hasPreviousPage: boolean
 }
 
-export interface Discount {
+export interface DiscountProduct {
   id: string
   name: string
-  description: string | null
-  type: DiscountType
+  sku: string
+  image: string | null
+}
+export interface DiscountCreator {
+  id: string
+  name: string
+}
+
+export interface Discount {
+  id: string
   value: string
   startDate: string | null
   endDate: string | null
-  isActive: boolean
+  productId: string
+  product: DiscountProduct
   createdById: string
+  createdBy: DiscountCreator
   createdAt: string
   updatedAt: string
 }
@@ -30,46 +35,22 @@ export interface DiscountWithPagination {
   data: Discount[]
   meta: PaginationMeta
 }
-
-export interface DiscountProduct {
-  id: string
-  name: string
-  image: string | null
-}
-
 export interface CreateDiscountRequest {
-  name: string
-  description?: string
-  type: DiscountType
-  value: string
-  startDate?: string
-  endDate?: string
-  isActive?: boolean
+  productId: string
+  value: number
+  startDate?: string | null
+  endDate?: string | null
 }
 
 export interface UpdateDiscountRequest {
-  name?: string
-  description?: string | null
-  type?: DiscountType
-  value?: string
+  productId?: string
+  value?: number
   startDate?: string | null
   endDate?: string | null
-  isActive?: boolean
-}
-
-export interface AssignProductDiscountRequest {
-  productIds: string[]
 }
 
 export interface DiscountQueryParams {
   search?: string
-  type?: DiscountType
-  isActive?: boolean
   page?: number
   limit?: number
-}
-
-export interface DiscountProductsResponse {
-  data: DiscountProduct[]
-  meta: PaginationMeta
 }

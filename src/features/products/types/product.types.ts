@@ -25,15 +25,12 @@ export interface ProductImageResponseDto {
   updatedAt: string
 }
 
-export interface ProductDiscount {
+export interface DiscountSummary {
   id: string
-  name: string
-  description: string | null
-  type: "PERCENTAGE" | "FIXED"
   value: string
   startDate: string | null
   endDate: string | null
-  isActive: boolean
+  createdById: string
 }
 
 export interface ProductReview {
@@ -81,13 +78,14 @@ export interface Product {
   category: ProductCategory
   brand: ProductBrand | null
   image?: string | null
+  discount?: DiscountSummary | null
   createdAt: string
   updatedAt: string
 }
 
 export interface ProductDetails extends Product {
   images: ProductImageResponseDto[]
-  discounts: ProductDiscount[]
+  discount: DiscountSummary | null
   reviews: ProductReview[]
   rating: ProductRating
 }
@@ -131,6 +129,11 @@ export interface CreateProductRequest {
   publicId?: string
   images?: AddProductImageDto[]
   isActive?: boolean
+  discount?: {
+    value: number
+    startDate?: string | null
+    endDate?: string | null
+  }
 }
 
 export interface UpdateProductRequest {
@@ -150,4 +153,9 @@ export interface UpdateProductRequest {
   images?: UpdateProductImageDto[]
   imageIdsToDelete?: string[]
   isActive?: boolean
+  discount?: {
+    value: number
+    startDate?: string | null
+    endDate?: string | null
+  } | null
 }

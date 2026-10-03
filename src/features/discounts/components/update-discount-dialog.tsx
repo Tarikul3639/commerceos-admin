@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { useForm, Controller } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 
@@ -10,307 +10,156 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field"
-
 import { getErrorMessage } from "@/lib/utils/error"
-
-import {
-  updateDiscountSchema,
-  type UpdateDiscountFormValues,
-} from "../schemas/update-discount.schema"
 import { useUpdateDiscountMutation } from "../api/discount.api"
-import { DiscountType, type Discount } from "../types/discount.types"
+import type { Discount } from "../types/discount.types"
+import {
+  discountFormSchema,
+  type DiscountFormValues,
+} from "../schemas/discount.schema"
+import { DiscountProductSelector } from "./discount-product-selector"
 
-interface UpdateDiscountDialogProps {
+interface Props {
   discount: Discount
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function UpdateDiscountDialog({
-  discount,
-  open,
-  onOpenChange,
-}: UpdateDiscountDialogProps) {
+export function UpdateDiscountDialog({ discount, open, onOpenChange }: Props) {
   const [updateDiscount, { isLoading }] = useUpdateDiscountMutation()
-
-  const form = useForm<UpdateDiscountFormValues>({
-    resolver: zodResolver(updateDiscountSchema),
+  const form = useForm<DiscountFormValues>({
+    resolver: zodResolver(discountFormSchema),
     defaultValues: {
-      name: discount.name,
-      description: discount.description ?? "",
-      type: discount.type,
+      productId: discount.productId,
       value: discount.value,
-      startDate: discount.startDate ? toDateTimeLocal(discount.startDate) : "",
-      endDate: discount.endDate ? toDateTimeLocal(discount.endDate) : "",
-      isActive: discount.isActive,
+      startDate: discount.startDate?.slice(0, 10) ?? "",
+      endDate: discount.endDate?.slice(0, 10) ?? "",
     },
   })
 
   useEffect(() => {
     if (!open) return
-
     form.reset({
-      name: discount.name,
-      description: discount.description ?? "",
-      type: discount.type,
+      productId: discount.productId,
       value: discount.value,
-      startDate: discount.startDate ? toDateTimeLocal(discount.startDate) : "",
-      endDate: discount.endDate ? toDateTimeLocal(discount.endDate) : "",
-      isActive: discount.isActive,
+      startDate: discount.startDate?.slice(0, 10) ?? "",
+      endDate: discount.endDate?.slice(0, 10) ?? "",
     })
   }, [open, discount, form])
 
-  const onSubmit = async (values: UpdateDiscountFormValues) => {
+  const submit = async (values: DiscountFormValues) => {
     try {
       await updateDiscount({
         id: discount.id,
         data: {
-          name: values.name,
-          description: values.description || null,
-          type: values.type,
-          value: values.value,
-          startDate: values.startDate
-            ? new Date(values.startDate).toISOString()
-            : null,
-          endDate: values.endDate
-            ? new Date(values.endDate).toISOString()
-            : null,
-          isActive: values.isActive,
+          productId: values.productId,
+          value: Number(values.value),
+          startDate: values.startDate || null,
+          endDate: values.endDate || null,
         },
       }).unwrap()
-
       toast.success("Discount updated successfully")
       onOpenChange(false)
     } catch (error) {
-      toast.error("Failed to update discount", {
-        description: getErrorMessage(error) || "Something went wrong.",
-      })
+      toast.error(getErrorMessage(error) || "Failed to update discount")
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Update Discount</DialogTitle>
+          <DialogTitle>Update discount</DialogTitle>
           <DialogDescription>
-            Update the discount information below.
+            Update the product, percentage, or discount dates.
           </DialogDescription>
         </DialogHeader>
-
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Controller
-              control={form.control}
-              name="name"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Name</FieldLabel>
-
-                  <Input
-                    {...field}
-                    placeholder="Eid Sale"
-                    aria-invalid={fieldState.invalid}
-                  />
-
-                  {fieldState.error && (
-                    <FieldError>{fieldState.error.message}</FieldError>
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              control={form.control}
-              name="type"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Discount Type</FieldLabel>
-
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger aria-invalid={fieldState.invalid}>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectItem value={DiscountType.PERCENTAGE}>
-                        Percentage
-                      </SelectItem>
-
-                      <SelectItem value={DiscountType.FIXED}>
-                        Fixed Amount
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {fieldState.error && (
-                    <FieldError>{fieldState.error.message}</FieldError>
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-
+        <form onSubmit={form.handleSubmit(submit)} className="space-y-4">
           <Controller
+            name="productId"
             control={form.control}
-            name="description"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel>Description</FieldLabel>
-
-                <Textarea
-                  {...field}
-                  placeholder="Special Eid discount campaign"
-                  rows={3}
-                  aria-invalid={fieldState.invalid}
+                <FieldLabel>Product</FieldLabel>
+                <DiscountProductSelector
+                  value={field.value}
+                  onChange={field.onChange}
+                  currentProductId={discount.productId}
+                  selectedProduct={discount.product}
+                  disabled={isLoading}
                 />
-
-                <FieldDescription>
-                  Optional description for this discount.
-                </FieldDescription>
-
-                {fieldState.error && (
-                  <FieldError>{fieldState.error.message}</FieldError>
-                )}
+                {fieldState.error && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
-
           <Controller
-            control={form.control}
             name="value"
+            control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel>Value</FieldLabel>
-
+                <FieldLabel htmlFor={`update-discount-value-${discount.id}`}>
+                  Discount percentage
+                </FieldLabel>
                 <Input
-                  {...field}
+                  id={`update-discount-value-${discount.id}`}
                   type="number"
                   min="0"
-                  step="any"
-                  placeholder="10"
-                  aria-invalid={fieldState.invalid}
+                  max="100"
+                  step="0.01"
+                  {...field}
+                  disabled={isLoading}
                 />
-
-                {fieldState.error && (
-                  <FieldError>{fieldState.error.message}</FieldError>
-                )}
+                {fieldState.error && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
-
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Controller
-              control={form.control}
               name="startDate"
+              control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Start Date</FieldLabel>
-
-                  <Input
-                    type="datetime-local"
-                    {...field}
-                    aria-invalid={fieldState.invalid}
-                  />
-
+                  <FieldLabel>Start date</FieldLabel>
+                  <Input type="date" {...field} disabled={isLoading} />
                   {fieldState.error && (
-                    <FieldError>{fieldState.error.message}</FieldError>
+                    <FieldError errors={[fieldState.error]} />
                   )}
                 </Field>
               )}
             />
-
             <Controller
-              control={form.control}
               name="endDate"
+              control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>End Date</FieldLabel>
-
-                  <Input
-                    type="datetime-local"
-                    {...field}
-                    aria-invalid={fieldState.invalid}
-                  />
-
+                  <FieldLabel>End date</FieldLabel>
+                  <Input type="date" {...field} disabled={isLoading} />
                   {fieldState.error && (
-                    <FieldError>{fieldState.error.message}</FieldError>
+                    <FieldError errors={[fieldState.error]} />
                   )}
                 </Field>
               )}
             />
           </div>
-
-          <Controller
-            control={form.control}
-            name="isActive"
-            render={({ field }) => (
-              <Field orientation="horizontal">
-                <div className="flex-1">
-                  <FieldLabel>Active</FieldLabel>
-
-                  <FieldDescription>Enable this discount.</FieldDescription>
-                </div>
-
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </Field>
-            )}
-          />
-
-          <DialogFooter>
+          <div className="flex justify-end gap-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={isLoading}
             >
               Cancel
             </Button>
-
-            <Button
-              type="submit"
-              disabled={isLoading || !form.formState.isDirty}
-            >
-              {isLoading ? "Updating..." : "Update Discount"}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Updating..." : "Update discount"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
   )
-}
-
-function toDateTimeLocal(date: string) {
-  const value = new Date(date)
-
-  const year = value.getFullYear()
-  const month = String(value.getMonth() + 1).padStart(2, "0")
-  const day = String(value.getDate()).padStart(2, "0")
-  const hours = String(value.getHours()).padStart(2, "0")
-  const minutes = String(value.getMinutes()).padStart(2, "0")
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`
 }

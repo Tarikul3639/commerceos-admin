@@ -61,6 +61,9 @@ export function UpdateProductForm({ product }: { product: ProductDetails }) {
           sortOrder,
         })),
       isActive: product.isActive,
+      discountValue: product.discount?.value ?? "",
+      discountStartDate: product.discount?.startDate?.slice(0, 10) ?? "",
+      discountEndDate: product.discount?.endDate?.slice(0, 10) ?? "",
     },
   })
 
@@ -91,6 +94,14 @@ export function UpdateProductForm({ product }: { product: ProductDetails }) {
           ),
           imageIdsToDelete,
           isActive: values.isActive,
+          discount:
+            values.discountValue === ""
+              ? null
+              : {
+                  value: Number(values.discountValue),
+                  startDate: values.discountStartDate || null,
+                  endDate: values.discountEndDate || null,
+                },
         },
       }).unwrap()
 

@@ -25,10 +25,28 @@ export const productFormSchema = z
       })
     ),
     isActive: z.boolean(),
+    discountValue: z
+      .string()
+      .refine(
+        (value) => value === "" || (Number(value) >= 0 && Number(value) <= 100),
+        "Discount must be between 0 and 100"
+      ),
+    discountStartDate: z.string(),
+    discountEndDate: z.string(),
   })
   .refine((values) => values.sellingPrice >= values.purchasePrice, {
     message: "Selling price cannot be lower than purchase price",
     path: ["sellingPrice"],
   })
+  .refine(
+    (values) =>
+      !values.discountStartDate ||
+      !values.discountEndDate ||
+      values.discountEndDate >= values.discountStartDate,
+    {
+      message: "Discount end date must be on or after its start date",
+      path: ["discountEndDate"],
+    }
+  )
 
 export type ProductFormValues = z.infer<typeof productFormSchema>

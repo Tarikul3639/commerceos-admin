@@ -13,8 +13,6 @@ import { useState } from "react"
 import { toast } from "sonner"
 
 import type { DataTableFeatures } from "@/components/data-table"
-
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -25,114 +23,66 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
 import { getErrorMessage } from "@/lib/utils/error"
-
 import { useDeleteDiscountMutation } from "../api/discount.api"
 import { UpdateDiscountDialog } from "./update-discount-dialog"
 import type { Discount } from "../types/discount.types"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 export const columnHelper = createColumnHelper<DataTableFeatures, Discount>()
 
 export const columns = columnHelper.columns([
   {
-    accessorKey: "name",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        className="-ml-3"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Name
-        <ArrowUpDown className="ml-2 size-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const discount = row.original
-
-      return (
-        <div className="flex flex-col">
-          <span className="font-medium">{discount.name}</span>
-          <Link
-            href={`/dashboard/discounts/${discount.id}`}
-            className="text-xs text-muted-foreground hover:underline"
-          >
-            {discount.id}
-          </Link>
+    id: "product",
+    header: "Product",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        {row.original.product.image && (
+          <img
+            src={row.original.product.image}
+            alt=""
+            className="h-9 w-9 rounded object-cover"
+          />
+        )}
+        <div>
+          <div className="font-medium">{row.original.product.name}</div>
+          <div className="text-xs text-muted-foreground">
+            SKU: {row.original.product.sku}
+          </div>
         </div>
-      )
-    },
+      </div>
+    ),
   },
-
-  {
-    accessorKey: "type",
-    header: "Type",
-    cell: ({ row }) => <Badge variant="outline">{row.original.type}</Badge>,
-  },
-
   {
     accessorKey: "value",
     header: "Value",
-    cell: ({ row }) => {
-      const discount = row.original
-
-      return (
-        <span className="font-medium">
-          {discount.type === "PERCENTAGE"
-            ? `${discount.value}%`
-            : discount.value}
-        </span>
-      )
-    },
+    cell: ({ row }) => (
+      <span className="font-medium">{row.original.value}%</span>
+    ),
   },
-
   {
     accessorKey: "startDate",
     header: "Start Date",
     cell: ({ row }) =>
       row.original.startDate
-        ? new Date(row.original.startDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour12: true,
-            hour: "numeric",
-            minute: "numeric",
-          })
+        ? new Date(row.original.startDate).toLocaleDateString()
         : "—",
   },
-
   {
     accessorKey: "endDate",
     header: "End Date",
     cell: ({ row }) =>
       row.original.endDate
-        ? new Date(row.original.endDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour12: true,
-            hour: "numeric",
-            minute: "numeric",
-          })
+        ? new Date(row.original.endDate).toLocaleDateString()
         : "—",
   },
-
   {
-    accessorKey: "isActive",
-    header: "Status",
-    cell: ({ row }) => {
-      const isActive = row.original.isActive
-
-      return (
-        <Badge variant={isActive ? "default" : "secondary"}>
-          {isActive ? "Active" : "Inactive"}
-        </Badge>
-      )
-    },
+    accessorKey: "createdBy.name",
+    header: "Created by",
+    cell: ({ row }) => row.original.createdBy.name,
   },
-
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
@@ -141,13 +91,11 @@ export const columns = columnHelper.columns([
         className="-ml-3"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Created
-        <ArrowUpDown className="ml-2 size-4" />
+        Created <ArrowUpDown className="ml-2 size-4" />
       </Button>
     ),
     cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
   },
-
   {
     id: "actions",
     header: "Actions",
@@ -155,18 +103,18 @@ export const columns = columnHelper.columns([
     minSize: 80,
     maxSize: 80,
     cell: ({ row }) => {
-      const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
       const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-
+      const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
+      const permission = usePermission()
+      const canReadProduct = permission.has(Permission.PRODUCT_READ)
+      const canUpdate = permission.has(Permission.DISCOUNT_UPDATE)
+      const canDelete = permission.has(Permission.DISCOUNT_DELETE)
       const [deleteDiscount, { isLoading: isDeleting }] =
         useDeleteDiscountMutation()
-
       const discount = row.original
-
       const handleDelete = async () => {
         try {
           await deleteDiscount(discount.id).unwrap()
-
           toast.success("Discount deleted successfully")
           setIsDeleteDialogOpen(false)
         } catch (error) {
@@ -185,64 +133,67 @@ export const columns = columnHelper.columns([
                 <span className="sr-only">Open actions</span>
               </Button>
             </DropdownMenuTrigger>
-
             <DropdownMenuContent align="end">
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
                 <DropdownMenuSeparator />
-
-                <DropdownMenuItem asChild>
-                  <Link href={`/dashboard/discounts/${discount.id}`}>
-                    <Info />
-                    Details
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
-                  <SquarePen className="size-4" />
-                  Update
-                </DropdownMenuItem>
+                {canReadProduct && (
+                  <DropdownMenuItem asChild>
+                    <Link href={`/dashboard/products/${discount.productId}`}>
+                      <Info />
+                      Details
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {canUpdate && (
+                  <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
+                    <SquarePen className="size-4" />
+                    Update
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Danger</DropdownMenuLabel>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => setIsDeleteDialogOpen(true)}
-                >
-                  <Trash2 className="size-4" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+              {canDelete && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>Danger</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={() => setIsDeleteDialogOpen(true)}
+                    >
+                      <Trash2 className="size-4" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <UpdateDiscountDialog
-            discount={discount}
-            open={isUpdateDialogOpen}
-            onOpenChange={setIsUpdateDialogOpen}
-          />
-
-          <ConfirmDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-            title="Delete Discount"
-            description={
-              <>
-                Are you sure you want to delete <strong>{discount.name}</strong>
-                ? This action cannot be undone.
-              </>
-            }
-            confirmLabel={isDeleting ? "Deleting..." : "Delete"}
-            cancelLabel="Cancel"
-            onConfirm={handleDelete}
-          />
+          {canUpdate && (
+            <UpdateDiscountDialog
+              discount={discount}
+              open={isUpdateDialogOpen}
+              onOpenChange={setIsUpdateDialogOpen}
+            />
+          )}
+          {canDelete && (
+            <ConfirmDialog
+              open={isDeleteDialogOpen}
+              onOpenChange={setIsDeleteDialogOpen}
+              title="Delete discount"
+              description={
+                <>
+                  Delete the discount on{" "}
+                  <strong>{discount.product.name}</strong>? This action cannot
+                  be undone.
+                </>
+              }
+              confirmLabel={isDeleting ? "Deleting..." : "Delete"}
+              cancelLabel="Cancel"
+              onConfirm={handleDelete}
+            />
+          )}
         </>
       )
     },

@@ -39,7 +39,7 @@ export function LoginContent() {
     defaultValues: {
       email: "",
       password: "",
-      remember: false,
+      remember: true,
     },
   })
 

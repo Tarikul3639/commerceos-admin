@@ -14,6 +14,13 @@ export const permissionGroups: PermissionGroup = {
     Delete: Permission.PRODUCT_DELETE,
   },
 
+  Discounts: {
+    Read: Permission.DISCOUNT_READ,
+    Create: Permission.DISCOUNT_CREATE,
+    Update: Permission.DISCOUNT_UPDATE,
+    Delete: Permission.DISCOUNT_DELETE,
+  },
+
   Orders: {
     Read: Permission.ORDER_READ,
     Create: Permission.ORDER_CREATE,
@@ -33,6 +40,20 @@ export const permissionGroups: PermissionGroup = {
     Create: Permission.SUPPLIER_CREATE,
     Update: Permission.SUPPLIER_UPDATE,
     Delete: Permission.SUPPLIER_DELETE,
+  },
+
+  Purchases: {
+    Read: Permission.PURCHASE_READ,
+    Create: Permission.PURCHASE_CREATE,
+    Update: Permission.PURCHASE_UPDATE,
+    Delete: Permission.PURCHASE_DELETE,
+  },
+
+  "Purchase Returns": {
+    Read: Permission.PURCHASE_READ,
+    Create: Permission.PURCHASE_CREATE,
+    Update: Permission.PURCHASE_UPDATE,
+    Delete: Permission.PURCHASE_RETURN_DELETE,
   },
 
   Categories: {

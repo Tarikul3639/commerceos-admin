@@ -12,6 +12,7 @@ import {
   ShoppingCart,
   Store,
   Tags,
+  RotateCcw,
   UserCog,
   Users,
 } from "lucide-react"
@@ -142,6 +143,12 @@ export const navigation: NavigationGroup[] = [
         title: "Purchases",
         href: "/dashboard/purchases",
         icon: ClipboardList,
+        permission: Permission.PURCHASE_READ,
+      },
+      {
+        title: "Returns",
+        href: "/dashboard/purchase-returns",
+        icon: RotateCcw,
         permission: Permission.PURCHASE_READ,
       },
       {

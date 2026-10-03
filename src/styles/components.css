@@ -181,6 +181,8 @@ textarea[data-slot="textarea"]:not(
 [data-slot="card"] {
   border-radius: calc(var(--radius) - 1px);
   border-width: 0;
+  padding: 0.5rem 1rem;
+  gap: 0.5rem;
 }
 
 [data-slot="card-header"] {

@@ -150,6 +150,66 @@ export function ProductPricingSection({
                 )}
               />
             </FieldGroup>
+            <div className="mt-6 space-y-3 border-t pt-5">
+              <div>
+                <h3 className="font-medium">Product discount</h3>
+                <p className="text-sm text-muted-foreground">
+                  Optionally apply a percentage discount to this product.
+                </p>
+              </div>
+              <FieldGroup className="grid gap-5 md:grid-cols-3">
+                <Controller
+                  name="discountValue"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>Discount (%)</FieldLabel>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        placeholder="No discount"
+                        {...field}
+                        disabled={disabled}
+                      />
+                      <FieldDescription>
+                        Enter a value from 0 to 100.
+                      </FieldDescription>
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="discountStartDate"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>Discount starts</FieldLabel>
+                      <Input type="date" {...field} disabled={disabled} />
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="discountEndDate"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>Discount ends</FieldLabel>
+                      <Input type="date" {...field} disabled={disabled} />
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </FieldGroup>
+            </div>
           </CardContent>
         </CollapsibleContent>
       </Collapsible>

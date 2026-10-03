@@ -90,6 +90,7 @@ export enum Permission {
   PURCHASE_READ = "PURCHASE_READ",
   PURCHASE_UPDATE = "PURCHASE_UPDATE",
   PURCHASE_DELETE = "PURCHASE_DELETE",
+  PURCHASE_RETURN_DELETE = "PURCHASE_RETURN_DELETE",
 
   // ─────────────────────────────────────────────
   // SUPPLIER

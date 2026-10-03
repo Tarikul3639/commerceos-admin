@@ -211,6 +211,12 @@ export function DataTable<TData extends RowData>({
         </Table>
       </div>
 
+      {!showPagination && (
+        <div className="flex items-center justify-center border-t px-2 py-3 text-xs text-muted-foreground uppercase">
+          {isLoading ? "Loading..." : "Showing all results"}
+        </div>
+      )}
+
       {/* Pagination */}
       {showPagination && !isLoading && data.length > 0 && (
         <div className="mt-auto border-t px-2">

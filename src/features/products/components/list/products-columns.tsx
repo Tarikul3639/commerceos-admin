@@ -92,13 +92,39 @@ export const columns = columnHelper.columns([
     header: "Pricing",
     cell: (info) => {
       const product = info.row.original
+      const now = Date.now()
+      const discount = product.discount
+      const activeDiscount =
+        discount &&
+        (!discount.startDate ||
+          new Date(discount.startDate).getTime() <= now) &&
+        (!discount.endDate || new Date(discount.endDate).getTime() >= now)
+          ? discount
+          : null
+      const originalPrice = Number(product.sellingPrice)
+      const currentPrice = activeDiscount
+        ? originalPrice - (originalPrice * Number(activeDiscount.value)) / 100
+        : originalPrice
 
       return (
         <div>
           <p className="flex items-center font-medium">
             <TakaIcon className="size-4" />
-            {Number(product.sellingPrice).toFixed(2)}
+            {currentPrice.toFixed(2)}
+            {activeDiscount && (
+              <Badge variant="destructive" className="ml-2">
+                {activeDiscount.value}% off
+              </Badge>
+            )}
           </p>
+
+          {activeDiscount ? (
+            <p className="text-xs text-muted-foreground line-through">
+              Regular: {originalPrice.toFixed(2)}
+            </p>
+          ) : (
+            <p className="text-xs text-muted-foreground">No active discount</p>
+          )}
 
           <p className="flex items-center text-xs text-muted-foreground">
             Cost: <TakaIcon className="size-3" />
