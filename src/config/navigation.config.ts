@@ -125,7 +125,7 @@ export const navigation: NavigationGroup[] = [
     items: [
       {
         title: "Stock",
-        href: "/dashboard/stocks",
+        href: "/dashboard/stock",
         icon: Boxes,
         permission: Permission.STOCK_READ,
       },
