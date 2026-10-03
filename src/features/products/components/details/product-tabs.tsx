@@ -4,8 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
 import type { ProductDetails } from "../../types/product.types"
-import { ProductDescription } from "./product-description"
-import { ProductReviews } from "./product-reviews"
+import { ProductDescription } from "./description/product-description"
+import { ProductReviews } from "./reviews/product-reviews"
 
 interface ProductTabsProps {
   product: ProductDetails

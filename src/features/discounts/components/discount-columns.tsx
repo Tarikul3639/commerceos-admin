@@ -46,12 +46,17 @@ export const columns = columnHelper.columns([
             className="h-9 w-9 rounded object-cover"
           />
         )}
-        <div>
-          <div className="font-medium">{row.original.product.name}</div>
+        <Link
+          href={`/dashboard/products/${row.original.productId}`}
+          className="group flex flex-col"
+        >
+          <div className="font-medium group-hover:text-primary group-hover:underline">
+            {row.original.product.name}
+          </div>
           <div className="text-xs text-muted-foreground">
             SKU: {row.original.product.sku}
           </div>
-        </div>
+        </Link>
       </div>
     ),
   },

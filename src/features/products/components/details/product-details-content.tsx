@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button"
 
 import { useGetProductDetailsQuery } from "../../api/product.api"
 import { GlobalBenefits } from "./global-benefits"
-import { ProductImageGallery } from "./product-image-gallery"
-import { ProductSummary } from "./product-summary"
+import { ProductImageGallery } from "./gallery/product-image-gallery"
+import { ProductSummary } from "./summary/product-summary"
 import { ProductTabs } from "./product-tabs"
 
 interface ProductDetailsContentProps {
