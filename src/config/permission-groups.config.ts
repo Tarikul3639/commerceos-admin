@@ -70,6 +70,13 @@ export const permissionGroups: PermissionGroup = {
     Delete: Permission.STOCK_DELETE,
   },
 
+  Banners: {
+    Read: Permission.BANNER_READ,
+    Create: Permission.BANNER_CREATE,
+    Update: Permission.BANNER_UPDATE,
+    Delete: Permission.BANNER_DELETE,
+  },
+
   Users: {
     Read: Permission.USER_READ,
     Create: Permission.USER_CREATE,
