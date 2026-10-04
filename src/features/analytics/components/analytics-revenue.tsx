@@ -49,7 +49,7 @@ export function AnalyticsRevenue({
 
   return (
     <Card className="min-w-0 overflow-hidden py-0">
-      <CardHeader className="px-3 py-3 sm:px-4 sm:py-3.5">
+      <CardHeader className="px-0! sm:px-2!">
         <CardTitle className="text-sm sm:text-base">Revenue Overview</CardTitle>
 
         <CardDescription className="text-xs sm:text-sm">
@@ -57,7 +57,7 @@ export function AnalyticsRevenue({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="px-0 pb-3 sm:pb-4">
+      <CardContent className="px-0! sm:px-2!">
         {isLoading ? (
           <div className="h-[200px] w-full px-3 sm:h-[220px] sm:px-4">
             <Skeleton className="h-full w-full" />

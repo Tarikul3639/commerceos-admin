@@ -37,7 +37,7 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
 
   const [deleteCustomer, { isLoading: isDeleting }] =
     useDeleteCustomerMutation()
@@ -110,8 +110,7 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
               Details
             </DropdownMenuItem>
 
-            {/* Edit */}
-            <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+            <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
               <SquarePen className="size-4" />
               Update
             </DropdownMenuItem>
@@ -155,8 +154,8 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
       {/* Update Customer */}
       <UpdateCustomerDialog
         customer={customer}
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
+        open={isUpdateDialogOpen}
+        onOpenChange={setIsUpdateDialogOpen}
       />
 
       {/* Delete Confirmation */}

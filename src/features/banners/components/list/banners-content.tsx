@@ -2,8 +2,11 @@
 
 import { useState } from "react"
 import type { PaginationState } from "@tanstack/react-table"
+import Link from "next/link"
+import { Plus } from "lucide-react"
 import { DataTable } from "@/components/data-table"
 import { PageContainer } from "@/components/layout/page-container"
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -14,17 +17,16 @@ import {
 import { Permission } from "@/config/permissions.config"
 import { UnauthorizedContent } from "@/features/permissions/components/unauthorized-content"
 import { usePermission } from "@/hooks/use-permission"
-import { useGetBannersQuery } from "../api/banners.api"
-import { BannerPosition, BannerType } from "../types/banners.types"
+import { useGetBannersQuery } from "../../api/banners.api"
+import { BannerPosition, BannerType } from "../../types/banners.types"
 import { columns } from "./banners-columns"
-import { CreateBannerDialog } from "./create-banner-dialog"
+// import { data as mockData } from "../../data/banner.data"
 
 export function BannersContent() {
   const [search, setSearch] = useState("")
   const [type, setType] = useState("all")
   const [position, setPosition] = useState("all")
   const [status, setStatus] = useState("all")
-  const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -53,10 +55,12 @@ export function BannersContent() {
       ]}
       pageHeaderAction={
         permission.has(Permission.BANNER_CREATE) && (
-          <CreateBannerDialog
-            open={isCreateOpen}
-            onOpenChange={setIsCreateOpen}
-          />
+          <Button asChild>
+            <Link href="/dashboard/banners/create">
+              <Plus />
+              Create Banner
+            </Link>
+          </Button>
         )
       }
     >

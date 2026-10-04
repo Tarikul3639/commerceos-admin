@@ -23,17 +23,17 @@ import type { RolePermissions } from "../types/permissions.types"
 import { getErrorMessage } from "@/lib/utils/error"
 import { Badge } from "@/components/ui/badge"
 
-interface EditPermissionsDialogProps {
+interface UpdatePermissionsDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   rolePermissions: RolePermissions | null
 }
 
-export function EditPermissionsDialog({
+export function UpdatePermissionsDialog({
   open,
   onOpenChange,
   rolePermissions,
-}: EditPermissionsDialogProps) {
+}: UpdatePermissionsDialogProps) {
   const [selectedPermissions, setSelectedPermissions] = useState<Permission[]>(
     []
   )
@@ -113,7 +113,7 @@ export function EditPermissionsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="gap-0 sm:max-w-xl">
         <DialogHeader className="pb-3">
-          <DialogTitle>Edit Permissions</DialogTitle>
+          <DialogTitle>Update Permissions</DialogTitle>
 
           <DialogDescription>
             Manage permissions assigned to the{" "}

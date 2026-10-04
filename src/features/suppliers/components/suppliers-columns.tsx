@@ -89,7 +89,7 @@ export const columns = helper.columns([
     cell: ({ row }) => {
       const supplier = row.original
       const [details, setDetails] = useState(false)
-      const [editing, setEditing] = useState(false)
+      const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
       const [deleting, setDeleting] = useState(false)
       const [deleteSupplier, state] = useDeleteSupplierMutation()
       const permission = usePermission()
@@ -126,7 +126,7 @@ export const columns = helper.columns([
                 </DropdownMenuItem>
 
                 {permission.has(Permission.SUPPLIER_UPDATE) && (
-                  <DropdownMenuItem onClick={() => setEditing(true)}>
+                  <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
                     <SquarePen className="size-4" />
                     Update
                   </DropdownMenuItem>
@@ -157,8 +157,8 @@ export const columns = helper.columns([
           {permission.has(Permission.SUPPLIER_UPDATE) && (
             <SupplierDialog
               supplier={supplier}
-              open={editing}
-              onOpenChange={setEditing}
+              open={isUpdateDialogOpen}
+              onOpenChange={setIsUpdateDialogOpen}
             />
           )}
           <ConfirmDialog

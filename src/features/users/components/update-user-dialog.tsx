@@ -25,17 +25,17 @@ import type { User } from "../types/user.types"
 
 import { UserForm } from "./user-form"
 
-interface EditUserDialogProps {
+interface UpdateUserDialogProps {
   user: User
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function EditUserDialog({
+export function UpdateUserDialog({
   user,
   open,
   onOpenChange,
-}: EditUserDialogProps) {
+}: UpdateUserDialogProps) {
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
 
   const form = useForm<UserFormValues>({
@@ -98,14 +98,14 @@ export function EditUserDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit User</DialogTitle>
+          <DialogTitle>Update User</DialogTitle>
 
           <DialogDescription>
             Update the user's account information.
           </DialogDescription>
         </DialogHeader>
 
-        <form id="edit-user-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="update-user-form" onSubmit={form.handleSubmit(onSubmit)}>
           <UserForm form={form} isSubmitting={isSubmitting} />
         </form>
 
@@ -123,7 +123,7 @@ export function EditUserDialog({
             Cancel
           </Button>
 
-          <Button type="submit" form="edit-user-form" disabled={isSubmitting}>
+          <Button type="submit" form="update-user-form" disabled={isSubmitting}>
             {isUpdating ? (
               <>
                 <Loader2 className="animate-spin" />

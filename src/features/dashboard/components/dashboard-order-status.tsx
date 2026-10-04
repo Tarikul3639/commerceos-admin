@@ -97,7 +97,7 @@ export function DashboardOrderStatus({
 
   return (
     <Card className="min-w-0 gap-3 overflow-hidden">
-      <CardHeader className="gap-0 px-3 sm:px-4">
+      <CardHeader className="px-0! sm:px-2!">
         <CardTitle className="text-sm sm:text-base">Order Status</CardTitle>
 
         <CardDescription className="text-xs">
@@ -105,7 +105,7 @@ export function DashboardOrderStatus({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="flex flex-1 px-3 pb-3 sm:px-4 sm:pb-4">
+     <CardContent className="px-0! sm:px-2!">
         {isLoading ? (
           <Skeleton className="mx-4 h-56" />
         ) : (

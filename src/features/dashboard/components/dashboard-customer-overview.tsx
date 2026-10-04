@@ -67,7 +67,7 @@ export function DashboardCustomerOverview({
 
   return (
     <Card className="min-w-0 gap-3 overflow-hidden">
-      <CardHeader className="gap-0 px-3 sm:px-4">
+     <CardHeader className="px-0! sm:px-2!">
         <CardTitle className="text-sm sm:text-base">
           Customer Overview
         </CardTitle>
@@ -77,7 +77,7 @@ export function DashboardCustomerOverview({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="flex flex-1 px-3 pb-3 sm:px-4 sm:pb-4">
+      <CardContent className="px-0! sm:px-2!">
         <div className="relative flex h-60 items-center justify-center">
           {isLoading ? (
             <Skeleton className="size-60 rounded-full" />

@@ -90,12 +90,12 @@ export function DashboardStockOverview({
 
   return (
     <Card className="min-w-0 gap-3 overflow-hidden">
-      <CardHeader className="gap-0 px-3 sm:px-4">
+     <CardHeader className="px-0! sm:px-2!">
         <CardTitle>Stock Overview</CardTitle>
         <CardDescription>Overview of product stock status</CardDescription>
       </CardHeader>
 
-      <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4">
+     <CardContent className="px-0! sm:px-2!">
         <div className="grid items-center lg:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)]">
           {/* Chart */}
           <div className="relative flex h-60 min-w-0 items-center justify-center">

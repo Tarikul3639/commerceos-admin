@@ -77,11 +77,11 @@ export function ProductDetailsContent({
 
           <Button asChild variant="ghost" size="icon-sm">
             <Link
-              href={`/dashboard/products/${product.id}/edit`}
+              href={`/dashboard/products/${product.id}/update`}
               className="text-muted-foreground hover:text-primary"
             >
               <SquarePen className="size-4" />
-              <span className="sr-only">Edit</span>
+              <span className="sr-only">Update</span>
             </Link>
           </Button>
 

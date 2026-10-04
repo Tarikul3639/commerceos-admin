@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { createColumnHelper } from "@tanstack/react-table"
 import { Info, MoreHorizontal, SquarePen, Trash2 } from "lucide-react"
 import { toast } from "sonner"
@@ -21,10 +22,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useDeleteBannerMutation } from "../api/banners.api"
-import type { Banner } from "../types/banners.types"
-import { BannerDetailsDialog } from "./banner-details-dialog"
-import { UpdateBannerDialog } from "./update-banner-dialog"
+import { useDeleteBannerMutation } from "../../api/banners.api"
+import type { Banner } from "../../types/banners.types"
 
 const helper = createColumnHelper<DataTableFeatures, Banner>()
 
@@ -35,14 +34,19 @@ export const columns = helper.columns([
       <AppImage
         name={row.original.title ?? "Banner"}
         image={row.original.imageUrl}
-        className="h-12 w-20 rounded-md"
+        className="h-12 w-20 rounded-md after:inset-0 after:rounded-md"
       />
     ),
   }),
   helper.accessor("title", {
     header: "Title",
-    cell: ({ getValue }) => (
-      <span className="font-medium">{getValue() || "Untitled banner"}</span>
+    cell: ({ row }) => (
+      <Link
+        href={`/dashboard/banners/${row.original.id}`}
+        className="font-medium hover:underline hover:text-primary"
+      >
+        {row.original.title || "Untitled banner"}
+      </Link>
     ),
   }),
   helper.accessor("type", {
@@ -81,8 +85,6 @@ export const columns = helper.columns([
     maxSize: 80,
     cell: ({ row }) => {
       const banner = row.original
-      const [viewOpen, setViewOpen] = useState(false)
-      const [editOpen, setEditOpen] = useState(false)
       const [deleteOpen, setDeleteOpen] = useState(false)
       const [deleteBanner, { isLoading: isDeleting }] =
         useDeleteBannerMutation()
@@ -117,15 +119,19 @@ export const columns = helper.columns([
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {canRead && (
-                  <DropdownMenuItem onClick={() => setViewOpen(true)}>
-                    <Info />
-                    Details
+                  <DropdownMenuItem asChild>
+                    <Link href={`/dashboard/banners/${banner.id}`}>
+                      <Info />
+                      Details
+                    </Link>
                   </DropdownMenuItem>
                 )}
                 {canUpdate && (
-                  <DropdownMenuItem onClick={() => setEditOpen(true)}>
-                    <SquarePen />
-                    Update
+                  <DropdownMenuItem asChild>
+                    <Link href={`/dashboard/banners/${banner.id}/update`}>
+                      <SquarePen />
+                      Update
+                    </Link>
                   </DropdownMenuItem>
                 )}
               </DropdownMenuGroup>
@@ -147,20 +153,6 @@ export const columns = helper.columns([
               )}
             </DropdownMenuContent>
           </DropdownMenu>
-          {canRead && (
-            <BannerDetailsDialog
-              banner={banner}
-              open={viewOpen}
-              onOpenChange={setViewOpen}
-            />
-          )}
-          {canUpdate && (
-            <UpdateBannerDialog
-              banner={banner}
-              open={editOpen}
-              onOpenChange={setEditOpen}
-            />
-          )}
           {canDelete && (
             <ConfirmDialog
               open={deleteOpen}

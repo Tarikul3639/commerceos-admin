@@ -9,7 +9,7 @@ import { PageContainer } from "@/components/layout/page-container"
 import { useGetProductDetailsQuery } from "../../api/product.api"
 import { UpdateProductForm } from "./update-product-form"
 
-export function EditProductContent() {
+export function UpdateProductContent() {
   const params = useParams()
   const productId = params.id as string
 

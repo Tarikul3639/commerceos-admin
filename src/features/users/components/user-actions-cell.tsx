@@ -37,7 +37,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { EditUserDialog } from "./edit-user-dialog"
+import { UpdateUserDialog } from "./update-user-dialog"
 import { UserDetailsDialog } from "./user-details-dialog"
 import { useIsMe } from "@/hooks/use-is-me"
 
@@ -57,7 +57,7 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
   const isMe = useIsMe(user.id)
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isRestoreOpen, setIsRestoreOpen] = useState(false)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
 
@@ -142,9 +142,9 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
                 Details
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+              <DropdownMenuItem onClick={() => setIsUpdateOpen(true)}>
                 <Pencil className="h-4 w-4" />
-                Edit
+                Update
               </DropdownMenuItem>
             </DropdownMenuGroup>
 
@@ -295,11 +295,11 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit User Dialog */}
-      <EditUserDialog
+      {/* Update User Dialog */}
+      <UpdateUserDialog
         user={user}
-        open={isEditOpen}
-        onOpenChange={setIsEditOpen}
+        open={isUpdateOpen}
+        onOpenChange={setIsUpdateOpen}
       />
 
       {/* User Details Dialog */}

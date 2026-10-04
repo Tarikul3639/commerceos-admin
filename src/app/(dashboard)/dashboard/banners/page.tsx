@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { BannersContent } from "@/features/banners/components/banners-content"
+import { BannersContent } from "@/features/banners/components/list/banners-content"
 
 export const metadata: Metadata = {
   title: "Banners",

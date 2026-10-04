@@ -85,7 +85,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
           </TabsList>
         </CardHeader>
 
-        <CardContent className="p-1">
+        <CardContent className="max-sm:px-0!">
           <TabsContent value="description" className="mt-0">
             <ProductDescription description={product.description} />
           </TabsContent>

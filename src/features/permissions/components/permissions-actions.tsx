@@ -11,7 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-import { EditPermissionsDialog } from "./edit-permissions-dialog"
+import { UpdatePermissionsDialog } from "./update-permissions-dialog"
 import { RolePermissionsDialog } from "./role-permissions-dialog"
 
 import type { RolePermissions } from "../types/permissions.types"
@@ -24,7 +24,7 @@ export function PermissionsActions({
   rolePermissions,
 }: PermissionsActionsProps) {
   const [isViewOpen, setIsViewOpen] = useState(false)
-  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
 
   return (
     <>
@@ -35,13 +35,13 @@ export function PermissionsActions({
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setIsEditOpen(true)}
+                onClick={() => setIsUpdateOpen(true)}
               >
                 <SquarePen className="size-4" />
-                <span className="sr-only">Edit</span>
+                <span className="sr-only">Update</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Edit permissions</TooltipContent>
+            <TooltipContent>Update permissions</TooltipContent>
           </Tooltip>
 
           <Tooltip>
@@ -60,9 +60,9 @@ export function PermissionsActions({
         </div>
       </TooltipProvider>
 
-      <EditPermissionsDialog
-        open={isEditOpen}
-        onOpenChange={setIsEditOpen}
+      <UpdatePermissionsDialog
+        open={isUpdateOpen}
+        onOpenChange={setIsUpdateOpen}
         rolePermissions={rolePermissions}
       />
 

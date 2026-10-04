@@ -260,9 +260,9 @@ export const columns = columnHelper.columns([
               {!isDeleted && (
                 <>
                   <DropdownMenuItem asChild>
-                    <Link href={`/dashboard/products/${product.id}/edit`}>
+                    <Link href={`/dashboard/products/${product.id}/update`}>
                       <SquarePen className="size-4" />
-                      Edit
+                      Update
                     </Link>
                   </DropdownMenuItem>
 
