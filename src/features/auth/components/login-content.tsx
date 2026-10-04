@@ -50,7 +50,7 @@ export function LoginContent() {
 
       toast.success("Login successful! Redirecting to dashboard...")
       // Redirect to dashboard or another page
-      window.location.href = "/dashboard"
+      // window.location.href = "/dashboard"
     } catch (error) {
       console.error("Login failed:", error)
     }

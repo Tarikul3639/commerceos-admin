@@ -117,7 +117,7 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-6 grid gap-x-8 gap-y-6 md:grid-cols-2">
+            <CardContent className="grid space-y-6 gap-x-8 gap-y-6 md:grid-cols-2">
               <Preview
                 label="Desktop banner"
                 image={banner.imageUrl}
@@ -141,51 +141,54 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
               <CardTitle>Banner information</CardTitle>
             </CardHeader>
 
-            <CardContent className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-              <Detail label="Title" value={banner.title || "—"} />
-
-              <Detail label="Type" value={formatEnumLabel(banner.type)} />
-
-              <Detail
-                label="Position"
-                value={formatEnumLabel(banner.position)}
-              />
-
-              <div className="space-y-1">
-                <p className="text-sm font-medium">Status</p>
-
-                <Badge variant={banner.isActive ? "default" : "secondary"}>
-                  {banner.isActive ? "Active" : "Inactive"}
-                </Badge>
+            <CardContent className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-5 lg:contents">
+                <Detail label="Title" value={banner.title || "—"} />
+                <Detail label="Type" value={formatEnumLabel(banner.type)} />
               </div>
 
-              <Detail label="Link" value={banner.link || "—"} />
+              <div className="grid grid-cols-2 gap-5 lg:contents">
+                <Detail
+                  label="Position"
+                  value={formatEnumLabel(banner.position)}
+                />
 
-              <Detail label="Button text" value={banner.buttonText || "—"} />
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">Status</p>
+                  <Badge variant={banner.isActive ? "default" : "secondary"}>
+                    {banner.isActive ? "Active" : "Inactive"}
+                  </Badge>
+                </div>
+              </div>
 
-              <Detail
-                label="Open in new tab"
-                value={banner.openInNewTab ? "Yes" : "No"}
-              />
+              <div className="grid grid-cols-2 gap-5 lg:contents">
+                <Detail label="Link" value={banner.link || "—"} />
+                <Detail label="Button text" value={banner.buttonText || "—"} />
+              </div>
 
-              <Detail label="Sort order" value={String(banner.sortOrder)} />
+              <div className="grid grid-cols-2 gap-5 lg:contents">
+                <Detail
+                  label="Open in new tab"
+                  value={banner.openInNewTab ? "Yes" : "No"}
+                />
+                <Detail label="Sort order" value={String(banner.sortOrder)} />
+              </div>
 
               <Detail label="Start date" value={formatDate(banner.startAt)} />
-
               <Detail label="End date" value={formatDate(banner.endAt)} />
 
-              <Detail
-                label="Created by"
-                value={banner.createdBy?.name || "—"}
-              />
-
-              <Detail
-                label="Updated by"
-                value={banner.updatedBy?.name || "—"}
-              />
+              <div className="grid grid-cols-2 gap-5 lg:contents">
+                <Detail
+                  label="Created by"
+                  value={banner.createdBy?.name || "—"}
+                />
+                <Detail
+                  label="Updated by"
+                  value={banner.updatedBy?.name || "—"}
+                />
+              </div>
 
               <Detail label="Created at" value={formatDate(banner.createdAt)} />
-
               <Detail label="Updated at" value={formatDate(banner.updatedAt)} />
             </CardContent>
           </Card>
@@ -247,7 +250,7 @@ function Preview({
             name={title || label}
             image={image}
             clickable
-            className="h-full w-full object-cover rounded-md after:inset-0 after:rounded-md"
+            className="h-full w-full rounded-md object-cover after:inset-0 after:rounded-md"
           />
         </div>
       ) : (
@@ -278,7 +281,16 @@ function Detail({ label, value }: { label: string; value: string }) {
 }
 
 function formatDate(value: string | null) {
-  return value ? new Date(value).toLocaleString() : "—"
+  return value
+    ? new Date(value).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour12: true,
+      hour: "numeric",
+      minute: "numeric",
+    })
+    : "—"
 }
 
 function formatEnumLabel(value: string) {
