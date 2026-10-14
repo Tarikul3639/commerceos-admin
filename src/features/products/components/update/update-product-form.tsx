@@ -1,146 +1,144 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryState } from "nuqs"
+import {
+  Info,
+  Image as ImageIcon,
+  SlidersHorizontal,
+  Boxes,
+} from "lucide-react"
+import type { ProductFormValues } from "../../schemas/product.schema"
+import type { useGetProductDetailsQuery } from "../../api/product.api"
+
+import { ProductBasicInfo } from "../form/product-basic-info"
+import { ProductImages } from "../form/product-images"
+import { ProductOptions } from "../form/product-options"
+import { ProductVariants } from "../form/product-variants"
+import { getErrorMessage } from "@/lib/utils/error"
 import { toast } from "sonner"
 
 import { useUpdateProductMutation } from "../../api/product.api"
-import {
-  productFormSchema,
-  type ProductFormValues,
-} from "../../schemas/product.schema"
-import type { ProductColor, ProductDetails } from "../../types/product.types"
-import { getErrorMessage } from "@/lib/utils/error"
+import { useGetBrandsQuery } from "@/features/brands/api/brands.api"
+import { useGetCategoriesQuery } from "@/features/categories/api/categories.api"
+import { useGetSizeGuidesQuery } from "@/features/size-guides/api/size-guides.api"
 
-import { ProductDetailsSection } from "../create/product-details-section"
-import { ProductImagesSection } from "../create/product-images-section"
-import { ProductPropertiesSection } from "../create/product-properties-section"
-import { ProductPricingSection } from "../create/product-pricing-section"
-import { ProductPublishSection } from "../create/product-publish-section"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export function UpdateProductForm({ product }: { product: ProductDetails }) {
-  const router = useRouter()
-  const [updateProduct, { isLoading }] = useUpdateProductMutation()
-  const [imageIdsToDelete, setImageIdsToDelete] = useState<string[]>([])
+type Product = NonNullable<ReturnType<typeof useGetProductDetailsQuery>["data"]>
 
-  const colors = Array.isArray(product.colors)
-    ? product.colors.filter(
-        (color): color is ProductColor =>
-          typeof color === "object" &&
-          color !== null &&
-          "name" in color &&
-          typeof color.name === "string" &&
-          "hex" in color &&
-          typeof color.hex === "string"
-      )
-    : []
+interface UpdateProductFormProps {
+  productId: string
+  product: Product
+}
 
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      name: product.name,
-      sku: product.sku,
-      barcode: product.barcode ?? "",
-      description: product.description ?? "",
-      subDescription: product.subDescription ?? "",
-      purchasePrice: Number(product.purchasePrice),
-      sellingPrice: Number(product.sellingPrice),
-      categoryId: product.category.id,
-      brandId: product.brand?.id ?? "",
-      stock: product.stock,
-      sizes: product.sizes ?? [],
-      colors,
-      images: [...product.images]
-        .sort((a, b) => a.sortOrder - b.sortOrder)
-        .map(({ id, imageUrl, publicId, sortOrder }) => ({
-          id,
-          imageUrl,
-          publicId,
-          sortOrder,
-        })),
-      isActive: product.isActive,
-      discountValue: product.discount?.value ?? "",
-      discountStartDate: product.discount?.startDate?.slice(0, 10) ?? "",
-      discountEndDate: product.discount?.endDate?.slice(0, 10) ?? "",
-    },
+export function UpdateProductForm({
+  productId,
+  product,
+}: UpdateProductFormProps) {
+  const [activeTab, setActiveTab] = useQueryState("tab", {
+    defaultValue: "basic-info",
   })
 
-  const handleSubmit = async (values: ProductFormValues) => {
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation()
+
+  const { data: brandsData, isLoading: isLoadingBrands } = useGetBrandsQuery({
+    limit: 100,
+  })
+
+  const { data: categoriesData, isLoading: isLoadingCategories } =
+    useGetCategoriesQuery({ limit: 100 })
+
+  const { data: sizeGuidesData, isLoading: isLoadingSizeGuides } =
+    useGetSizeGuidesQuery()
+
+  const handleProductUpdate = async (values: ProductFormValues) => {
     try {
       await updateProduct({
-        id: product.id,
+        id: productId,
         data: {
           name: values.name,
-          sku: values.sku,
-          barcode: values.barcode || null,
-          description: values.description || null,
-          subDescription: values.subDescription || null,
-          purchasePrice: values.purchasePrice,
-          sellingPrice: values.sellingPrice,
-          categoryId: values.categoryId,
-          brandId: values.brandId || null,
-          stock: values.stock,
-          sizes: values.sizes,
-          colors: values.colors,
-          images: values.images.map(
-            ({ id, imageUrl, publicId, sortOrder }) => ({
-              ...(id ? { id } : {}),
-              imageUrl,
-              publicId,
-              sortOrder,
-            })
-          ),
-          imageIdsToDelete,
-          isActive: values.isActive,
-          discount:
-            values.discountValue === ""
-              ? null
-              : {
-                  value: Number(values.discountValue),
-                  startDate: values.discountStartDate || null,
-                  endDate: values.discountEndDate || null,
-                },
+          subDescription: values.subDescription ?? undefined,
+          description: values.description ?? undefined,
+          purchasePrice: Number(values.purchasePrice),
+          sellingPrice: Number(values.sellingPrice),
+          categoryId: values.categoryId ?? undefined,
+          brandId: values.brandId || undefined,
+          sizeGuideId: values.sizeGuideId || undefined,
+          status: values.status,
         },
       }).unwrap()
 
       toast.success("Product updated successfully")
-      router.push(`/dashboard/products/${product.id}`)
     } catch (error) {
-      toast.error(getErrorMessage(error) || "Failed to update product")
+      toast.error("Failed to update product", {
+        description: getErrorMessage(error),
+      })
     }
   }
 
   return (
-    <form
-      onSubmit={form.handleSubmit(handleSubmit)}
-      className="mx-auto w-full max-w-3xl space-y-6"
+    <Tabs
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="w-full space-y-6"
     >
-      <ProductDetailsSection control={form.control} disabled={isLoading} />
+      <TabsList className="grid h-auto! w-full grid-cols-2 sm:grid-cols-4">
+        <TabsTrigger value="basic-info">
+          <Info />
+          Basic Info
+        </TabsTrigger>
 
-      <ProductImagesSection
-        control={form.control}
-        disabled={isLoading}
-        onRemoveExistingImage={(id) =>
-          setImageIdsToDelete((current) =>
-            current.includes(id) ? current : [...current, id]
-          )
-        }
-      />
+        <TabsTrigger value="images">
+          <ImageIcon />
+          Images
+        </TabsTrigger>
 
-      <ProductPropertiesSection control={form.control} disabled={isLoading} />
+        <TabsTrigger value="options">
+          <SlidersHorizontal />
+          Options
+        </TabsTrigger>
 
-      <ProductPricingSection control={form.control} disabled={isLoading} />
+        <TabsTrigger value="variants">
+          <Boxes />
+          Variants
+        </TabsTrigger>
+      </TabsList>
 
-      <ProductPublishSection
-        control={form.control}
-        isLoading={isLoading}
-        isDirty={form.formState.isDirty}
-        onCancel={() => router.back()}
-        submitLabel="Update"
-        busyLabel="Updating..."
-      />
-    </form>
+      <TabsContent value="basic-info" className="mt-0">
+        <ProductBasicInfo
+          brands={brandsData?.data ?? []}
+          categories={categoriesData?.data ?? []}
+          sizeGuides={sizeGuidesData?.data ?? []}
+          isLoadingBrands={isLoadingBrands}
+          isLoadingCategories={isLoadingCategories}
+          isLoadingSizeGuides={isLoadingSizeGuides}
+          onSubmit={handleProductUpdate}
+          isSubmitting={isUpdating}
+          defaultValues={{
+            name: product.name,
+            subDescription: product.subDescription ?? "",
+            description: product.description ?? "",
+            purchasePrice: Number(product.purchasePrice),
+            sellingPrice: Number(product.sellingPrice),
+            categoryId: product.categoryId,
+            brandId: product.brandId ?? "",
+            sizeGuideId: product.sizeGuideId ?? "",
+            status: product.status,
+          }}
+        />
+      </TabsContent>
+
+      <TabsContent value="images" className="mt-0">
+        <ProductImages productId={productId} />
+      </TabsContent>
+
+      <TabsContent value="options" className="mt-0">
+        <ProductOptions productId={product.id} />
+      </TabsContent>
+
+      <TabsContent value="variants" className="mt-0">
+        <ProductVariants productId={product.id} />
+      </TabsContent>
+    </Tabs>
   )
 }

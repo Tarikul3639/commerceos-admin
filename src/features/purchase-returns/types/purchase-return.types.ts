@@ -19,7 +19,7 @@ export interface PurchaseReturnItem {
     quantity: number
     unitPrice: string
     productId: string
-    product: { id: string; name: string; sku: string }
+    product: { id: string; name: string }
   }
   createdAt: string
   updatedAt: string

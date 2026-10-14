@@ -1,161 +1,66 @@
-export interface ProductCategory {
+import type { PaginatedResponse } from "@/types/pagination"
+
+// Product status
+export type ProductStatus = "DRAFT" | "PROPOSED" | "PUBLISHED" | "REJECTED"
+
+// Relation summary
+export interface RelationSummary {
   id: string
   name: string
-  slug: string
 }
 
-export interface ProductBrand {
-  id: string
-  name: string
-  slug: string
-  website: string | null
-}
-
-export interface ProductColor {
-  name: string
-  hex: string
-}
-
-export interface ProductImageResponseDto {
-  id: string
-  imageUrl: string
-  publicId: string
-  sortOrder: number
-  createdAt: string
-  updatedAt: string
-}
-
-export interface DiscountSummary {
-  id: string
-  value: string
-  startDate: string | null
-  endDate: string | null
-  createdById: string
-}
-
-export interface ProductReview {
-  id: string
-  rating: number
-  comment: string | null
-  customerId: string
-  avatarUrl: string | null
-  createdAt: string
-}
-
-export interface ProductRating {
-  average: number
-  count: number
-}
-
-export interface AddProductImageDto {
-  id?: string
-  imageUrl: string
-  publicId: string
-  sortOrder?: number
-}
-
-export interface UpdateProductImageDto {
-  id?: string
-  imageUrl?: string
-  publicId?: string
-  sortOrder?: number
-}
-
+// Product
 export interface Product {
   id: string
   name: string
-  description: string | null
   subDescription: string | null
-  sku: string
-  barcode: string | null
   purchasePrice: string
   sellingPrice: string
-  stock: number
-  colors: ProductColor[] | null
-  sizes: string[]
-  isActive: boolean
+  status: ProductStatus
+
+  category: RelationSummary
+  brand: RelationSummary | null
+  sizeGuide: RelationSummary | null
+
   deletedAt: string | null
-  category: ProductCategory
-  brand: ProductBrand | null
-  image?: string | null
-  discount?: DiscountSummary | null
   createdAt: string
   updatedAt: string
 }
 
-export interface ProductDetails extends Product {
-  images: ProductImageResponseDto[]
-  discount: DiscountSummary | null
-  reviews: ProductReview[]
-  rating: ProductRating
+// Product list item
+export interface ProductListItem extends Product {
+  image: string | null
+  variants?: Array<{
+    sku: string
+    isActive: boolean
+  }>
 }
 
+// Product query parameters
 export interface ProductQueryParams {
+  page?: number
+  limit?: number
   search?: string
   categoryId?: string
   brandId?: string
-  isActive?: boolean
-  page?: number
-  limit?: number
+  status?: ProductStatus
 }
 
-export interface PaginationMeta {
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-  hasNextPage: boolean
-  hasPreviousPage: boolean
-}
+// Products response
+export interface ProductsResponse extends PaginatedResponse<ProductListItem> {}
 
-export interface ProductsResponse {
-  data: Product[]
-  meta: PaginationMeta
-}
-
+// Create product request
 export interface CreateProductRequest {
   name: string
-  sku: string
-  barcode?: string
-  description?: string
   subDescription?: string
+  description?: string
   purchasePrice: number
   sellingPrice: number
-  stock?: number
-  sizes?: string[]
-  colors?: ProductColor[]
   categoryId: string
   brandId?: string
-  publicId?: string
-  images?: AddProductImageDto[]
-  isActive?: boolean
-  discount?: {
-    value: number
-    startDate?: string | null
-    endDate?: string | null
-  }
+  sizeGuideId?: string
+  status?: ProductStatus
 }
 
-export interface UpdateProductRequest {
-  name?: string
-  categoryId?: string
-  brandId?: string | null
-  description?: string | null
-  subDescription?: string | null
-  sku?: string
-  barcode?: string | null
-  purchasePrice?: number
-  sellingPrice?: number
-  stock?: number
-  sizes?: string[]
-  colors?: ProductColor[]
-  publicId?: string | null
-  images?: UpdateProductImageDto[]
-  imageIdsToDelete?: string[]
-  isActive?: boolean
-  discount?: {
-    value: number
-    startDate?: string | null
-    endDate?: string | null
-  } | null
-}
+// Update product request
+export type UpdateProductRequest = Partial<CreateProductRequest>

@@ -144,9 +144,6 @@ export function PurchaseReturnForm({
               <p className="truncate font-medium">
                 {row.original.product.name}
               </p>
-              <p className="font-mono text-xs text-muted-foreground">
-                {row.original.product.sku}
-              </p>
             </div>
           ),
         },

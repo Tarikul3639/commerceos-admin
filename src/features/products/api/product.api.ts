@@ -2,19 +2,23 @@ import { baseApi } from "@/lib/api/base-api"
 
 import type {
   CreateProductRequest,
-  Product,
-  ProductDetails,
   ProductQueryParams,
   ProductsResponse,
   UpdateProductRequest,
 } from "../types/product.types"
 
+import type { ProductDetails } from "../types/product-details.types"
+
+const productTags = (id: string) => [
+  "Product" as const,
+  { type: "Product" as const, id },
+]
+
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Products
     getProducts: builder.query<ProductsResponse, ProductQueryParams | void>({
       query: (params) => ({
-        url: "/products",
+        url: "/admin/products",
         method: "GET",
         ...(params && { params }),
       }),
@@ -23,15 +27,15 @@ export const productApi = baseApi.injectEndpoints({
 
     getProductDetails: builder.query<ProductDetails, string>({
       query: (id) => ({
-        url: `/products/${id}`,
+        url: `/admin/products/${id}/details`,
         method: "GET",
       }),
       providesTags: (_result, _error, id) => [{ type: "Product", id }],
     }),
 
-    createProduct: builder.mutation<Product, CreateProductRequest>({
+    createProduct: builder.mutation<ProductDetails, CreateProductRequest>({
       query: (body) => ({
-        url: "/products",
+        url: "/admin/products",
         method: "POST",
         body,
       }),
@@ -40,34 +44,40 @@ export const productApi = baseApi.injectEndpoints({
 
     updateProduct: builder.mutation<
       ProductDetails,
-      {
-        id: string
-        data: UpdateProductRequest
-      }
+      { id: string; data: UpdateProductRequest }
     >({
       query: ({ id, data }) => ({
-        url: `/products/${id}`,
+        url: `/admin/products/${id}`,
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (_result, _error, { id }) => [
-        "Product",
-        { type: "Product", id },
-      ],
+      invalidatesTags: (_result, _error, { id }) => productTags(id),
     }),
 
-    deleteProduct: builder.mutation<void, string>({
+    saveProductGeneral: builder.mutation<
+      ProductDetails,
+      { id: string; data: UpdateProductRequest }
+    >({
+      query: ({ id, data }) => ({
+        url: `/admin/products/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: (_result, _error, { id }) => productTags(id),
+    }),
+
+    deleteProduct: builder.mutation<{ message: string }, string>({
       query: (id) => ({
-        url: `/products/${id}`,
+        url: `/admin/products/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Product"],
     }),
 
-    restoreProduct: builder.mutation<void, string>({
+    restoreProduct: builder.mutation<{ message: string }, string>({
       query: (id) => ({
-        url: `/products/${id}/restore`,
-        method: "POST",
+        url: `/admin/products/${id}/restore`,
+        method: "PATCH",
       }),
       invalidatesTags: ["Product"],
     }),
@@ -75,11 +85,11 @@ export const productApi = baseApi.injectEndpoints({
 })
 
 export const {
-  // Products
   useGetProductsQuery,
   useGetProductDetailsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
+  useSaveProductGeneralMutation,
   useDeleteProductMutation,
   useRestoreProductMutation,
 } = productApi

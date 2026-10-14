@@ -17,11 +17,12 @@ import {
 } from "@/components/ui/select"
 
 import { useGetProductsQuery } from "../../api/product.api"
+import type { ProductStatus } from "../../types/product.types"
 import { columns } from "./products-columns"
 
 export function ProductsContent() {
   const [search, setSearch] = useState("")
-  const [isActive, setIsActive] = useState<boolean | undefined>()
+  const [status, setStatus] = useState<ProductStatus | undefined>()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -31,11 +32,15 @@ export function ProductsContent() {
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
     search,
-    isActive,
+    status,
   })
 
-  const handleActiveFilter = (value: string) => {
-    setIsActive(value === "all" ? undefined : value === "active")
+  const handleStatusFilter = (value: string) => {
+    setStatus(value === "all" ? undefined : (value as ProductStatus))
+    setPagination((previous) => ({
+      ...previous,
+      pageIndex: 0,
+    }))
   }
 
   return (
@@ -62,24 +67,27 @@ export function ProductsContent() {
         error={error}
         search={{
           value: search,
-          onChange: setSearch,
+          onChange: (value) => {
+            setSearch(value)
+            setPagination((previous) => ({
+              ...previous,
+              pageIndex: 0,
+            }))
+          },
           placeholder: "Search products...",
         }}
         toolbarFilters={
-          <Select
-            value={
-              isActive === undefined ? "all" : isActive ? "active" : "inactive"
-            }
-            onValueChange={handleActiveFilter}
-          >
-            <SelectTrigger className="w-24">
+          <Select value={status ?? "all"} onValueChange={handleStatusFilter}>
+            <SelectTrigger className="w-32">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
 
             <SelectContent className="p-1">
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="all">All statuses</SelectItem>
+              <SelectItem value="DRAFT">Draft</SelectItem>
+              <SelectItem value="PROPOSED">Proposed</SelectItem>
+              <SelectItem value="PUBLISHED">Published</SelectItem>
+              <SelectItem value="REJECTED">Rejected</SelectItem>
             </SelectContent>
           </Select>
         }
@@ -92,7 +100,6 @@ export function ProductsContent() {
           createdAt: false,
           updatedAt: false,
         }}
-
         emptyText="No products found."
       />
     </PageContainer>

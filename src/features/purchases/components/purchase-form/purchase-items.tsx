@@ -37,17 +37,20 @@ import {
 import { cn } from "@/lib/utils"
 
 import type { PurchaseFormValues } from "../../schemas/purchase.schema"
+import type { ProductListItem } from "@/features/products/types/product.types"
 
-interface Product {
-  id: string
-  name: string
-  sku: string
+const getProductLabel = (product: ProductListItem) => {
+  const skus = (product.variants ?? [])
+    .filter((variant) => variant.isActive)
+    .map((variant) => variant.sku)
+    .join(", ")
+  return skus ? `${product.name} · ${skus}` : product.name
 }
 
 interface PurchaseItemsProps {
   control: Control<PurchaseFormValues>
   fields: FieldArrayWithId<PurchaseFormValues, "items", "id">[]
-  products: Product[]
+  products: ProductListItem[]
   append: UseFieldArrayAppend<PurchaseFormValues, "items">
   remove: UseFieldArrayRemove
   isLoading: boolean
@@ -98,14 +101,14 @@ export function PurchaseItems({
                           <span className="truncate">
                             {field.value
                               ? (() => {
-                                  const product = products.find(
-                                    (product) => product.id === field.value
-                                  )
+                                const product = products.find(
+                                  (product) => product.id === field.value
+                                )
 
-                                  return product
-                                    ? `${product.name} · ${product.sku}`
-                                    : "Choose a product"
-                                })()
+                                return product
+                                  ? getProductLabel(product)
+                                  : "Choose a product"
+                              })()
                               : "Choose a product"}
                           </span>
 
@@ -125,30 +128,38 @@ export function PurchaseItems({
 
                             <CommandGroup>
                               {products.map((product) => (
+
                                 <CommandItem
                                   key={product.id}
-                                  value={`${product.name} ${product.sku}`}
+                                  value={getProductLabel(product)}
                                   onSelect={() => field.onChange(product.id)}
                                 >
-                                  <div className="flex min-w-0 flex-col">
-                                    <span className="truncate">
-                                      {product.name}
-                                    </span>
+                                  <div className="flex min-w-0 items-center gap-3">
+                                    <img
+                                      src={product.image ?? "/placeholder.png"}
+                                      alt={product.name}
+                                      className="size-10 shrink-0 rounded-md border object-cover"
+                                    />
 
-                                    <span className="text-xs text-muted-foreground">
-                                      {product.sku}
-                                    </span>
+                                    <div className="flex min-w-0 flex-col">
+                                      <span className="truncate font-medium">{product.name}</span>
+                                      <span className="truncate text-xs text-muted-foreground">
+                                        {product.variants
+                                          ?.filter((variant) => variant.isActive)
+                                          .map((variant) => variant.sku)
+                                          .join(", ")}
+                                      </span>
+                                    </div>
                                   </div>
 
                                   <Check
                                     className={cn(
                                       "ml-auto size-4 shrink-0",
-                                      field.value === product.id
-                                        ? "opacity-100"
-                                        : "opacity-0"
+                                      field.value === product.id ? "opacity-100" : "opacity-0"
                                     )}
                                   />
                                 </CommandItem>
+
                               ))}
                             </CommandGroup>
                           </CommandList>

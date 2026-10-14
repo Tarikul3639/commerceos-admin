@@ -1,6 +1,7 @@
 export interface Stock {
   id: string
   productId: string
+  variantId: string
   quantity: number
   sku: string
   productName: string
@@ -28,7 +29,7 @@ export interface StockResponse {
 }
 
 export interface AdjustStockRequest {
-  productId: string
+  variantId: string
   quantity: number
   reason?: string
 }

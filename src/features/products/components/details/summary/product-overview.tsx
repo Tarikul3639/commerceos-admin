@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge"
-import { Rating } from "@/components/shared/rating"
-import type { ProductDetails } from "../../../types/product.types"
+import type { ProductDetails } from "../../../types/product-details.types"
 import { ProductPrice } from "./product-price"
 
 interface ProductOverviewProps {
@@ -8,33 +7,31 @@ interface ProductOverviewProps {
 }
 
 export function ProductOverview({ product }: ProductOverviewProps) {
+  const hasVariants = product.variants.length > 0
+  const quantity = product.variants.reduce((total, variant) => {
+    if (variant.isActive && !variant.deletedAt) {
+      return total + variant.stock
+    }
+    return total
+  }, 0)
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-2">
-        <Badge variant={product.isActive ? "default" : "secondary"}>
-          {product.isActive ? "Active" : "Inactive"}
-        </Badge>
-
-        {product.deletedAt && <Badge variant="destructive">Deleted</Badge>}
-      </div>
-
-      {product.stock > 0 ? (
+    <div className="flex flex-col gap-2">
+      {hasVariants && quantity > 0 ? (
         <span className="text-xs font-medium text-green-500 uppercase">
-          In Stock: {product.stock}
+          In Stock: {quantity}
         </span>
-      ) : (
+      ) : hasVariants ? (
         <span className="text-xs font-medium text-destructive uppercase">
           Out of Stock
+        </span>
+      ) : (
+        <span className="text-xs font-medium text-muted-foreground uppercase">
+          No variant inventory
         </span>
       )}
 
       <h5 className="text-lg font-semibold tracking-tight">{product.name}</h5>
-
-      <Rating
-        value={product.rating.average}
-        count={product.rating.count}
-        size="md"
-      />
 
       <ProductPrice product={product} />
 

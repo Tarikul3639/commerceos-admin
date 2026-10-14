@@ -72,7 +72,7 @@ export function AdjustStockDialog({
 
     try {
       await adjustStock({
-        productId: stock.productId,
+        variantId: stock.variantId,
         quantity: adjustment,
         ...(values.reason?.trim() && {
           reason: values.reason.trim(),

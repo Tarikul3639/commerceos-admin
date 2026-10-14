@@ -1,37 +1,63 @@
 "use client"
 
+import { useState } from "react"
+
 import { Separator } from "@/components/ui/separator"
+
 import { ProductActions } from "./product-actions"
 import { ProductOptions } from "./product-options"
 import { ProductOverview } from "./product-overview"
 import { ProductQuantitySelector } from "./product-quantity-selector"
-import type { ProductDetails } from "../../../types/product.types"
+import type { ProductDetails } from "../../../types/product-details.types"
 
-interface ProductSummaryProps {
-  product: ProductDetails
-}
+export function ProductSummary({ product }: { product: ProductDetails }) {
+  // Find the first active, non-deleted variant that has available stock
+  const firstActiveVariant = product.variants.find(
+    (variant) => variant.isActive && !variant.deletedAt && variant.stock > 0
+  )
 
-export function ProductSummary({ product }: ProductSummaryProps) {
+  // Initialize the selected variant ID with the first available variant
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(
+    firstActiveVariant?.id ?? null
+  )
+
+  // Find the currently selected variant, ensuring it is active and not deleted
+  const selectedVariant =
+    product.variants.find(
+      (variant) =>
+        variant.id === selectedVariantId &&
+        variant.isActive &&
+        !variant.deletedAt
+    ) ?? null
+
+  // Check whether the product has any variants
+  const hasVariants = product.variants.length > 0
+
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col justify-center gap-4">
       <ProductOverview product={product} />
+      <Separator />
 
-      <Separator className="my-6" />
+      <ProductOptions
+        variants={product.variants}
+        options={product.options}
+        onSelect={(variant) => setSelectedVariantId(variant?.id ?? null)}
+        sizeGuide={product.sizeGuide}
+      />
 
-      <div className="space-y-5">
-        <ProductOptions colors={product.colors} sizes={product.sizes} />
-        <ProductQuantitySelector stock={product.stock} />
-      </div>
+      <ProductQuantitySelector stock={selectedVariant?.stock} />
 
-      <Separator className="my-6" />
+      <Separator />
 
       <ProductActions
-        disabled={product.stock <= 0}
-        onAddToCart={() => {}}
-        onBuyNow={() => {}}
-        onCompare={() => {}}
-        onFavorite={() => {}}
-        onShare={() => {}}
+        disabled={
+          hasVariants && (!selectedVariant || selectedVariant.stock <= 0)
+        }
+        onAddToCart={() => { }}
+        onBuyNow={() => { }}
+        onCompare={() => { }}
+        onFavorite={() => { }}
+        onShare={() => { }}
       />
     </div>
   )

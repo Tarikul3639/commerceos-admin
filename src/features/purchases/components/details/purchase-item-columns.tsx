@@ -16,15 +16,6 @@ export const purchaseItemColumns = helper.columns([
     ),
   },
   {
-    accessorKey: "product.sku",
-    header: "SKU",
-    cell: ({ row }) => (
-      <span className="font-mono text-xs text-muted-foreground">
-        {row.original.product.sku}
-      </span>
-    ),
-  },
-  {
     accessorKey: "quantity",
     header: "Quantity",
     cell: ({ row }) => (

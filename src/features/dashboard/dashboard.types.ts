@@ -38,6 +38,7 @@ export interface CustomerSummary {
 }
 
 export interface LowStockProduct {
+  variantId: string
   sku: string
   productId: string
   productName: string

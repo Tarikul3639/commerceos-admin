@@ -1,46 +1,48 @@
 "use client"
 
-import { AlertCircle, Loader2 } from "lucide-react"
 import { useParams } from "next/navigation"
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { PageContainer } from "@/components/layout/page-container"
-
+import { LoadingState } from "@/components/shared/loading-state"
+import { ErrorState } from "@/components/shared/error-state"
 import { useGetProductDetailsQuery } from "../../api/product.api"
 import { UpdateProductForm } from "./update-product-form"
 
 export function UpdateProductContent() {
-  const params = useParams()
-  const productId = params.id as string
+  const { id: productId } = useParams<{ id: string }>()
 
   const {
     data: product,
     isLoading,
     isError,
+    refetch,
   } = useGetProductDetailsQuery(productId)
+
+  if (isLoading) {
+    return <LoadingState message="Loading product details..." />
+  }
+
+  if (isError || !product) {
+    return (
+      <ErrorState
+        title="Failed to load product"
+        message="Unable to fetch product details."
+        onRetry={() => refetch()}
+      />
+    )
+  }
+
+  const title = `${product.name.slice(0, 20)}${product.name.length > 20 ? "..." : ""}`
 
   return (
     <PageContainer
-      title="Update product"
+      title={title}
       breadcrumbs={[
         { label: "Dashboard", href: "/dashboard" },
         { label: "Products", href: "/dashboard/products" },
-        { label: "Update product" },
+        { label: "Update" },
       ]}
     >
-      {isLoading ? (
-        <div className="flex min-h-96 items-center justify-center">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
-        </div>
-      ) : isError || !product ? (
-        <Alert variant="destructive">
-          <AlertCircle className="size-4" />
-          <AlertTitle>Unable to load product</AlertTitle>
-          <AlertDescription>Failed to load product details.</AlertDescription>
-        </Alert>
-      ) : (
-        <UpdateProductForm product={product} />
-      )}
+      <UpdateProductForm productId={productId} product={product} />
     </PageContainer>
   )
 }

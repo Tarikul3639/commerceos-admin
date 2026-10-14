@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react"
 import type { CarouselApi } from "@/components/ui/carousel"
 
-import type { ProductImageResponseDto } from "../../../types/product.types"
+import type { ProductImage } from "../../../types/product-image.types"
 import { ProductImageThumbnails } from "./product-image-thumbnails"
 import { ProductMainImageCarousel } from "./product-main-image-carousel"
 
 interface ProductImageGalleryProps {
   name: string
-  images?: ProductImageResponseDto[]
+  images?: ProductImage[]
 }
 
 export function ProductImageGallery({

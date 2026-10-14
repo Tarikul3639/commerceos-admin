@@ -63,6 +63,7 @@ export enum Permission {
   PRODUCT_READ = "PRODUCT_READ",
   PRODUCT_UPDATE = "PRODUCT_UPDATE",
   PRODUCT_DELETE = "PRODUCT_DELETE",
+  PRODUCT_RESTORE = "PRODUCT_RESTORE",
 
   // ─────────────────────────────────────────────
   // DISCOUNT

@@ -28,6 +28,7 @@ export interface TopProduct {
   productId: string
   productName: string
   productImage?: string | null
+  /** Present in legacy analytics fixtures; the current API omits this field. */
   sku?: string
   totalSold: number
   totalRevenue: string

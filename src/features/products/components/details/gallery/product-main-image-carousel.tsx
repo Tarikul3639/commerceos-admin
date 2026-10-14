@@ -8,11 +8,11 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel"
-import type { ProductImageResponseDto } from "../../../types/product.types"
+import type { ProductImage } from "../../../types/product-image.types"
 
 interface ProductMainImageCarouselProps {
   name: string
-  images: ProductImageResponseDto[]
+  images: ProductImage[]
   activeIndex: number
   api?: CarouselApi
   onApiChange: (api: CarouselApi) => void

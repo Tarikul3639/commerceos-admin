@@ -7,7 +7,7 @@ export interface PurchaseItem {
   unitPrice: string
   subtotal: string
   productId: string
-  product: { id: string; name: string; sku: string }
+  product: { id: string; name: string }
   createdAt: string
   updatedAt: string
 }

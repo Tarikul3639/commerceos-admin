@@ -10,6 +10,7 @@ import {
   Package,
   Settings,
   ShoppingCart,
+  Ruler,
   Store,
   Tags,
   RotateCcw,
@@ -106,6 +107,11 @@ export const navigation: NavigationGroup[] = [
         href: "/dashboard/brands",
         icon: Tags,
         permission: Permission.BRAND_READ,
+      },
+      {
+        title: "Size Guides",
+        href: "/dashboard/size-guides",
+        icon: Ruler,
       },
       {
         title: "Discounts",

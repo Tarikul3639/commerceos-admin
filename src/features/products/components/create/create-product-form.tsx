@@ -1,120 +1,91 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
+import { LockKeyhole } from "lucide-react"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { useCreateProductMutation } from "../../api/product.api"
-import {
-  productFormSchema,
-  type ProductFormValues,
-} from "../../schemas/product.schema"
-import type { CreateProductRequest } from "../../types/product.types"
+import type { ProductFormValues } from "../../schemas/product.schema"
 
-import { ProductDetailsSection } from "./product-details-section"
-import { ProductPropertiesSection } from "./product-properties-section"
-import { ProductPricingSection } from "./product-pricing-section"
-import { ProductPublishSection } from "./product-publish-section"
-import { ProductImagesSection } from "./product-images-section"
+import { ProductBasicInfo } from "../form/product-basic-info"
 import { getErrorMessage } from "@/lib/utils/error"
 
+import { useGetBrandsQuery } from "@/features/brands/api/brands.api"
+import { useGetCategoriesQuery } from "@/features/categories/api/categories.api"
+import { useGetSizeGuidesQuery } from "@/features/size-guides/api/size-guides.api"
+
 export function CreateProductForm() {
-  const router = useRouter()
+    const router = useRouter()
 
-  const [createProduct, { isLoading }] = useCreateProductMutation()
+    const [createProduct, { isLoading: isCreating }] = useCreateProductMutation()
 
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      name: "",
-      sku: "",
-      barcode: "",
-      description: "",
-      subDescription: "",
-      purchasePrice: 0,
-      sellingPrice: 0,
-      categoryId: "",
-      brandId: "",
-      stock: 0,
-      sizes: [],
-      colors: [],
-      images: [],
-      isActive: true,
-      discountValue: "",
-      discountStartDate: "",
-      discountEndDate: "",
-    },
-  })
+    const { data: brandsData, isLoading: isLoadingBrands } = useGetBrandsQuery()
 
-  const handleSubmit = async (values: ProductFormValues) => {
-    try {
-      const data: CreateProductRequest = {
-        name: values.name,
-        sku: values.sku,
-        purchasePrice: values.purchasePrice,
-        sellingPrice: values.sellingPrice,
-        categoryId: values.categoryId,
-        stock: values.stock,
-        sizes: values.sizes,
-        colors: values.colors,
-        images: values.images.map(({ imageUrl, publicId, sortOrder }) => ({
-          imageUrl,
-          publicId,
-          sortOrder,
-        })),
-        isActive: values.isActive,
-        ...(values.discountValue !== "" && {
-          discount: {
-            value: Number(values.discountValue),
-            startDate: values.discountStartDate || null,
-            endDate: values.discountEndDate || null,
-          },
-        }),
-      }
+    const { data: categoriesData, isLoading: isLoadingCategories } =
+        useGetCategoriesQuery()
 
-      if (values.description) {
-        data.description = values.description
-      }
+    const { data: sizeGuidesData, isLoading: isLoadingSizeGuides } =
+        useGetSizeGuidesQuery()
 
-      if (values.subDescription) {
-        data.subDescription = values.subDescription
-      }
+    const handleProductCreate = async (values: ProductFormValues) => {
+        try {
+            const response = await createProduct(values).unwrap()
+            const productId = response.id
 
-      if (values.brandId) {
-        data.brandId = values.brandId
-      }
-      if (values.barcode) data.barcode = values.barcode
+            if (!productId) {
+                throw new Error("Created product ID was not returned.")
+            }
 
-      const product = await createProduct(data).unwrap()
+            toast.success("Product created successfully")
 
-      toast.success("Product created successfully")
-
-      router.push(`/dashboard/products/${product.id}`)
-    } catch (error) {
-      toast.error(getErrorMessage(error) || "Failed to create product")
+            router.push(`/admin/products/${productId}/edit`)
+        } catch (error) {
+            toast.error("Failed to create product", {
+                description: getErrorMessage(error),
+            })
+        }
     }
-  }
 
-  return (
-    <form
-      onSubmit={form.handleSubmit(handleSubmit)}
-      className="mx-auto w-full max-w-3xl space-y-6"
-    >
-      <ProductDetailsSection control={form.control} disabled={isLoading} />
+    return (
+        <div className="flex flex-col gap-6">
+            <Tabs value="basic-info" className="w-full">
+                <TabsList className="grid h-auto! w-full grid-cols-3 gap-1 sm:gap-2">
+                    <TabsTrigger
+                        value="basic-info"
+                        className="min-w-0 gap-1 px-1 text-xs sm:gap-2 sm:px-3 sm:text-sm rounded-xs py-1.5"
+                    >
+                        <span>1. Basic Info</span>
+                    </TabsTrigger>
 
-      <ProductImagesSection control={form.control} disabled={isLoading} />
+                    <TabsTrigger
+                        value="images"
+                        className="pointer-events-none min-w-0 gap-1 px-1 text-xs sm:gap-2 sm:px-3 sm:text-sm"
+                    >
+                        <LockKeyhole className="size-3 shrink-0 sm:size-3.5" />
+                        <span>2. Images</span>
+                    </TabsTrigger>
 
-      <ProductPropertiesSection control={form.control} disabled={isLoading} />
+                    <TabsTrigger
+                        value="variants"
+                        className="pointer-events-none min-w-0 gap-1 px-1 text-xs sm:gap-2 sm:px-3 sm:text-sm"
+                    >
+                        <LockKeyhole className="size-3 shrink-0 sm:size-3.5" />
+                        <span className="truncate">3. Variants & Options</span>
+                    </TabsTrigger>
+                </TabsList>
+            </Tabs>
 
-      <ProductPricingSection control={form.control} disabled={isLoading} />
-
-      <ProductPublishSection
-        control={form.control}
-        isLoading={isLoading}
-        isDirty={form.formState.isDirty}
-        onCancel={() => router.back()}
-      />
-    </form>
-  )
+            <ProductBasicInfo
+                brands={brandsData?.data ?? []}
+                categories={categoriesData?.data ?? []}
+                sizeGuides={sizeGuidesData?.data ?? []}
+                isLoadingBrands={isLoadingBrands}
+                isLoadingCategories={isLoadingCategories}
+                isLoadingSizeGuides={isLoadingSizeGuides}
+                isSubmitting={isCreating}
+                onSubmit={handleProductCreate}
+            />
+        </div>
+    )
 }

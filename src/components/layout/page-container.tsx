@@ -49,14 +49,14 @@ export function PageContainer({
   }
 
   return (
-    <main className={cn("flex flex-1 flex-col gap-5", className)}>
+    <main className={cn("flex flex-1 flex-col gap-4 sm:gap-5", className)}>
       {/* Page Header */}
       {(title || breadcrumbs || infoContent || pageHeaderAction) && (
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex min-w-0 flex-col gap-2">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex flex-wrap justify-between gap-3">
+            <div className="flex min-w-0 flex-col sm:gap-2">
               {title && (
-                <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                <h1 className="text-xl font-semibold tracking-tight md:text-2xl">
                   {title}
                 </h1>
               )}
