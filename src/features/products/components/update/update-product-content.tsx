@@ -32,6 +32,7 @@ export function UpdateProductContent() {
   }
 
   const title = `${product.name.slice(0, 20)}${product.name.length > 20 ? "..." : ""}`
+  const label = `${product.name.slice(0, 10)}${product.name.length > 10 ? "..." : ""}`
 
   return (
     <PageContainer
@@ -39,7 +40,7 @@ export function UpdateProductContent() {
       breadcrumbs={[
         { label: "Dashboard", href: "/dashboard" },
         { label: "Products", href: "/dashboard/products" },
-        { label: "Update" },
+        { label: `Update ${label}`, href: `/dashboard/products/${productId}/update` },
       ]}
     >
       <UpdateProductForm productId={productId} product={product} />

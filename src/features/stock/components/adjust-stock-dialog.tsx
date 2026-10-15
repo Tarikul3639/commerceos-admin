@@ -51,7 +51,7 @@ export function AdjustStockDialog({
   useEffect(() => {
     if (open) {
       form.reset({
-        quantity: stock ? String(stock.quantity) : "",
+        quantity: "",
         reason: "",
       })
     }

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { siteConfig } from "@/config/site"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -24,8 +25,9 @@ import { useLoginMutation } from "@/features/auth/auth.api"
 import { getErrorMessage } from "@/lib/utils/error"
 
 export function LoginContent() {
+  const router = useRouter()
+  const callbackUrl = useSearchParams().get("callbackUrl")
   const [showPassword, setShowPassword] = useState(false)
-
   const [loginMutation, { isError, error, isLoading }] = useLoginMutation()
 
   const {
@@ -50,7 +52,8 @@ export function LoginContent() {
 
       toast.success("Login successful! Redirecting to dashboard...")
       // Redirect to dashboard or another page
-      // window.location.href = "/dashboard"
+      // If a callbackUrl is provided, redirect to that URL; otherwise, redirect to the dashboard
+      router.push(callbackUrl || "/dashboard")
     } catch (error) {
       console.error("Login failed:", error)
     }

@@ -3,6 +3,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -31,6 +32,9 @@ export function ViewCategoryDialog({
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Category Details</DialogTitle>
+          <DialogDescription>
+            View category information, status, and timestamps.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5">

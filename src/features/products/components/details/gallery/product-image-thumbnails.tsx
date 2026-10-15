@@ -50,6 +50,7 @@ export function ProductImageThumbnails({
                   src={image.imageUrl}
                   alt={`${name} ${index + 1}`}
                   fill
+                  loading="eager"
                   sizes="64px"
                   className={`object-cover transition-all duration-300 ${
                     !isActive && "brightness-50"

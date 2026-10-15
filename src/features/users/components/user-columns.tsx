@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { createColumnHelper } from "@tanstack/react-table"
 import { BadgeCheck, ShieldCheck, XCircle } from "lucide-react"
 
@@ -6,12 +9,45 @@ import {
   DataTableColumnHeader,
 } from "@/components/data-table"
 import { AppImage } from "@/components/media"
-
 import { Badge } from "@/components/ui/badge"
-import { User, UserStatus } from "../types/user.types"
+
+import { type User, UserStatus } from "../types/user.types"
 import { UserActionsCell } from "./user-actions-cell"
+import { UserDetailsDialog } from "./user-details-dialog"
 
 export const columnHelper = createColumnHelper<DataTableFeatures, User>()
+
+function UserNameCell({ user }: { user: User }) {
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsDetailOpen(true)}
+        className="flex min-w-0 items-center gap-2 text-left"
+        aria-label={`View details for ${user.name}`}
+      >
+        <AppImage
+          name={user.name}
+          image={user.avatar}
+          className="h-10 w-10 shrink-0 rounded-full"
+        />
+
+        <div className="min-w-0">
+          <p className="truncate font-medium hover:underline">{user.name}</p>
+          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+        </div>
+      </button>
+
+      <UserDetailsDialog
+        user={user}
+        open={isDetailOpen}
+        onOpenChange={setIsDetailOpen}
+      />
+    </>
+  )
+}
 
 export const columns = columnHelper.columns([
   // User
@@ -21,28 +57,7 @@ export const columns = columnHelper.columns([
       <DataTableColumnHeader column={info.column} title="User" />
     ),
     sortFn: "sortFn_text",
-
-    cell: (info) => {
-      const user = info.row.original
-
-      return (
-        <div className="flex min-w-0 items-center gap-2">
-          <AppImage
-            name={user.name}
-            image={user.avatar}
-            className="h-10 w-10 shrink-0 rounded-full"
-          />
-
-          <div className="min-w-0">
-            <p className="truncate font-medium">{user.name}</p>
-
-            <p className="truncate text-xs text-muted-foreground">
-              {user.email}
-            </p>
-          </div>
-        </div>
-      )
-    },
+    cell: (info) => <UserNameCell user={info.row.original} />,
   }),
 
   // Role
@@ -51,8 +66,6 @@ export const columns = columnHelper.columns([
     header: (info) => (
       <DataTableColumnHeader column={info.column} title="Role" />
     ),
-    sortFn: "sortFn_text",
-
     cell: (info) => {
       const role = info.getValue()
 
@@ -72,14 +85,11 @@ export const columns = columnHelper.columns([
       <DataTableColumnHeader column={info.column} title="Phone" />
     ),
     sortFn: "sortFn_text",
-
-    cell: (info) => {
-      return (
-        <span className="text-sm whitespace-nowrap">
-          {info.getValue() || "—"}
-        </span>
-      )
-    },
+    cell: (info) => (
+      <span className="text-sm whitespace-nowrap">
+        {info.getValue() || "—"}
+      </span>
+    ),
   }),
 
   // Status
@@ -87,7 +97,6 @@ export const columns = columnHelper.columns([
     id: "status",
     header: "Status",
     sortFn: "sortFn_text",
-
     cell: (info) => {
       const status = info.getValue()
 
@@ -96,17 +105,14 @@ export const columns = columnHelper.columns([
           label: "Active",
           variant: "default" as const,
         },
-
         [UserStatus.INACTIVE]: {
           label: "Inactive",
           variant: "secondary" as const,
         },
-
         [UserStatus.SUSPENDED]: {
           label: "Suspended",
           variant: "destructive" as const,
         },
-
         [UserStatus.DELETED]: {
           label: "Deleted",
           variant: "destructive" as const,
@@ -122,13 +128,11 @@ export const columns = columnHelper.columns([
   // Verified
   columnHelper.accessor("isVerified", {
     id: "verified",
-
     header: () => (
       <div className="flex justify-center">
         <span>Verified</span>
       </div>
     ),
-
     cell: (info) => {
       const isVerified = info.getValue()
 
@@ -158,7 +162,6 @@ export const columns = columnHelper.columns([
     ),
     size: 25,
     sortFn: "sortFn_datetime",
-
     cell: (info) => {
       const lastLoginAt = info.getValue()
 
@@ -187,7 +190,6 @@ export const columns = columnHelper.columns([
     ),
     size: 20,
     sortFn: "sortFn_datetime",
-
     cell: (info) => {
       const createdAt = info.getValue()
 

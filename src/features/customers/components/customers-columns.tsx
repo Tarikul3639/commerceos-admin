@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { createColumnHelper } from "@tanstack/react-table"
 
 import {
@@ -11,8 +12,45 @@ import { Badge } from "@/components/ui/badge"
 
 import type { Customer } from "../types/customers.types"
 import { CustomerColumnActions } from "./customer-column-actions"
+import { CustomerViewDialog } from "./customer-view-dialog"
 
 export const columnHelper = createColumnHelper<DataTableFeatures, Customer>()
+
+function CustomerNameCell({ customer }: { customer: Customer }) {
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsViewDialogOpen(true)}
+        className="flex min-w-0 items-center gap-2 text-left"
+        aria-label={`View details for ${customer.name}`}
+      >
+        <AppImage
+          name={customer.name}
+          image={customer.avatarUrl ?? undefined}
+        />
+
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate font-medium hover:underline">
+            {customer.name}
+          </span>
+
+          <span className="truncate text-sm text-muted-foreground">
+            {customer.email}
+          </span>
+        </div>
+      </button>
+
+      <CustomerViewDialog
+        customer={customer}
+        open={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+      />
+    </>
+  )
+}
 
 export const customerColumns = columnHelper.columns([
   {
@@ -24,26 +62,7 @@ export const customerColumns = columnHelper.columns([
     sortFn: "sortFn_text",
     size: 250,
     minSize: 180,
-    cell: ({ row }) => {
-      const customer = row.original
-
-      return (
-        <div className="flex items-center gap-2">
-          <AppImage
-            name={customer.name}
-            image={customer.avatarUrl ?? undefined}
-          />
-
-          <div className="flex min-w-0 flex-col">
-            <span className="truncate font-medium">{customer.name}</span>
-
-            <span className="truncate text-sm text-muted-foreground">
-              {customer.email}
-            </span>
-          </div>
-        </div>
-      )
-    },
+    cell: ({ row }) => <CustomerNameCell customer={row.original} />,
   },
 
   {
@@ -74,14 +93,14 @@ export const customerColumns = columnHelper.columns([
       const variant = (() => {
         switch (status) {
           case "ACTIVE":
-            return "default"
+            return "default" as const
           case "INACTIVE":
-            return "secondary"
+            return "secondary" as const
           case "SUSPENDED":
           case "DELETED":
-            return "destructive"
+            return "destructive" as const
           default:
-            return "default"
+            return "default" as const
         }
       })()
 

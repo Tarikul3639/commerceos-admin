@@ -11,6 +11,7 @@ import {
   tableFeatures,
   sortFn_alphanumeric,
   sortFn_text,
+  sortFn_basic,
   sortFn_datetime,
   columnSizingFeature,
   columnResizingFeature,
@@ -35,6 +36,7 @@ export const features = tableFeatures({
 
   sortFns: {
     sortFn_text,
+    sortFn_basic,
     sortFn_datetime,
     sortFn_alphanumeric,
   },

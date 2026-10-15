@@ -12,7 +12,6 @@ import {
 import { toast } from "sonner"
 
 import type { DataTableFeatures } from "@/components/data-table"
-
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -24,16 +23,141 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
-
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
+import { getErrorMessage } from "@/lib/utils/error"
+
 import { ViewCategoryDialog } from "./view-category-dialog"
 import { UpdateCategoryDialog } from "./update-category-dialog"
 import { useDeleteCategoryMutation } from "../api/categories.api"
 import type { Category } from "../types/categories.types"
-import { getErrorMessage } from "@/lib/utils/error"
 
 export const columnHelper = createColumnHelper<DataTableFeatures, Category>()
 
+// Category name cell
+function CategoryNameCell({ category }: { category: Category }) {
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+
+  return (
+    <>
+      <button
+        type="button"
+        className="cursor-pointer text-left font-medium hover:text-primary"
+        onClick={() => setIsViewDialogOpen(true)}
+      >
+        {category.name}
+      </button>
+
+      <ViewCategoryDialog
+        category={category}
+        open={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+      />
+    </>
+  )
+}
+
+// Category actions cell
+function CategoryActionsCell({ category }: { category: Category }) {
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+
+  const [deleteCategory, { isLoading: isDeleting }] =
+    useDeleteCategoryMutation()
+
+  const handleDelete = async () => {
+    try {
+      await deleteCategory(category.id).unwrap()
+
+      toast.success("Category deleted successfully")
+      setIsDeleteDialogOpen(false)
+    } catch (error) {
+      toast.error("Failed to delete category", {
+        description: getErrorMessage(error) || "Something went wrong.",
+      })
+    }
+  }
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="secondary"
+            size="icon"
+            aria-label={`Actions for ${category.name}`}
+          >
+            <MoreHorizontal className="size-4" />
+            <span className="sr-only">Open actions</span>
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
+              <Info className="size-4" />
+              Details
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
+              <SquarePen className="size-4" />
+              Update
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Danger</DropdownMenuLabel>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => setIsDeleteDialogOpen(true)}
+            >
+              <Trash2 className="size-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ViewCategoryDialog
+        category={category}
+        open={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+      />
+
+      <UpdateCategoryDialog
+        category={category}
+        open={isUpdateDialogOpen}
+        onOpenChange={setIsUpdateDialogOpen}
+      />
+
+      <ConfirmDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        title="Delete Category"
+        description={
+          <>
+            Are you sure you want to delete <strong>{category.name}</strong>?
+            This action cannot be undone.
+          </>
+        }
+        confirmLabel={isDeleting ? "Deleting..." : "Delete"}
+        cancelLabel="Cancel"
+        onConfirm={handleDelete}
+      />
+    </>
+  )
+}
+
+// Table columns
 export const columns = columnHelper.columns([
   {
     accessorKey: "name",
@@ -47,7 +171,7 @@ export const columns = columnHelper.columns([
         <ArrowUpDown className="ml-2 size-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="font-medium">{row.original.name}</div>,
+    cell: ({ row }) => <CategoryNameCell category={row.original} />,
   },
 
   {
@@ -103,99 +227,8 @@ export const columns = columnHelper.columns([
     size: 80,
     minSize: 80,
     maxSize: 80,
-    cell: ({ row }) => {
-      const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
-      const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
-      const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-
-      const [deleteCategory, { isLoading: isDeleting }] =
-        useDeleteCategoryMutation()
-
-      const category = row.original
-
-      const handleDelete = async () => {
-        try {
-          await deleteCategory(category.id).unwrap()
-
-          toast.success("Category deleted successfully")
-          setIsDeleteDialogOpen(false)
-        } catch (error) {
-          toast.error("Failed to delete category", {
-            description: getErrorMessage(error) || "Something went wrong.",
-          })
-        }
-      }
-
-      return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon">
-                <MoreHorizontal className="size-4" />
-                <span className="sr-only">Open actions</span>
-              </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
-                  <Info className="size-4" />
-                  Details
-                </DropdownMenuItem>
-
-                <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
-                  <SquarePen className="size-4" />
-                  Update
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Danger</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => setIsDeleteDialogOpen(true)}
-                >
-                  <Trash2 className="size-4" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <ViewCategoryDialog
-            category={category}
-            open={isViewDialogOpen}
-            onOpenChange={setIsViewDialogOpen}
-          />
-
-          <UpdateCategoryDialog
-            category={category}
-            open={isUpdateDialogOpen}
-            onOpenChange={setIsUpdateDialogOpen}
-          />
-
-          <ConfirmDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-            title="Delete Category"
-            description={
-              <>
-                Are you sure you want to delete <strong>{category.name}</strong>
-                ? This action cannot be undone.
-              </>
-            }
-            confirmLabel={isDeleting ? "Deleting..." : "Delete"}
-            cancelLabel="Cancel"
-            onConfirm={handleDelete}
-          />
-        </>
-      )
-    },
+    enableSorting: false,
+    enableHiding: false,
+    cell: ({ row }) => <CategoryActionsCell category={row.original} />,
   },
 ])

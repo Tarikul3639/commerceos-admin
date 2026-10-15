@@ -6,8 +6,10 @@ import { createColumnHelper } from "@tanstack/react-table"
 import { SquarePen } from "lucide-react"
 
 import type { DataTableFeatures } from "@/components/data-table"
+import { DataTableColumnHeader } from "@/components/data-table"
 import { AppImage } from "@/components/media"
 import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
 import { Permission } from "@/config/permissions.config"
 import { usePermission } from "@/hooks/use-permission"
 
@@ -27,6 +29,7 @@ export const columns = helper.columns([
         <AppImage
           image={row.original.productImage}
           name={row.original.productName}
+          clickable={false}
           className="size-11 rounded-md"
         />
 
@@ -38,54 +41,86 @@ export const columns = helper.columns([
   }),
 
   helper.accessor("sku", {
-    header: "SKU",
-    cell: ({ getValue }) => (
-      <span className="text-sm text-muted-foreground">{getValue()}</span>
+    header: () => <div className="text-center">SKU</div>,
+    cell: ({ row, getValue }) => (
+      <Link
+        href={`/dashboard/products/${row.original.productId}/update?tab=variants&sku=${encodeURIComponent(getValue())}`}
+        className="text-center text-sm text-primary hover:underline"
+      >
+        {getValue()}
+      </Link>
     ),
   }),
 
   helper.accessor("quantity", {
-    header: "Current stock",
-    cell: ({ getValue }) => (
-      <span className="font-medium tabular-nums">{getValue()}</span>
+    header: (info) => (
+      <div className="text-center">
+        <DataTableColumnHeader column={info.column} title="Stock" />
+      </div>
     ),
+    cell: (info) => {
+      const stock = info.getValue()
+      const progress = Math.min(stock, 100)
+
+      const progressColor =
+        stock < 5
+          ? "[&>div]:bg-destructive"
+          : stock < 20
+            ? "[&>div]:bg-yellow-500"
+            : stock < 50
+              ? "[&>div]:bg-blue-500"
+              : "[&>div]:bg-green-500"
+
+      return (
+        <div className="flex w-full items-center justify-center gap-2">
+          <div className="flex w-20 flex-col space-y-1">
+            <Progress value={progress} className={`h-1.5 ${progressColor}`} />
+
+            <p className="text-center text-xs text-muted-foreground tabular-nums">
+              {stock === 0 ? "Out of stock" : `${stock} in stock`}
+            </p>
+          </div>
+        </div>
+      )
+    },
   }),
 
   helper.accessor("updatedAt", {
-    header: "Updated",
-    cell: ({ getValue }) =>
-      new Intl.DateTimeFormat(undefined, {
-        dateStyle: "medium",
-        timeStyle: "short",
-      }).format(new Date(getValue())),
+    header: () => <div className="text-center">Updated</div>,
+    cell: ({ getValue }) => (
+      <div className="text-center">
+        {new Intl.DateTimeFormat(undefined, {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }).format(new Date(getValue()))}
+      </div>
+    ),
   }),
 
   helper.display({
     id: "actions",
-    header: "Actions",
+    header: () => <div className="text-center">Actions</div>,
     size: 100,
     minSize: 100,
     maxSize: 100,
-    cell: ({ row }) => {
-      const [open, setOpen] = useState(false)
-      const canAdjust = usePermission().has(Permission.STOCK_UPDATE)
-
-      if (!canAdjust) return null
-
-      return (
-        <>
-          <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-            <SquarePen />
-            Adjust
-          </Button>
-
-          <AdjustStockDialog
-            stock={row.original}
-            open={open}
-            onOpenChange={setOpen}
-          />
-        </>
-      )
-    },
+    cell: ({ row }) => <StockActionsCell stock={row.original} />,
   }),
 ])
+
+function StockActionsCell({ stock }: { stock: Stock }) {
+  const [open, setOpen] = useState(false)
+  const canAdjust = usePermission().has(Permission.STOCK_UPDATE)
+
+  if (!canAdjust) return null
+
+  return (
+    <div className="flex justify-center">
+      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+        <SquarePen className="size-4" />
+        Adjust
+      </Button>
+
+      <AdjustStockDialog stock={stock} open={open} onOpenChange={setOpen} />
+    </div>
+  )
+}

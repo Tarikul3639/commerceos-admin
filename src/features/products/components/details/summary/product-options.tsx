@@ -14,7 +14,6 @@ import type {
   ProductSizeGuide,
 } from "../../../types/product-details.types"
 import type { ProductOptionType } from "../../../types/product-option.types"
-import { X } from "lucide-react"
 
 // Check valiant are available
 function hasAvailableVariant(
@@ -96,6 +95,9 @@ const findMatchedVariant = (
 interface ProductOptionsProps {
   options: ProductOption[]
   variants: ProductVariant[]
+  initialSelectedOptions?: Partial<
+    Record<ProductOptionType, ProductOptionValue>
+  >
   onSelect: (variant: ProductVariant | null) => void
   sizeGuide: ProductSizeGuide | null
 }
@@ -103,13 +105,14 @@ interface ProductOptionsProps {
 export function ProductOptions({
   options,
   variants,
+  initialSelectedOptions = {},
   onSelect,
   sizeGuide,
 }: ProductOptionsProps) {
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState<
     Partial<Record<ProductOptionType, ProductOptionValue>>
-  >({})
+  >(initialSelectedOptions)
 
   const onSelectOption = (
     type: ProductOptionType,
@@ -308,13 +311,15 @@ export function ProductOptions({
   )
 }
 
-// Unavailable overlay component
 function UnavailableOverlay({ show }: { show: boolean }) {
   if (!show) return null
 
   return (
-    <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-      <X className="size-full text-muted-foreground/90" strokeWidth={0.8} />
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
+    >
+      <span className="h-[1.5px] w-[140%] -rotate-45 bg-muted-foreground/40 transition-opacity" />
     </span>
   )
 }

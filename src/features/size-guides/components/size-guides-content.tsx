@@ -13,7 +13,10 @@ import { columns } from "./size-guides-columns"
 
 export function SizeGuidesContent() {
   const [search, setSearch] = useState("")
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
   const [createOpen, setCreateOpen] = useState(false)
   const { data, isLoading, isError, error } = useGetSizeGuidesQuery({
     page: pagination.pageIndex + 1,
@@ -22,7 +25,16 @@ export function SizeGuidesContent() {
   })
 
   return (
-    <PageContainer title="Size Guides" breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Size Guides" }]} pageHeaderAction={<CreateSizeGuideDialog open={createOpen} onOpenChange={setCreateOpen} />}>
+    <PageContainer
+      title="Size Guides"
+      breadcrumbs={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Size Guides" },
+      ]}
+      pageHeaderAction={
+        <CreateSizeGuideDialog open={createOpen} onOpenChange={setCreateOpen} />
+      }
+    >
       <DataTable
         title="Size Guides"
         description="Manage measurement tables used by your products."
@@ -33,7 +45,11 @@ export function SizeGuidesContent() {
         error={error}
         pagination={pagination}
         onPaginationChange={setPagination}
-        search={{ value: search, onChange: setSearch, placeholder: "Search size guides..." }}
+        search={{
+          value: search,
+          onChange: setSearch,
+          placeholder: "Search size guides...",
+        }}
         manualPagination
         columnVisibility
         totalRows={data?.meta.total ?? 0}

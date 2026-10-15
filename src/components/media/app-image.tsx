@@ -53,7 +53,7 @@ export function AppImage({
         clickable && viewerImages.length > 0 && "cursor-pointer",
         className
       )}
-      onClick={handleImageClick}
+      onClick={clickable ? handleImageClick : undefined}
     >
       {image && (
         <AvatarImage

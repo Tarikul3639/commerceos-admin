@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
+
 import {
   Loader2,
   Save,
@@ -31,16 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+
 import {
   Table,
   TableBody,
@@ -144,6 +137,44 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
   const [editForm, setEditForm] = useState<EditableVariant | null>(null)
   const [savingId, setSavingId] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+
+  const searchParams = useSearchParams()
+  const targetSku = searchParams.get("sku")
+
+  useEffect(() => {
+    if (!targetSku || isLoading) return
+
+    let timeout: number | undefined
+    const frame = requestAnimationFrame(() => {
+      const targetRow = document.getElementById(`variant-${targetSku}`)
+
+      if (!targetRow) return
+
+      targetRow.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      })
+
+      targetRow.classList.add("bg-primary/10", "outline", "outline-primary/40")
+
+      timeout = window.setTimeout(() => {
+        targetRow.classList.remove(
+          "bg-primary/10",
+          "outline",
+          "outline-primary/40"
+        )
+        // Remove the "sku" query parameter from the URL after highlighting
+        const url = new URL(window.location.href)
+        url.searchParams.delete("sku")
+        window.history.replaceState({}, "", url.toString())
+      }, 2500)
+    })
+
+    return () => {
+      cancelAnimationFrame(frame)
+      if (timeout !== undefined) window.clearTimeout(timeout)
+    }
+  }, [targetSku, isLoading, variants])
 
   function handleGenerateVariants() {
     generateVariants(productId)
@@ -313,7 +344,6 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
       if (editingId === variant.id) {
         cancelEditing()
       }
-      
     } catch (error) {
       toast.error(getErrorMessage(error))
     } finally {
@@ -437,9 +467,7 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
       <Card>
         <CardHeader className="flex items-center justify-between">
           <div className="min-w-0 flex-1">
-            <CardTitle className="truncate">
-              Product Variants
-            </CardTitle>
+            <CardTitle className="truncate">Product Variants</CardTitle>
 
             <CardDescription className="truncate">
               {variants.length} variant{variants.length === 1 ? "" : "s"} total.
@@ -496,7 +524,11 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
                     const isDeleting = deletingId === variant.id
 
                     return (
-                      <TableRow key={variant.id}>
+                      <TableRow
+                        key={variant.id}
+                        id={`variant-${variant.sku}`}
+                        className="transition-colors duration-300"
+                      >
                         <TableCell className="min-w-56">
                           {isEditing && editForm ? (
                             <div className="space-y-2">
