@@ -94,6 +94,7 @@ export const baseApi = createApi({
     "Stock",
     "Employee",
     "SizeGuide",
+    "ActivityLog",
   ],
 
   endpoints: () => ({}),
