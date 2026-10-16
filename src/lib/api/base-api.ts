@@ -95,6 +95,9 @@ export const baseApi = createApi({
     "Employee",
     "SizeGuide",
     "ActivityLog",
+    "Payment",
+    "PaymentGatewayConfig",
+    "General",
   ],
 
   endpoints: () => ({}),

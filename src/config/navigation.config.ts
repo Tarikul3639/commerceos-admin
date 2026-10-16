@@ -10,21 +10,27 @@ import {
   Package,
   Settings,
   ShoppingCart,
+  CreditCard,
   Ruler,
   Store,
   Tags,
   RotateCcw,
   UserCog,
   Users,
+  CreditCard as PaymentIcon,
+  Truck,
+  SlidersHorizontal,
+  Settings2,
 } from "lucide-react"
 
 import { Permission } from "@/config/permissions.config"
 
 export interface NavigationItem {
   title: string
-  href: string
-  icon: LucideIcon
+  href?: string
+  icon?: LucideIcon
   permission?: Permission
+  children?: NavigationItem[]
 }
 
 export interface NavigationGroup {
@@ -33,10 +39,6 @@ export interface NavigationGroup {
 }
 
 export const navigation: NavigationGroup[] = [
-  // ─────────────────────────────────────────────
-  // Overview
-  // ─────────────────────────────────────────────
-
   {
     title: "Overview",
     items: [
@@ -54,11 +56,6 @@ export const navigation: NavigationGroup[] = [
       },
     ],
   },
-
-  // ─────────────────────────────────────────────
-  // Management
-  // ─────────────────────────────────────────────
-
   {
     title: "Management",
     items: [
@@ -82,20 +79,29 @@ export const navigation: NavigationGroup[] = [
       },
     ],
   },
-
-  // ─────────────────────────────────────────────
-  // Catalog
-  // ─────────────────────────────────────────────
-
   {
     title: "Catalog",
     items: [
+
       {
         title: "Products",
-        href: "/dashboard/products",
+        // href: "/dashboard/products",
         icon: Package,
         permission: Permission.PRODUCT_READ,
+        children: [
+          {
+            title: "List",
+            href: "/dashboard/products",
+            permission: Permission.PRODUCT_READ,
+          },
+          {
+            title: "Create",
+            href: "/dashboard/products/create",
+            permission: Permission.PRODUCT_CREATE,
+          },
+        ],
       },
+
       {
         title: "Categories",
         href: "/dashboard/categories",
@@ -121,11 +127,6 @@ export const navigation: NavigationGroup[] = [
       },
     ],
   },
-
-  // ─────────────────────────────────────────────
-  // Inventory
-  // ─────────────────────────────────────────────
-
   {
     title: "Inventory",
     items: [
@@ -137,11 +138,6 @@ export const navigation: NavigationGroup[] = [
       },
     ],
   },
-
-  // ─────────────────────────────────────────────
-  // Purchasing
-  // ─────────────────────────────────────────────
-
   {
     title: "Purchasing",
     items: [
@@ -165,11 +161,6 @@ export const navigation: NavigationGroup[] = [
       },
     ],
   },
-
-  // ─────────────────────────────────────────────
-  // Sales
-  // ─────────────────────────────────────────────
-
   {
     title: "Sales",
     items: [
@@ -180,6 +171,12 @@ export const navigation: NavigationGroup[] = [
         permission: Permission.ORDER_READ,
       },
       {
+        title: "Payments",
+        href: "/dashboard/payments",
+        icon: CreditCard,
+        permission: Permission.ORDER_READ,
+      },
+      {
         title: "Carts",
         href: "/dashboard/carts",
         icon: ShoppingCart,
@@ -187,11 +184,6 @@ export const navigation: NavigationGroup[] = [
       },
     ],
   },
-
-  // ─────────────────────────────────────────────
-  // Marketing
-  // ─────────────────────────────────────────────
-
   {
     title: "Marketing",
     items: [
@@ -203,11 +195,6 @@ export const navigation: NavigationGroup[] = [
       },
     ],
   },
-
-  // ─────────────────────────────────────────────
-  // System
-  // ─────────────────────────────────────────────
-
   {
     title: "System",
     items: [
@@ -226,8 +213,28 @@ export const navigation: NavigationGroup[] = [
       {
         title: "Settings",
         href: "/dashboard/settings",
-        icon: Settings,
+        icon: Settings2,
         permission: Permission.SETTING_READ,
+        children: [
+          {
+            title: "General",
+            href: "/dashboard/settings/general",
+            // icon: SlidersHorizontal,
+            permission: Permission.SETTING_READ,
+          },
+          {
+            title: "Payments",
+            href: "/dashboard/settings/payment-gateways",
+            // icon: PaymentIcon,
+            permission: Permission.SETTING_READ,
+          },
+          {
+            title: "Shipping",
+            href: "/dashboard/settings/shipping",
+            // icon: Truck,
+            permission: Permission.SETTING_READ,
+          },
+        ],
       },
     ],
   },
