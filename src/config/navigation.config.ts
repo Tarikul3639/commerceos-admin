@@ -124,12 +124,6 @@ export const navigation: NavigationGroup[] = [
         href: "/dashboard/size-guides",
         icon: Ruler,
       },
-      {
-        title: "Discounts",
-        href: "/dashboard/discounts",
-        icon: Tags,
-        permission: Permission.DISCOUNT_READ,
-      },
     ],
   },
   {
@@ -213,6 +207,12 @@ export const navigation: NavigationGroup[] = [
         href: "/dashboard/banners",
         icon: LayoutDashboard,
         permission: Permission.BANNER_READ,
+      },
+      {
+        title: "Discounts",
+        href: "/dashboard/discounts",
+        icon: Tags,
+        permission: Permission.DISCOUNT_READ,
       },
     ],
   },

@@ -31,15 +31,11 @@ export const cartColumns = helper.columns([
   }),
   helper.accessor("itemCount", {
     header: "Products",
-    cell: ({ getValue }) => (
-      <span className="tabular-nums">{getValue()}</span>
-    ),
+    cell: ({ getValue }) => <span className="tabular-nums">{getValue()}</span>,
   }),
   helper.accessor("totalQuantity", {
     header: "Total quantity",
-    cell: ({ getValue }) => (
-      <span className="tabular-nums">{getValue()}</span>
-    ),
+    cell: ({ getValue }) => <span className="tabular-nums">{getValue()}</span>,
   }),
   helper.accessor("estimatedValue", {
     header: (info) => (

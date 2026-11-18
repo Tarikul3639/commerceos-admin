@@ -34,7 +34,9 @@ function DetailItem({
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
       <div className="text-sm font-medium wrap-break-word">{value}</div>
       {secondary ? (
-        <div className="text-xs break-all text-muted-foreground">{secondary}</div>
+        <div className="text-xs break-all text-muted-foreground">
+          {secondary}
+        </div>
       ) : null}
     </div>
   )
@@ -75,7 +77,10 @@ export function CartDetailsDialog({
                     value={cart.customer.name || "—"}
                     secondary={cart.customer.email}
                   />
-                  <DetailItem label="Phone" value={cart.customer.phone || "—"} />
+                  <DetailItem
+                    label="Phone"
+                    value={cart.customer.phone || "—"}
+                  />
                   <DetailItem
                     label="Total quantity"
                     value={cart.totalQuantity.toLocaleString()}
@@ -99,7 +104,9 @@ export function CartDetailsDialog({
                 <CardHeader className="pb-0">
                   <CardTitle>Cart items</CardTitle>
                   <CardDescription>
-                    {cart.itemCount} {cart.itemCount === 1 ? "product line" : "product lines"} in this cart
+                    {cart.itemCount}{" "}
+                    {cart.itemCount === 1 ? "product line" : "product lines"} in
+                    this cart
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="gap-0 pt-2">
@@ -113,14 +120,14 @@ export function CartDetailsDialog({
                           <AppImage
                             name={item.product.name}
                             image={item.product.imageUrl}
-                            className="size-16 rounded-lg! after:rounded-lg border"
+                            className="size-16 rounded-lg! border after:rounded-lg"
                           />
                           <div className="min-w-0 flex-1 space-y-1">
                             <p className="text-sm font-medium wrap-break-word">
                               {item.product.name}
                             </p>
                             {item.variant ? (
-                              <p className="text-xs text-muted-foreground wrap-break-word">
+                              <p className="text-xs wrap-break-word text-muted-foreground">
                                 {item.variant.title || item.variant.sku}
                                 {" · "}SKU {item.variant.sku}
                               </p>
@@ -130,10 +137,14 @@ export function CartDetailsDialog({
                             </p>
                           </div>
                           <div className="shrink-0 text-left sm:text-right">
-                            <p className="text-xs text-muted-foreground">Line total</p>
+                            <p className="text-xs text-muted-foreground">
+                              Line total
+                            </p>
                             <p className="text-sm font-semibold tabular-nums">
                               {money(
-                                (Number(item.product.price) * item.quantity).toString()
+                                (
+                                  Number(item.product.price) * item.quantity
+                                ).toString()
                               )}
                             </p>
                           </div>

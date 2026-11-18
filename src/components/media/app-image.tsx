@@ -59,7 +59,7 @@ export function AppImage({
         <AvatarImage
           src={image}
           alt={name ?? "Image"}
-          className="size-full rounded-none object-cover"
+          className="size-full rounded-none! object-cover"
         />
       )}
 
