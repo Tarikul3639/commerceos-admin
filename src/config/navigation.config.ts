@@ -14,7 +14,6 @@ import {
   Ruler,
   Store,
   Tags,
-  RotateCcw,
   UserCog,
   Users,
   CreditCard as PaymentIcon,
@@ -142,15 +141,20 @@ export const navigation: NavigationGroup[] = [
     items: [
       {
         title: "Purchases",
-        href: "/dashboard/purchases",
         icon: ClipboardList,
         permission: Permission.PURCHASE_READ,
-      },
-      {
-        title: "Returns",
-        href: "/dashboard/purchase-returns",
-        icon: RotateCcw,
-        permission: Permission.PURCHASE_READ,
+        children: [
+          {
+            title: "All Purchases",
+            href: "/dashboard/purchases",
+            permission: Permission.PURCHASE_READ,
+          },
+          {
+            title: "Returns",
+            href: "/dashboard/purchase-returns",
+            permission: Permission.PURCHASE_READ,
+          },
+        ],
       },
       {
         title: "Suppliers",
@@ -165,9 +169,20 @@ export const navigation: NavigationGroup[] = [
     items: [
       {
         title: "Orders",
-        href: "/dashboard/orders",
         icon: ShoppingCart,
         permission: Permission.ORDER_READ,
+        children: [
+          {
+            title: "All Orders",
+            href: "/dashboard/orders",
+            permission: Permission.ORDER_READ,
+          },
+          {
+            title: "Returns",
+            href: "/dashboard/returns",
+            permission: Permission.ORDER_READ,
+          },
+        ],
       },
       {
         title: "Payments",
