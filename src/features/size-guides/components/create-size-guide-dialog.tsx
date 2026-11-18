@@ -27,8 +27,7 @@ export function CreateSizeGuideDialog({
   open,
   onOpenChange,
 }: CreateSizeGuideDialogProps) {
-  const [createSizeGuide, { isLoading }] =
-    useCreateSizeGuideMutation()
+  const [createSizeGuide, { isLoading }] = useCreateSizeGuideMutation()
 
   const handleSubmit = async (data: SizeGuideFormValues) => {
     try {
@@ -41,8 +40,7 @@ export function CreateSizeGuideDialog({
       onOpenChange(false)
     } catch (error) {
       toast.error("Failed to create size guide", {
-        description:
-          getErrorMessage(error) || "Something went wrong.",
+        description: getErrorMessage(error) || "Something went wrong.",
       })
     }
   }

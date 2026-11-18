@@ -109,10 +109,10 @@ export function ProductSummary({ product }: { product: ProductDetails }) {
             selectedVariant.stock <= 0)
         }
         onAddToCart={handleAddToCart}
-        onBuyNow={() => { }}
-        onCompare={() => { }}
-        onFavorite={() => { }}
-        onShare={() => { }}
+        onBuyNow={() => {}}
+        onCompare={() => {}}
+        onFavorite={() => {}}
+        onShare={() => {}}
       />
     </div>
   )

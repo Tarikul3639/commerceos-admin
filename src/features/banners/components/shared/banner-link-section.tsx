@@ -16,7 +16,11 @@ export function BannerLinkSection({ control }: BannerLinkSectionProps) {
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor="banner-link">Link</FieldLabel>
-            <Input {...field} id="banner-link" placeholder="e.g. https://commerceos.com/products" />
+            <Input
+              {...field}
+              id="banner-link"
+              placeholder="e.g. https://commerceos.com/products"
+            />
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}

@@ -43,7 +43,7 @@ export const columns = helper.columns([
     cell: ({ row }) => (
       <Link
         href={`/dashboard/banners/${row.original.id}`}
-        className="font-medium hover:underline hover:text-primary"
+        className="font-medium hover:text-primary hover:underline"
       >
         {row.original.title || "Untitled banner"}
       </Link>

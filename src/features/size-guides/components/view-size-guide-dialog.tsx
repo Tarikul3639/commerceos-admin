@@ -41,23 +41,19 @@ export function ViewSizeGuideDialog({
           <div className="grid grid-cols-3 gap-3">
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">Name</p>
-              <p className="wrap-break-word text-sm font-medium">
+              <p className="text-sm font-medium wrap-break-word">
                 {sizeGuide.name}
               </p>
             </div>
 
             <div>
               <p className="text-xs text-muted-foreground">Unit</p>
-              <p className="text-sm font-medium uppercase">
-                {sizeGuide.unit}
-              </p>
+              <p className="text-sm font-medium uppercase">{sizeGuide.unit}</p>
             </div>
 
             <div>
               <p className="text-xs text-muted-foreground">Sizes</p>
-              <p className="text-sm font-medium">
-                {sizeGuide.rows.length}
-              </p>
+              <p className="text-sm font-medium">{sizeGuide.rows.length}</p>
             </div>
           </div>
 
@@ -89,7 +85,7 @@ export function ViewSizeGuideDialog({
                       {sizeGuide.columns.map((column, columnIndex) => (
                         <TableCell
                           key={`${column}-${columnIndex}`}
-                          className="whitespace-nowrap py-2"
+                          className="py-2 whitespace-nowrap"
                         >
                           {row[column] ?? "—"}
                         </TableCell>

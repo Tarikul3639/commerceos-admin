@@ -114,9 +114,7 @@ function SupplierActionsCell({ supplier }: { supplier: Supplier }) {
             </DropdownMenuItem>
 
             {permission.has(Permission.SUPPLIER_UPDATE) && (
-              <DropdownMenuItem
-                onClick={() => setIsUpdateDialogOpen(true)}
-              >
+              <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
                 <SquarePen className="size-4" />
                 Update
               </DropdownMenuItem>
@@ -159,8 +157,8 @@ function SupplierActionsCell({ supplier }: { supplier: Supplier }) {
         title="Delete supplier"
         description={
           <>
-            Remove <strong>{supplier.name}</strong>? It will no longer
-            appear in the active supplier list.
+            Remove <strong>{supplier.name}</strong>? It will no longer appear in
+            the active supplier list.
           </>
         }
         confirmLabel={state.isLoading ? "Deleting..." : "Delete"}
@@ -187,26 +185,20 @@ export const columns = helper.columns([
         <ArrowUpDown className="ml-2 size-4" />
       </Button>
     ),
-    cell: ({ row }) => (
-      <SupplierNameCell supplier={row.original} />
-    ),
+    cell: ({ row }) => <SupplierNameCell supplier={row.original} />,
   },
   {
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => (
-      <span className="text-muted-foreground">
-        {row.original.email || "—"}
-      </span>
+      <span className="text-muted-foreground">{row.original.email || "—"}</span>
     ),
   },
   {
     accessorKey: "phone",
     header: "Phone",
     cell: ({ row }) => (
-      <span className="text-muted-foreground">
-        {row.original.phone || "—"}
-      </span>
+      <span className="text-muted-foreground">{row.original.phone || "—"}</span>
     ),
   },
   {
@@ -221,8 +213,7 @@ export const columns = helper.columns([
   {
     accessorKey: "createdAt",
     header: "Created",
-    cell: ({ row }) =>
-      new Date(row.original.createdAt).toLocaleDateString(),
+    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
   },
   {
     id: "actions",
@@ -230,8 +221,6 @@ export const columns = helper.columns([
     size: 80,
     minSize: 80,
     maxSize: 80,
-    cell: ({ row }) => (
-      <SupplierActionsCell supplier={row.original} />
-    ),
+    cell: ({ row }) => <SupplierActionsCell supplier={row.original} />,
   },
 ])

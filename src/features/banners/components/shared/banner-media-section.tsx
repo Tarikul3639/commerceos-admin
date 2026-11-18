@@ -174,7 +174,7 @@ export function BannerMediaSection({
                 name={title || "Desktop banner"}
                 image={desktopUrl}
                 clickable={false}
-                className="h-full w-full object-cover rounded-md after:inset-0 after:rounded-md"
+                className="h-full w-full rounded-md object-cover after:inset-0 after:rounded-md"
               />
             ) : (
               <EmptyImagePreview label="Desktop" />
@@ -228,7 +228,7 @@ export function BannerMediaSection({
                 name={title || "Mobile banner"}
                 image={mobileUrl}
                 clickable={false}
-                className="h-full w-full object-cover rounded-md after:inset-0 after:rounded-md"
+                className="h-full w-full rounded-md object-cover after:inset-0 after:rounded-md"
               />
             ) : (
               <EmptyImagePreview label="Mobile" />

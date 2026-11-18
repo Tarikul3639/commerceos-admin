@@ -61,12 +61,12 @@ export function PurchaseForm({ purchase, onSuccess }: PurchaseFormProps) {
         quantity: item.quantity,
         unitPrice: item.unitPrice,
       })) ?? [
-          {
-            productId: "",
-            quantity: 1,
-            unitPrice: "",
-          },
-        ],
+        {
+          productId: "",
+          quantity: 1,
+          unitPrice: "",
+        },
+      ],
       discount: purchase?.discount ?? "0",
       tax: purchase?.tax ?? "0",
     },

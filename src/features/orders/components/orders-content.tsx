@@ -23,7 +23,9 @@ import { orderColumns } from "./orders-columns"
 export function OrdersContent() {
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState<OrderStatus | "ALL">("ALL")
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | "ALL">("ALL")
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | "ALL">(
+    "ALL"
+  )
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -52,7 +54,8 @@ export function OrdersContent() {
       ]}
       infoContent={
         <p className="text-sm text-muted-foreground">
-          Review customer orders, inspect line items, and manage fulfilment status.
+          Review customer orders, inspect line items, and manage fulfilment
+          status.
         </p>
       }
     >

@@ -84,7 +84,7 @@ export function SidebarNavigation() {
                                 <Icon
                                   className={cn(
                                     (isActive || isChildActive) &&
-                                    "text-primary",
+                                      "text-primary",
                                     "size-4.5!"
                                   )}
                                 />
@@ -118,7 +118,7 @@ export function SidebarNavigation() {
                                             <ChildIcon
                                               className={cn(
                                                 isChildItemActive &&
-                                                "text-primary",
+                                                  "text-primary",
                                                 "size-4"
                                               )}
                                             />

@@ -179,10 +179,11 @@ export function ProductOptions({
                         aria-label={`Select color ${item.value}`}
                         aria-pressed={isSelected}
                         title={item.value}
-                        className={`relative rounded-xs! p-0.5! transition-colors ${isSelected
-                          ? "border-2! border-primary!"
-                          : "border-border hover:border-primary/50"
-                          } ${!isAvailable ? "opacity-50" : ""}`}
+                        className={`relative rounded-xs! p-0.5! transition-colors ${
+                          isSelected
+                            ? "border-2! border-primary!"
+                            : "border-border hover:border-primary/50"
+                        } ${!isAvailable ? "opacity-50" : ""}`}
                       >
                         <span
                           className="block size-7 rounded-xs border border-border/50"
@@ -239,8 +240,9 @@ export function ProductOptions({
                         size="sm"
                         onClick={() => onSelectOption(option.type, item)}
                         aria-pressed={isSelected}
-                        className={`relative min-w-8 overflow-hidden rounded-xs! uppercase ${!isAvailable ? "opacity-50" : ""
-                          }`}
+                        className={`relative min-w-8 overflow-hidden rounded-xs! uppercase ${
+                          !isAvailable ? "opacity-50" : ""
+                        }`}
                       >
                         {item.value}
 
@@ -292,8 +294,9 @@ export function ProductOptions({
                         size="sm"
                         onClick={() => onSelectOption(option.type, item)}
                         aria-pressed={isSelected}
-                        className={`relative min-w-8 overflow-hidden rounded-xs! capitalize ${!isAvailable ? "opacity-50" : ""
-                          }`}
+                        className={`relative min-w-8 overflow-hidden rounded-xs! capitalize ${
+                          !isAvailable ? "opacity-50" : ""
+                        }`}
                       >
                         {item.value}
 

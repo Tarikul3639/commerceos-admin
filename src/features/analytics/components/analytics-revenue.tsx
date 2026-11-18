@@ -38,14 +38,15 @@ export function AnalyticsRevenue({
   revenue?: RevenueChartData[]
   isLoading: boolean
 }) {
-   revenue = revenueChartData
+  revenue = revenueChartData
 
   const isMobile = useIsMobile()
 
-  const data = revenue?.map((item) => ({
-    date: item.date,
-    revenue: Number(item.revenue),
-  })) || []
+  const data =
+    revenue?.map((item) => ({
+      date: item.date,
+      revenue: Number(item.revenue),
+    })) || []
 
   return (
     <Card className="min-w-0 overflow-hidden py-0">

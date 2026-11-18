@@ -29,7 +29,10 @@ export const sizeGuidesApi = baseApi.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.data.map(({ id }) => ({ type: "SizeGuide" as const, id })),
+              ...result.data.map(({ id }) => ({
+                type: "SizeGuide" as const,
+                id,
+              })),
               { type: "SizeGuide" as const, id: "LIST" },
             ]
           : [{ type: "SizeGuide" as const, id: "LIST" }],

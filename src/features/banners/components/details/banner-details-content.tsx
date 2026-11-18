@@ -283,13 +283,13 @@ function Detail({ label, value }: { label: string; value: string }) {
 function formatDate(value: string | null) {
   return value
     ? new Date(value).toLocaleString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour12: true,
-      hour: "numeric",
-      minute: "numeric",
-    })
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour12: true,
+        hour: "numeric",
+        minute: "numeric",
+      })
     : "—"
 }
 

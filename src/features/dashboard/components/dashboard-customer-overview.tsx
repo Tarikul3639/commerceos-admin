@@ -67,7 +67,7 @@ export function DashboardCustomerOverview({
 
   return (
     <Card className="min-w-0 gap-3 overflow-hidden">
-     <CardHeader className="px-0! sm:px-2!">
+      <CardHeader className="px-0! sm:px-2!">
         <CardTitle className="text-sm sm:text-base">
           Customer Overview
         </CardTitle>

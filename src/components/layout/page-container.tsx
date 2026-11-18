@@ -87,7 +87,7 @@ export function PageContainer({
             </div>
 
             {pageHeaderAction && (
-              <div className="flex shrink-0 flex-wrap items-center gap-2 justify-end">
+              <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
                 {pageHeaderAction}
               </div>
             )}

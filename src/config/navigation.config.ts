@@ -82,7 +82,6 @@ export const navigation: NavigationGroup[] = [
   {
     title: "Catalog",
     items: [
-
       {
         title: "Products",
         // href: "/dashboard/products",

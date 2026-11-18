@@ -1,17 +1,8 @@
 export type OrderStatus =
-  | "PENDING"
-  | "CONFIRMED"
-  | "PROCESSING"
-  | "SHIPPED"
-  | "DELIVERED"
-  | "CANCELLED"
+  "PENDING" | "CONFIRMED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED"
 
 export type PaymentStatus =
-  | "PENDING"
-  | "PAID"
-  | "FAILED"
-  | "REFUNDED"
-  | "CANCELLED"
+  "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "CANCELLED"
 
 export interface OrderItem {
   id: string

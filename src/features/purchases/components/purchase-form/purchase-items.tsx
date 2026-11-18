@@ -101,14 +101,14 @@ export function PurchaseItems({
                           <span className="truncate">
                             {field.value
                               ? (() => {
-                                const product = products.find(
-                                  (product) => product.id === field.value
-                                )
+                                  const product = products.find(
+                                    (product) => product.id === field.value
+                                  )
 
-                                return product
-                                  ? getProductLabel(product)
-                                  : "Choose a product"
-                              })()
+                                  return product
+                                    ? getProductLabel(product)
+                                    : "Choose a product"
+                                })()
                               : "Choose a product"}
                           </span>
 
@@ -128,7 +128,6 @@ export function PurchaseItems({
 
                             <CommandGroup>
                               {products.map((product) => (
-
                                 <CommandItem
                                   key={product.id}
                                   value={getProductLabel(product)}
@@ -142,10 +141,14 @@ export function PurchaseItems({
                                     />
 
                                     <div className="flex min-w-0 flex-col">
-                                      <span className="truncate font-medium">{product.name}</span>
+                                      <span className="truncate font-medium">
+                                        {product.name}
+                                      </span>
                                       <span className="truncate text-xs text-muted-foreground">
                                         {product.variants
-                                          ?.filter((variant) => variant.isActive)
+                                          ?.filter(
+                                            (variant) => variant.isActive
+                                          )
                                           .map((variant) => variant.sku)
                                           .join(", ")}
                                       </span>
@@ -155,11 +158,12 @@ export function PurchaseItems({
                                   <Check
                                     className={cn(
                                       "ml-auto size-4 shrink-0",
-                                      field.value === product.id ? "opacity-100" : "opacity-0"
+                                      field.value === product.id
+                                        ? "opacity-100"
+                                        : "opacity-0"
                                     )}
                                   />
                                 </CommandItem>
-
                               ))}
                             </CommandGroup>
                           </CommandList>

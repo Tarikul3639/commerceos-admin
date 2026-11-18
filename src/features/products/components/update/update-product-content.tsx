@@ -40,7 +40,10 @@ export function UpdateProductContent() {
       breadcrumbs={[
         { label: "Dashboard", href: "/dashboard" },
         { label: "Products", href: "/dashboard/products" },
-        { label: `Update ${label}`, href: `/dashboard/products/${productId}/update` },
+        {
+          label: `Update ${label}`,
+          href: `/dashboard/products/${productId}/update`,
+        },
       ]}
     >
       <UpdateProductForm productId={productId} product={product} />

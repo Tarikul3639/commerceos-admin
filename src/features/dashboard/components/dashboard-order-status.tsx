@@ -105,7 +105,7 @@ export function DashboardOrderStatus({
         </CardDescription>
       </CardHeader>
 
-     <CardContent className="px-0! sm:px-2!">
+      <CardContent className="px-0! sm:px-2!">
         {isLoading ? (
           <Skeleton className="mx-4 h-56" />
         ) : (
