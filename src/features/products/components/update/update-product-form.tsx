@@ -129,7 +129,7 @@ export function UpdateProductForm({
       </TabsContent>
 
       <TabsContent value="images" className="mt-0">
-        <ProductImages productId={productId} />
+        <ProductImages productId={product.id} />
       </TabsContent>
 
       <TabsContent value="options" className="mt-0">

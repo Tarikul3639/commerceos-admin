@@ -77,7 +77,7 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
           {banner && permission.has(Permission.BANNER_UPDATE) && (
             <Button size="sm" asChild>
               <Link href={`/dashboard/banners/${banner.id}/update`}>
-                <SquarePen />
+                <SquarePen className="size-4" />
                 Update
               </Link>
             </Button>

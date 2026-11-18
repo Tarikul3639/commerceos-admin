@@ -129,7 +129,7 @@ export const columns = helper.columns([
                 {canUpdate && (
                   <DropdownMenuItem asChild>
                     <Link href={`/dashboard/banners/${banner.id}/update`}>
-                      <SquarePen />
+                      <SquarePen className="size-4" />
                       Update
                     </Link>
                   </DropdownMenuItem>

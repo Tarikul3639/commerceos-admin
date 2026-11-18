@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react"
 import type { DataTableFeatures } from "@/components/data-table"
 import type { Discount } from "../types/discount.types"
 
@@ -77,7 +77,8 @@ export function getDiscountColumns(
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => onEdit(row.original)}>
-              <Pencil /> Edit
+              <SquarePen className="size-4" />
+              Update
             </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"

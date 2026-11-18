@@ -8,7 +8,7 @@ import {
   Save,
   Trash2,
   X,
-  Pencil,
+  SquarePen,
   SavePlus,
   Sparkles,
 } from "lucide-react"
@@ -674,13 +674,13 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
                             ) : (
                               <>
                                 <Button
-                                  size="icon"
+                                  size="sm"
                                   variant="outline"
-                                  aria-label="Edit variant"
                                   onClick={() => startEditing(variant)}
                                   disabled={!!editingId}
                                 >
-                                  <Pencil className="size-4" />
+                                  <SquarePen className="size-4" />
+                                  Update
                                 </Button>
 
                                 <Button

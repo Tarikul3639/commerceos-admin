@@ -1,4 +1,4 @@
-import { Loader2, PencilLine } from "lucide-react"
+import { Loader2, SquarePen } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -108,7 +108,8 @@ export function PaymentGatewayCard({
           onClick={onEdit}
           disabled={isUpdating}
         >
-          Edit
+          <SquarePen className="size-4" />
+          Update
         </Button>
       </div>
     </Card>

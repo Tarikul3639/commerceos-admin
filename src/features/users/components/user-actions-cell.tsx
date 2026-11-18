@@ -5,7 +5,7 @@ import {
   CirclePause,
   Info,
   MoreHorizontal,
-  Pencil,
+  SquarePen,
   ShieldPlus,
   Trash2,
   XCircle,
@@ -143,7 +143,7 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
               </DropdownMenuItem>
 
               <DropdownMenuItem onClick={() => setIsUpdateOpen(true)}>
-                <Pencil className="h-4 w-4" />
+                <SquarePen className="size-4" />
                 Update
               </DropdownMenuItem>
             </DropdownMenuGroup>
