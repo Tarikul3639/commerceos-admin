@@ -210,7 +210,7 @@ export function AppHeader() {
                   )}
                 </div>
 
-                <div className="w-fit flex justify-end border-t">
+                <div className="w-fit flex justify-">
                   <Button
                     variant="ghost"
                     size="xs"
