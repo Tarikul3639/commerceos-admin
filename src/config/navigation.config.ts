@@ -258,7 +258,16 @@ export const navigation: NavigationGroup[] = [
           {
             title: "Shipping",
             href: "/dashboard/settings/shipping",
-            // icon: Truck,
+            permission: Permission.SETTING_READ,
+          },
+          {
+            title: "Notifications",
+            href: "/dashboard/settings/notifications",
+            permission: Permission.SETTING_READ,
+          },
+          {
+            title: "Security",
+            href: "/dashboard/settings/security",
             permission: Permission.SETTING_READ,
           },
         ],
