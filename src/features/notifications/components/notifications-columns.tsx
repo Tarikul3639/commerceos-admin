@@ -23,7 +23,10 @@ import {
   useDeleteNotificationMutation,
   useMarkNotificationReadMutation,
 } from "../api/notifications.api"
-import type { Notification, NotificationType } from "../types/notification.types"
+import type {
+  Notification,
+  NotificationType,
+} from "../types/notification.types"
 import { NotificationDetailsDialog } from "./notification-details-dialog"
 
 const helper = createColumnHelper<DataTableFeatures, Notification>()

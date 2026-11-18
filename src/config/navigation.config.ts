@@ -7,6 +7,7 @@ import {
   ChartNoAxesCombined,
   ClipboardList,
   LayoutDashboard,
+  Mail,
   Package,
   Settings,
   ShoppingCart,
@@ -62,6 +63,12 @@ export const navigation: NavigationGroup[] = [
         title: "Users",
         href: "/dashboard/users",
         icon: Users,
+        permission: Permission.USER_READ,
+      },
+      {
+        title: "Employees",
+        href: "/dashboard/employees",
+        icon: UserCog,
         permission: Permission.USER_READ,
       },
       {
@@ -223,6 +230,12 @@ export const navigation: NavigationGroup[] = [
         href: "/dashboard/notifications",
         icon: Bell,
         permission: Permission.NOTIFICATION_READ,
+      },
+      {
+        title: "Emails",
+        href: "/dashboard/emails",
+        icon: Mail,
+        permission: Permission.EMAIL_READ,
       },
       {
         title: "Settings",

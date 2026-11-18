@@ -1,6 +1,7 @@
 import { baseApi } from "@/lib/api/base-api"
 
 import type {
+  CreateEmployeePayload,
   CreateUserPayload,
   UpdateUserPayload,
   UpdateUserStatusPayload,
@@ -17,6 +18,18 @@ export const userApi = baseApi.injectEndpoints({
     createUser: builder.mutation<User, CreateUserPayload>({
       query: (body) => ({
         url: "/users",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    /**
+     * Create employee or manager using the staff-only backend contract.
+     */
+    createEmployee: builder.mutation<User, CreateEmployeePayload>({
+      query: (body) => ({
+        url: "/users/employees",
         method: "POST",
         body,
       }),
@@ -106,6 +119,7 @@ export const userApi = baseApi.injectEndpoints({
 
 export const {
   useCreateUserMutation,
+  useCreateEmployeeMutation,
   useGetUsersQuery,
   useGetUserQuery,
   useUpdateUserMutation,

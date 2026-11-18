@@ -99,6 +99,7 @@ export const baseApi = createApi({
     "Payment",
     "PaymentGatewayConfig",
     "Notification",
+    "Email",
     "General",
   ],
 

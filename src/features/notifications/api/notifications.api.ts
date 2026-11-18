@@ -9,7 +9,10 @@ import type {
 
 export const notificationsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getNotifications: builder.query<NotificationsResponse, NotificationQueryParams | void>({
+    getNotifications: builder.query<
+      NotificationsResponse,
+      NotificationQueryParams | void
+    >({
       query: (params) => ({
         url: "/notifications",
         method: "GET",
@@ -18,7 +21,10 @@ export const notificationsApi = baseApi.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.data.map(({ id }) => ({ type: "Notification" as const, id })),
+              ...result.data.map(({ id }) => ({
+                type: "Notification" as const,
+                id,
+              })),
               { type: "Notification" as const, id: "LIST" },
             ]
           : [{ type: "Notification" as const, id: "LIST" }],
@@ -34,7 +40,10 @@ export const notificationsApi = baseApi.injectEndpoints({
         { type: "Notification", id: "LIST" },
       ],
     }),
-    markAllNotificationsRead: builder.mutation<MarkAllNotificationsReadResponse, void>({
+    markAllNotificationsRead: builder.mutation<
+      MarkAllNotificationsReadResponse,
+      void
+    >({
       query: () => ({ url: "/notifications/read-all", method: "PATCH" }),
       invalidatesTags: [{ type: "Notification", id: "LIST" }],
     }),

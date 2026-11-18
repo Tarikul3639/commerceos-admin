@@ -57,6 +57,10 @@ export interface CreateUserPayload {
   role: Role
 }
 
+export type CreateEmployeePayload = Omit<CreateUserPayload, "role"> & {
+  role: Role.MANAGER | Role.EMPLOYEE
+}
+
 export interface UpdateUserPayload {
   name?: string | null
   email?: string
@@ -75,6 +79,8 @@ export interface UserQueryParams {
   limit?: number
   search?: string
   status?: UserStatus
+  role?: Role
+  staffOnly?: boolean
   sortBy?: UserSortBy
   sortOrder?: SortOrder
 }

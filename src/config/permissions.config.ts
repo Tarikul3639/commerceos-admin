@@ -134,6 +134,7 @@ export enum Permission {
   // ─────────────────────────────────────────────
 
   ACTIVITY_LOG_READ = "ACTIVITY_LOG_READ",
+  EMAIL_READ = "EMAIL_READ",
 
   // ─────────────────────────────────────────────
   // SETTINGS

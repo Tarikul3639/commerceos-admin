@@ -69,7 +69,7 @@ export function NotificationDetailsDialog({
               <h3 className="text-base font-semibold wrap-break-word">
                 {data.title}
               </h3>
-              <p className="text-sm leading-6 whitespace-pre-wrap wrap-break-word text-muted-foreground">
+              <p className="text-sm leading-6 wrap-break-word whitespace-pre-wrap text-muted-foreground">
                 {data.message}
               </p>
             </div>
@@ -92,7 +92,7 @@ export function NotificationDetailsDialog({
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Related ID</p>
-                <p className="mt-1 break-all font-mono text-xs">
+                <p className="mt-1 font-mono text-xs break-all">
                   {data.entityId || "—"}
                 </p>
               </div>
@@ -108,7 +108,7 @@ export function NotificationDetailsDialog({
                       {data.link}
                     </Link>
                   ) : (
-                    <p className="mt-1 break-all text-sm text-muted-foreground">
+                    <p className="mt-1 text-sm break-all text-muted-foreground">
                       {data.link}
                     </p>
                   )}
