@@ -210,10 +210,10 @@ export function AppHeader() {
                   )}
                 </div>
 
-                <div className="border-t p-2">
+                <div className="w-full justify-end border-t">
                   <Button
                     variant="ghost"
-                    size="sm"
+                    size="xs"
                     className="w-full"
                     onClick={() => {
                       setNotificationsOpen(false)
