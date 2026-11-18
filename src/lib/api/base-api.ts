@@ -97,6 +97,7 @@ export const baseApi = createApi({
     "SizeGuide",
     "ActivityLog",
     "Payment",
+    "Cart",
     "PaymentGatewayConfig",
     "Notification",
     "Email",
