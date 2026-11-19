@@ -98,10 +98,12 @@ export const baseApi = createApi({
     "ActivityLog",
     "Payment",
     "Cart",
-    "PaymentGatewayConfig",
+    "PaymentGateway",
     "Notification",
     "Email",
     "General",
+    "Shipping",
+    "NotificationPreferences",
   ],
 
   endpoints: () => ({}),

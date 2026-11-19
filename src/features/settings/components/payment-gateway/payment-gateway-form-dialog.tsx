@@ -27,23 +27,20 @@ import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 
 import type {
-  CreatePaymentGatewayConfigRequest,
-  PaymentGatewayConfig,
+  CreatePaymentGatewayRequest,
+  PaymentGateway,
   PaymentGatewayMode,
   PaymentProvider,
-  UpdatePaymentGatewayConfigRequest,
-} from "../../types/payment-gateway-config.types"
+  UpdatePaymentGatewayRequest,
+} from "../../types/payment-gateway.types"
 import { modeMeta, providerMeta, providerOptions } from "./payment-gateway-meta"
 
 interface PaymentGatewayFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  config: PaymentGatewayConfig | null
-  onCreate: (values: CreatePaymentGatewayConfigRequest) => Promise<void>
-  onUpdate: (
-    id: string,
-    values: UpdatePaymentGatewayConfigRequest
-  ) => Promise<void>
+  config: PaymentGateway | null
+  onCreate: (values: CreatePaymentGatewayRequest) => Promise<void>
+  onUpdate: (id: string, values: UpdatePaymentGatewayRequest) => Promise<void>
   isSubmitting: boolean
 }
 

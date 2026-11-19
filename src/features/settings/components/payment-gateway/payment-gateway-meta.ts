@@ -9,7 +9,7 @@ import {
 import type {
   PaymentGatewayMode,
   PaymentProvider,
-} from "../../types/payment-gateway-config.types"
+} from "../../types/payment-gateway.types"
 
 export const providerMeta = {
   MANUAL: {

@@ -11,15 +11,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 
 import {
-  useCreatePaymentGatewayConfigMutation,
-  useGetPaymentGatewayConfigsQuery,
-  useUpdatePaymentGatewayConfigMutation,
-} from "../../api/payment-gateway-config.api"
+  useCreatePaymentGatewayMutation,
+  useGetPaymentGatewaysQuery,
+  useUpdatePaymentGatewayMutation,
+} from "../../api/payment-gateway.api"
 import type {
-  CreatePaymentGatewayConfigRequest,
-  PaymentGatewayConfig,
-  UpdatePaymentGatewayConfigRequest,
-} from "../../types/payment-gateway-config.types"
+  CreatePaymentGatewayRequest,
+  PaymentGateway,
+  UpdatePaymentGatewayRequest,
+} from "../../types/payment-gateway.types"
 
 import { PaymentGatewayFormDialog } from "./payment-gateway-form-dialog"
 import { PaymentGatewayList } from "./payment-gateway-list"
@@ -33,8 +33,9 @@ const breadcrumbs = [
 
 export function PaymentSettingsContent() {
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [editingConfig, setEditingConfig] =
-    useState<PaymentGatewayConfig | null>(null)
+  const [editingConfig, setEditingConfig] = useState<PaymentGateway | null>(
+    null
+  )
   const [togglingId, setTogglingId] = useState<string | null>(null)
 
   const {
@@ -43,33 +44,30 @@ export function PaymentSettingsContent() {
     isFetching,
     error,
     refetch,
-  } = useGetPaymentGatewayConfigsQuery()
+  } = useGetPaymentGatewaysQuery()
 
   const [createConfig, { isLoading: isCreating }] =
-    useCreatePaymentGatewayConfigMutation()
+    useCreatePaymentGatewayMutation()
 
   const [updateConfig, { isLoading: isUpdating }] =
-    useUpdatePaymentGatewayConfigMutation()
+    useUpdatePaymentGatewayMutation()
 
   const enabledCount = configs.filter((c) => c.isEnabled).length
   const liveCount = configs.filter((c) => c.mode === "LIVE").length
 
-  async function handleCreate(values: CreatePaymentGatewayConfigRequest) {
+  async function handleCreate(values: CreatePaymentGatewayRequest) {
     await createConfig(values).unwrap()
     setDialogOpen(false)
   }
 
-  async function handleUpdate(
-    id: string,
-    values: UpdatePaymentGatewayConfigRequest
-  ) {
+  async function handleUpdate(id: string, values: UpdatePaymentGatewayRequest) {
     await updateConfig({ id, body: values }).unwrap()
     setDialogOpen(false)
     setEditingConfig(null)
   }
 
   // Quick toggle from the card: locks only that card, never touches the dialog.
-  async function handleToggle(config: PaymentGatewayConfig) {
+  async function handleToggle(config: PaymentGateway) {
     const next = !config.isEnabled
     setTogglingId(config.id)
     try {
@@ -85,7 +83,7 @@ export function PaymentSettingsContent() {
     }
   }
 
-  function handleEdit(config: PaymentGatewayConfig) {
+  function handleEdit(config: PaymentGateway) {
     setEditingConfig(config)
     setDialogOpen(true)
   }
@@ -120,7 +118,7 @@ export function PaymentSettingsContent() {
         </div>
       }
     >
-      <div className="mx-auto w-full max-w-6xl space-y-6">
+      <div className="mx-auto w-full space-y-6">
         {isLoading ? (
           <Skeleton className="h-28 rounded-xl sm:h-24" />
         ) : (

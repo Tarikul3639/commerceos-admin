@@ -3,7 +3,7 @@ export type PaymentProvider =
 
 export type PaymentGatewayMode = "TEST" | "LIVE"
 
-export interface PaymentGatewayConfig {
+export interface PaymentGateway {
   id: string
   provider: PaymentProvider
   displayName: string
@@ -14,7 +14,7 @@ export interface PaymentGatewayConfig {
   updatedAt: string
 }
 
-export interface CreatePaymentGatewayConfigRequest {
+export interface CreatePaymentGatewayRequest {
   provider: PaymentProvider
   displayName: string
   isEnabled?: boolean
@@ -22,13 +22,12 @@ export interface CreatePaymentGatewayConfigRequest {
   settings?: Record<string, unknown>
 }
 
-export type UpdatePaymentGatewayConfigRequest =
-  Partial<CreatePaymentGatewayConfigRequest>
+export type UpdatePaymentGatewayRequest = Partial<CreatePaymentGatewayRequest>
 
-export interface PaymentGatewayConfigResponse {
-  data: PaymentGatewayConfig
+export interface PaymentGatewayResponse {
+  data: PaymentGateway
 }
 
-export interface PaymentGatewayConfigsResponse {
-  data: PaymentGatewayConfig[]
+export interface PaymentGatewaysResponse {
+  data: PaymentGateway[]
 }

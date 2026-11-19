@@ -16,7 +16,9 @@ export function SettingsSectionPlaceholder({
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
       <div className="rounded-lg border bg-card p-5">
-        <h2 className="text-sm font-medium">Configuration is not available yet</h2>
+        <h2 className="text-sm font-medium">
+          Configuration is not available yet
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">{requirements}</p>
       </div>
     </section>

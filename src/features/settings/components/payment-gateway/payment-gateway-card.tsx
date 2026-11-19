@@ -7,11 +7,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 
-import type { PaymentGatewayConfig } from "../../types/payment-gateway-config.types"
+import type { PaymentGateway } from "../../types/payment-gateway.types"
 import { modeMeta, providerMeta } from "./payment-gateway-meta"
 
 interface PaymentGatewayCardProps {
-  config: PaymentGatewayConfig
+  config: PaymentGateway
   onEdit: () => void
   onToggle: () => void
   isUpdating: boolean

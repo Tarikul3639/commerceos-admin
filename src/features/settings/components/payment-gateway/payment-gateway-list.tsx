@@ -2,13 +2,13 @@ import { CreditCard, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
-import type { PaymentGatewayConfig } from "../../types/payment-gateway-config.types"
+import type { PaymentGateway } from "../../types/payment-gateway.types"
 import { PaymentGatewayCard } from "./payment-gateway-card"
 
 interface PaymentGatewayListProps {
-  configs: PaymentGatewayConfig[]
-  onEdit: (config: PaymentGatewayConfig) => void
-  onToggle: (config: PaymentGatewayConfig) => void
+  configs: PaymentGateway[]
+  onEdit: (config: PaymentGateway) => void
+  onToggle: (config: PaymentGateway) => void
   onAdd: () => void
   /** id of the gateway currently being toggled (only that card is locked) */
   updatingId: string | null
