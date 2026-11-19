@@ -1,6 +1,7 @@
 import { baseApi } from "@/lib/api/base-api"
 
 import type {
+  ActiveSession,
   ChangePasswordRequest,
   ChangePasswordResponse,
   UpdateCurrentUserProfileRequest,
@@ -59,6 +60,36 @@ export const authApi = baseApi.injectEndpoints({
         url: "/auth/user/logout-all",
         method: "POST",
       }),
+    }),
+
+    getActiveSessions: builder.query<{ data: ActiveSession[] }, void>({
+      query: () => ({
+        url: "/auth/user/sessions",
+        method: "GET",
+      }),
+      providesTags: ["AuthSessions"],
+    }),
+
+    revokeSession: builder.mutation<
+      { message: string; isCurrent: boolean },
+      string
+    >({
+      query: (sessionId) => ({
+        url: `/auth/user/sessions/${sessionId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["AuthSessions"],
+    }),
+
+    logoutOtherSessions: builder.mutation<
+      { message: string; revokedCount: number },
+      void
+    >({
+      query: () => ({
+        url: "/auth/user/logout-other-sessions",
+        method: "POST",
+      }),
+      invalidatesTags: ["AuthSessions"],
     }),
 
     changePassword: builder.mutation<
@@ -122,6 +153,9 @@ export const {
   useUpdateCurrentUserProfileMutation,
   useLogoutMutation,
   useLogoutAllMutation,
+  useGetActiveSessionsQuery,
+  useRevokeSessionMutation,
+  useLogoutOtherSessionsMutation,
   useChangePasswordMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,

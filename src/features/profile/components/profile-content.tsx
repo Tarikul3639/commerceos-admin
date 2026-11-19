@@ -12,6 +12,7 @@ import { AccountInformationCard } from "./account-information-card"
 import { ChangePasswordForm } from "./change-password-form"
 import { PersonalInformationForm } from "./personal-information-form"
 import { ProfileOverview } from "./profile-overview"
+import { ActiveSessionsCard } from "./active-sessions-card"
 
 const breadcrumbs = [
   { label: "Dashboard", href: "/dashboard" },
@@ -67,6 +68,7 @@ export function ProfileContent() {
             <PersonalInformationForm user={data} />
             <div className="space-y-5">
               <ChangePasswordForm />
+              <ActiveSessionsCard />
               <AccountInformationCard user={data} />
             </div>
           </div>

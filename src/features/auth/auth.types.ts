@@ -22,6 +22,16 @@ export interface UpdateCurrentUserProfileRequest {
   publicId?: string | null
 }
 
+export interface ActiveSession {
+  id: string
+  userAgent: string | null
+  ipAddress: string | null
+  createdAt: string
+  lastUsedAt: string | null
+  expiresAt: string
+  isCurrent: boolean
+}
+
 export interface CurrentUserPayload {
   id: string
   email: string
