@@ -15,6 +15,8 @@ import type { BrandFormValues } from "../schemas/brand.schema"
 import type { Brand } from "../types/brands.types"
 import { BrandForm } from "./brand-form"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 interface UpdateBrandDialogProps {
   open: boolean
@@ -27,10 +29,11 @@ export function UpdateBrandDialog({
   onOpenChange,
   brand,
 }: UpdateBrandDialogProps) {
+  const canUpdate = usePermission().has(Permission.BRAND_UPDATE)
   const [updateBrand, { isLoading }] = useUpdateBrandMutation()
 
   const handleSubmit = async (data: BrandFormValues) => {
-    if (!brand) return
+    if (!canUpdate || !brand) return
 
     try {
       await updateBrand({
@@ -52,7 +55,7 @@ export function UpdateBrandDialog({
     }
   }
 
-  if (!brand) return null
+  if (!canUpdate || !brand) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

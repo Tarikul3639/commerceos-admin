@@ -20,11 +20,19 @@ export function UpdateBannerContent() {
   const { id: bannerId } = useParams<{ id: string }>()
   const router = useRouter()
   const permission = usePermission()
-  const { data: banner, isLoading, isError } = useGetBannerQuery(bannerId)
+  const canUpdate = permission.has(Permission.BANNER_UPDATE)
+  const canRead = permission.has(Permission.BANNER_READ)
+  const {
+    data: banner,
+    isLoading,
+    isError,
+  } = useGetBannerQuery(bannerId, {
+    skip: !canUpdate || !canRead,
+  })
   const [updateBanner, { isLoading: isUpdating }] = useUpdateBannerMutation()
 
   const handleSubmit = async (values: BannerFormValues) => {
-    if (!banner) return
+    if (!canUpdate || !banner) return
 
     try {
       await updateBanner({
@@ -58,7 +66,7 @@ export function UpdateBannerContent() {
 
   return (
     <PageContainer
-      access={permission.has(Permission.BANNER_UPDATE)}
+      access={canUpdate}
       accessFallback={<UnauthorizedContent />}
       title="Update Banner"
       breadcrumbs={[

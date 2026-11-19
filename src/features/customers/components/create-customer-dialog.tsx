@@ -20,6 +20,8 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 import { CustomerForm } from "./customer-form"
 
 import { useCreateCustomerMutation } from "../api/customers.api"
@@ -34,9 +36,12 @@ export function CreateCustomerDialog({
   open,
   onOpenChange,
 }: CreateCustomerDialogProps) {
+  const canCreate = usePermission().has(Permission.CUSTOMER_CREATE)
   const [createCustomer, { isLoading }] = useCreateCustomerMutation()
 
   const handleSubmit = async (data: CustomerFormValues) => {
+    if (!canCreate) return
+
     try {
       await createCustomer({
         name: data.name,
@@ -56,6 +61,8 @@ export function CreateCustomerDialog({
       })
     }
   }
+
+  if (!canCreate) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

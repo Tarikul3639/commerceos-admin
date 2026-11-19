@@ -17,6 +17,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 
 import { Permission } from "@/config/permissions.config"
+import { Role } from "@/config/roles.config"
+import { usePermission } from "@/hooks/use-permission"
 import { permissionGroups } from "@/config/permission-groups.config"
 import { useUpdateRolePermissionsMutation } from "../api/permissions.api"
 import type { RolePermissions } from "../types/permissions.types"
@@ -34,6 +36,12 @@ export function UpdatePermissionsDialog({
   onOpenChange,
   rolePermissions,
 }: UpdatePermissionsDialogProps) {
+  const { has, role } = usePermission()
+  const canUpdate =
+    role === Role.SUPER_ADMIN &&
+    has(Permission.PERMISSION_UPDATE) &&
+    !!rolePermissions &&
+    rolePermissions.role !== Role.SUPER_ADMIN
   const [selectedPermissions, setSelectedPermissions] = useState<Permission[]>(
     []
   )
@@ -91,7 +99,7 @@ export function UpdatePermissionsDialog({
       ))
 
   const handleSubmit = async () => {
-    if (!rolePermissions) return
+    if (!canUpdate || !rolePermissions) return
 
     try {
       await updateRolePermissions({
@@ -109,6 +117,8 @@ export function UpdatePermissionsDialog({
       })
     }
   }
+
+  if (!canUpdate) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

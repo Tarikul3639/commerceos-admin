@@ -96,6 +96,8 @@ function BannerActions({ banner }: { banner: Banner }) {
   const canDelete = permission.has(Permission.BANNER_DELETE)
 
   const handleDelete = async () => {
+    if (!canDelete) return
+
     try {
       await deleteBanner(banner.id).unwrap()
       toast.success("Banner deleted successfully")

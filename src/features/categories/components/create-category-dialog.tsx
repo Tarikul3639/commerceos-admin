@@ -20,6 +20,8 @@ import {
 import { Button } from "@/components/ui/button"
 
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { CategoryForm } from "./category-form"
 import { useCreateCategoryMutation } from "../api/categories.api"
@@ -34,9 +36,12 @@ export function CreateCategoryDialog({
   open,
   onOpenChange,
 }: CreateCategoryDialogProps) {
+  const canCreate = usePermission().has(Permission.CATEGORY_CREATE)
   const [createCategory, { isLoading }] = useCreateCategoryMutation()
 
   const handleSubmit = async (data: CategoryFormValues) => {
+    if (!canCreate) return
+
     try {
       await createCategory({
         name: data.name,
@@ -53,6 +58,8 @@ export function CreateCategoryDialog({
       })
     }
   }
+
+  if (!canCreate) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

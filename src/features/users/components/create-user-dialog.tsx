@@ -20,6 +20,8 @@ import {
 import { getErrorMessage } from "@/lib/utils/error"
 import { Role } from "@/config/roles.config"
 import { useRole } from "@/hooks/use-role"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { useCreateUserMutation } from "../api/user.api"
 import { userSchema, type UserFormValues } from "../schemas/user.schema"
@@ -27,6 +29,7 @@ import { userSchema, type UserFormValues } from "../schemas/user.schema"
 import { UserForm } from "./user-form"
 
 export function CreateUserDialog() {
+  const canCreate = usePermission().has(Permission.USER_CREATE)
   const [open, setOpen] = useState(false)
   const { hasRole } = useRole()
   const allowedRoles = hasRole(Role.SUPER_ADMIN)
@@ -57,6 +60,8 @@ export function CreateUserDialog() {
   }
 
   const onSubmit = async (values: UserFormValues) => {
+    if (!canCreate) return
+
     try {
       await createUser({
         ...values,
@@ -78,6 +83,8 @@ export function CreateUserDialog() {
   }
 
   const isSubmitting = isCreating
+
+  if (!canCreate) return null
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { useGetProductsQuery } from "@/features/products/api/product.api"
 import { useGetSuppliersQuery } from "@/features/suppliers/api/supplier.api"
@@ -31,6 +33,10 @@ interface PurchaseFormProps {
 
 export function PurchaseForm({ purchase, onSuccess }: PurchaseFormProps) {
   const isUpdate = Boolean(purchase)
+  const permission = usePermission()
+  const canSubmit = isUpdate
+    ? permission.has(Permission.PURCHASE_UPDATE)
+    : permission.has(Permission.PURCHASE_CREATE)
 
   const { data: supplierData } = useGetSuppliersQuery({
     limit: 100,
@@ -107,6 +113,8 @@ export function PurchaseForm({ purchase, onSuccess }: PurchaseFormProps) {
     subtotal - Number(values.discount || 0) + Number(values.tax || 0)
 
   const submit = async (data: PurchaseFormValues) => {
+    if (!canSubmit) return
+
     const subtotalValue = data.items.reduce(
       (sum, item) => sum + Number(item.unitPrice) * item.quantity,
       0
@@ -210,7 +218,7 @@ export function PurchaseForm({ purchase, onSuccess }: PurchaseFormProps) {
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading || !canSubmit}>
           {isLoading ? "Saving..." : isUpdate ? "Update" : "Create"}
         </Button>
       </div>

@@ -84,6 +84,8 @@ function BrandActionsCell({ brand }: { brand: Brand }) {
   const [deleteBrand, { isLoading: isDeleting }] = useDeleteBrandMutation()
 
   const handleDelete = async () => {
+    if (!canDelete) return
+
     try {
       await deleteBrand(brand.id).unwrap()
 

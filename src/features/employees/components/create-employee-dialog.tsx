@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/dialog"
 import { getErrorMessage } from "@/lib/utils/error"
 import { Role } from "@/config/roles.config"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { useCreateEmployeeMutation } from "@/features/users/api/user.api"
 import { UserForm } from "@/features/users/components/user-form"
@@ -34,6 +36,7 @@ const employeeSchema = userSchema.extend({
 type EmployeeFormValues = z.infer<typeof employeeSchema>
 
 export function CreateEmployeeDialog() {
+  const canCreate = usePermission().has(Permission.USER_CREATE)
   const [open, setOpen] = useState(false)
   const [createEmployee, { isLoading }] = useCreateEmployeeMutation()
   const form = useForm<EmployeeFormValues>({
@@ -54,6 +57,8 @@ export function CreateEmployeeDialog() {
   }
 
   const onSubmit = async (values: EmployeeFormValues) => {
+    if (!canCreate) return
+
     try {
       await createEmployee({
         ...values,
@@ -67,6 +72,8 @@ export function CreateEmployeeDialog() {
       toast.error(getErrorMessage(error) || "Unable to create employee")
     }
   }
+
+  if (!canCreate) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

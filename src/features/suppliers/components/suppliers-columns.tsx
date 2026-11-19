@@ -78,8 +78,12 @@ function SupplierActionsCell({ supplier }: { supplier: Supplier }) {
 
   const [deleteSupplier, state] = useDeleteSupplierMutation()
   const permission = usePermission()
+  const canUpdate = permission.has(Permission.SUPPLIER_UPDATE)
+  const canDelete = permission.has(Permission.SUPPLIER_DELETE)
 
   const remove = async () => {
+    if (!canDelete) return
+
     try {
       await deleteSupplier(supplier.id).unwrap()
 
@@ -113,7 +117,7 @@ function SupplierActionsCell({ supplier }: { supplier: Supplier }) {
               Details
             </DropdownMenuItem>
 
-            {permission.has(Permission.SUPPLIER_UPDATE) && (
+            {canUpdate && (
               <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
                 <SquarePen className="size-4" />
                 Update
@@ -121,7 +125,7 @@ function SupplierActionsCell({ supplier }: { supplier: Supplier }) {
             )}
           </DropdownMenuGroup>
 
-          {permission.has(Permission.SUPPLIER_DELETE) && (
+          {canDelete && (
             <>
               <DropdownMenuSeparator />
 
@@ -143,7 +147,7 @@ function SupplierActionsCell({ supplier }: { supplier: Supplier }) {
         onOpenChange={setDetails}
       />
 
-      {permission.has(Permission.SUPPLIER_UPDATE) && (
+      {canUpdate && (
         <SupplierDialog
           supplier={supplier}
           open={isUpdateDialogOpen}
@@ -151,19 +155,21 @@ function SupplierActionsCell({ supplier }: { supplier: Supplier }) {
         />
       )}
 
-      <ConfirmDialog
-        open={deleting}
-        onOpenChange={setDeleting}
-        title="Delete supplier"
-        description={
-          <>
-            Remove <strong>{supplier.name}</strong>? It will no longer appear in
-            the active supplier list.
-          </>
-        }
-        confirmLabel={state.isLoading ? "Deleting..." : "Delete"}
-        onConfirm={remove}
-      />
+      {canDelete && (
+        <ConfirmDialog
+          open={deleting}
+          onOpenChange={setDeleting}
+          title="Delete supplier"
+          description={
+            <>
+              Remove <strong>{supplier.name}</strong>? It will no longer appear
+              in the active supplier list.
+            </>
+          }
+          confirmLabel={state.isLoading ? "Deleting..." : "Delete"}
+          onConfirm={remove}
+        />
+      )}
     </>
   )
 }

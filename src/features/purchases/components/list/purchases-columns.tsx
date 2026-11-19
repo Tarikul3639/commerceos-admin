@@ -142,6 +142,7 @@ function PurchaseActions({ purchase }: { purchase: Purchase }) {
 
   const handleConfirm = async () => {
     if (!confirmAction) return
+    if (confirmAction === "delete" ? !canDelete : !canUpdate) return
 
     try {
       if (confirmAction === "receive") {

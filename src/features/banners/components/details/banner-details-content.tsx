@@ -46,11 +46,19 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
 
   const [deleteOpen, setDeleteOpen] = useState(false)
 
-  const { data: banner, isLoading, isError } = useGetBannerQuery(bannerId)
+  const canRead = permission.has(Permission.BANNER_READ)
+  const canDelete = permission.has(Permission.BANNER_DELETE)
+  const {
+    data: banner,
+    isLoading,
+    isError,
+  } = useGetBannerQuery(bannerId, {
+    skip: !canRead,
+  })
   const [deleteBanner, { isLoading: isDeleting }] = useDeleteBannerMutation()
 
   const handleDelete = async () => {
-    if (!banner) return
+    if (!canDelete || !banner) return
 
     try {
       await deleteBanner(banner.id).unwrap()
@@ -64,7 +72,7 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
 
   return (
     <PageContainer
-      access={permission.has(Permission.BANNER_READ)}
+      access={canRead}
       accessFallback={<UnauthorizedContent />}
       title={banner?.title || "Banner details"}
       breadcrumbs={[
@@ -83,7 +91,7 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
             </Button>
           )}
 
-          {banner && permission.has(Permission.BANNER_DELETE) && (
+          {banner && canDelete && (
             <Button
               size="sm"
               variant="destructive"
@@ -195,7 +203,7 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
         </div>
       )}
 
-      {banner && (
+      {banner && canDelete && (
         <ConfirmDialog
           open={deleteOpen}
           onOpenChange={setDeleteOpen}

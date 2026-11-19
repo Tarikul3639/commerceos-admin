@@ -24,6 +24,8 @@ import { useCreateBrandMutation } from "../api/brands.api"
 import type { BrandFormValues } from "../schemas/brand.schema"
 import { BrandForm } from "./brand-form"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 interface CreateBrandDialogProps {
   open: boolean
@@ -34,9 +36,12 @@ export function CreateBrandDialog({
   open,
   onOpenChange,
 }: CreateBrandDialogProps) {
+  const canCreate = usePermission().has(Permission.BRAND_CREATE)
   const [createBrand, { isLoading }] = useCreateBrandMutation()
 
   const handleSubmit = async (data: BrandFormValues) => {
+    if (!canCreate) return
+
     try {
       await createBrand({
         name: data.name,
@@ -54,6 +59,8 @@ export function CreateBrandDialog({
       toast.error(getErrorMessage(error) || "Failed to create brand")
     }
   }
+
+  if (!canCreate) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

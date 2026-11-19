@@ -14,9 +14,12 @@ import { BannerForm } from "../shared/banner-form"
 export function CreateBannerContent() {
   const router = useRouter()
   const permission = usePermission()
+  const canCreate = permission.has(Permission.BANNER_CREATE)
   const [createBanner, { isLoading }] = useCreateBannerMutation()
 
   const handleSubmit = async (values: BannerFormValues) => {
+    if (!canCreate) return
+
     try {
       const banner = await createBanner({
         title: values.title || undefined,
@@ -46,7 +49,7 @@ export function CreateBannerContent() {
 
   return (
     <PageContainer
-      access={permission.has(Permission.BANNER_CREATE)}
+      access={canCreate}
       accessFallback={<UnauthorizedContent />}
       title="Create Banner"
       breadcrumbs={[

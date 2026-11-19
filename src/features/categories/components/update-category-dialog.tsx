@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/dialog"
 
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { CategoryForm } from "./category-form"
 import { useUpdateCategoryMutation } from "../api/categories.api"
@@ -27,10 +29,11 @@ export function UpdateCategoryDialog({
   open,
   onOpenChange,
 }: UpdateCategoryDialogProps) {
+  const canUpdate = usePermission().has(Permission.CATEGORY_UPDATE)
   const [updateCategory, { isLoading }] = useUpdateCategoryMutation()
 
   const handleSubmit = async (data: CategoryFormValues) => {
-    if (!category) {
+    if (!canUpdate || !category) {
       return
     }
 
@@ -54,7 +57,7 @@ export function UpdateCategoryDialog({
     }
   }
 
-  if (!category) {
+  if (!canUpdate || !category) {
     return null
   }
 

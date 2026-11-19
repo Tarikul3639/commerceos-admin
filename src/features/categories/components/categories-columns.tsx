@@ -71,6 +71,8 @@ function CategoryActionsCell({ category }: { category: Category }) {
     useDeleteCategoryMutation()
 
   const handleDelete = async () => {
+    if (!canDelete) return
+
     try {
       await deleteCategory(category.id).unwrap()
 

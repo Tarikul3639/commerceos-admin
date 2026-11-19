@@ -72,6 +72,8 @@ function SizeGuideActionsCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
   const [deleteSizeGuide, { isLoading }] = useDeleteSizeGuideMutation()
 
   const handleDelete = async () => {
+    if (!canDelete) return
+
     try {
       await deleteSizeGuide(sizeGuide.id).unwrap()
 

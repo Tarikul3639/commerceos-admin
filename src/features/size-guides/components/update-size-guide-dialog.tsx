@@ -10,6 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { useUpdateSizeGuideMutation } from "../api/size-guides.api"
 import type { SizeGuideFormValues } from "../schemas/size-guide.schema"
@@ -27,10 +29,11 @@ export function UpdateSizeGuideDialog({
   open,
   onOpenChange,
 }: UpdateSizeGuideDialogProps) {
+  const canUpdate = usePermission().has(Permission.PRODUCT_UPDATE)
   const [updateSizeGuide, { isLoading }] = useUpdateSizeGuideMutation()
 
   const handleSubmit = async (data: SizeGuideFormValues) => {
-    if (!sizeGuide) return
+    if (!canUpdate || !sizeGuide) return
 
     try {
       await updateSizeGuide({
@@ -50,7 +53,7 @@ export function UpdateSizeGuideDialog({
     }
   }
 
-  if (!sizeGuide) return null
+  if (!canUpdate || !sizeGuide) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

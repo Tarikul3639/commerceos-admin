@@ -31,18 +31,27 @@ export function PurchasesContent() {
     pageSize: 10,
   })
   const permission = usePermission()
-  const { data: suppliers } = useGetSuppliersQuery({ limit: 100 })
-  const { data, isLoading, isFetching, isError, error } = useGetPurchasesQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-    status: status === "all" ? undefined : (status as PurchaseStatus),
-    supplierId: supplierId === "all" ? undefined : supplierId,
-  })
+  const canRead = permission.has(Permission.PURCHASE_READ)
+  const canReadSuppliers = permission.has(Permission.SUPPLIER_READ)
+  const canCreate = permission.has(Permission.PURCHASE_CREATE)
+  const { data: suppliers } = useGetSuppliersQuery(
+    { limit: 100 },
+    { skip: !canReadSuppliers }
+  )
+  const { data, isLoading, isFetching, isError, error } = useGetPurchasesQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+      status: status === "all" ? undefined : (status as PurchaseStatus),
+      supplierId: supplierId === "all" ? undefined : supplierId,
+    },
+    { skip: !canRead }
+  )
   const resetPage = () => setPagination((value) => ({ ...value, pageIndex: 0 }))
   return (
     <PageContainer
-      access={permission.has(Permission.PURCHASE_READ)}
+      access={canRead}
       accessFallback={<UnauthorizedContent />}
       title="Purchases"
       breadcrumbs={[
@@ -50,7 +59,7 @@ export function PurchasesContent() {
         { label: "Purchases" },
       ]}
       pageHeaderAction={
-        permission.has(Permission.PURCHASE_CREATE) && (
+        canCreate && (
           <Button asChild variant="default" size="sm">
             <Link href="/dashboard/purchases/create">
               <Plus />

@@ -13,6 +13,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { useCreateSizeGuideMutation } from "../api/size-guides.api"
 import type { SizeGuideFormValues } from "../schemas/size-guide.schema"
@@ -27,9 +29,12 @@ export function CreateSizeGuideDialog({
   open,
   onOpenChange,
 }: CreateSizeGuideDialogProps) {
+  const canCreate = usePermission().has(Permission.PRODUCT_CREATE)
   const [createSizeGuide, { isLoading }] = useCreateSizeGuideMutation()
 
   const handleSubmit = async (data: SizeGuideFormValues) => {
+    if (!canCreate) return
+
     try {
       await createSizeGuide({
         ...data,
@@ -44,6 +49,8 @@ export function CreateSizeGuideDialog({
       })
     }
   }
+
+  if (!canCreate) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

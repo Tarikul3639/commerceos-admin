@@ -19,6 +19,8 @@ import {
 import { getErrorMessage } from "@/lib/utils/error"
 import { Role } from "@/config/roles.config"
 import { useRole } from "@/hooks/use-role"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { useUpdateUserMutation } from "../api/user.api"
 import { userSchema, type UserFormValues } from "../schemas/user.schema"
@@ -37,6 +39,7 @@ export function UpdateUserDialog({
   open,
   onOpenChange,
 }: UpdateUserDialogProps) {
+  const canUpdate = usePermission().has(Permission.USER_UPDATE)
   const { hasRole } = useRole()
   const allowedRoles = hasRole(Role.SUPER_ADMIN)
     ? [Role.ADMIN, Role.MANAGER, Role.EMPLOYEE]
@@ -72,6 +75,8 @@ export function UpdateUserDialog({
   }, [user, open, form])
 
   const onSubmit = async (values: UserFormValues) => {
+    if (!canUpdate) return
+
     try {
       await updateUser({
         userId: user.id,
@@ -98,6 +103,8 @@ export function UpdateUserDialog({
   }
 
   const isSubmitting = isUpdating
+
+  if (!canUpdate) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

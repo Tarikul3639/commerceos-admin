@@ -14,6 +14,8 @@ import { useUpdateCustomerMutation } from "../api/customers.api"
 import type { Customer } from "../types/customers.types"
 import type { CustomerFormValues } from "../schemas/customer.schema"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 interface UpdateCustomerDialogProps {
   customer: Customer | null
@@ -26,10 +28,11 @@ export function UpdateCustomerDialog({
   open,
   onOpenChange,
 }: UpdateCustomerDialogProps) {
+  const canUpdate = usePermission().has(Permission.CUSTOMER_UPDATE)
   const [updateCustomer, { isLoading }] = useUpdateCustomerMutation()
 
   const handleSubmit = async (data: CustomerFormValues) => {
-    if (!customer) {
+    if (!canUpdate || !customer) {
       return
     }
 
@@ -55,7 +58,7 @@ export function UpdateCustomerDialog({
     }
   }
 
-  if (!customer) {
+  if (!canUpdate || !customer) {
     return null
   }
 

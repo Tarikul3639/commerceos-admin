@@ -17,6 +17,8 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { useAdjustStockMutation } from "../api/stock.api"
 import { stockFormSchema } from "../schemas/stock.schema"
@@ -35,6 +37,7 @@ export function AdjustStockDialog({
   open,
   onOpenChange,
 }: AdjustStockDialogProps) {
+  const canAdjust = usePermission().has(Permission.STOCK_UPDATE)
   const [adjustStock, { isLoading }] = useAdjustStockMutation()
 
   const form = useForm<StockFormValues>({
@@ -59,7 +62,7 @@ export function AdjustStockDialog({
   }, [open, stock, form])
 
   const submit = async (values: StockFormValues) => {
-    if (!stock) return
+    if (!canAdjust || !stock) return
 
     const adjustment = Number(values.quantity)
     const finalStock = stock.quantity + adjustment
@@ -87,6 +90,8 @@ export function AdjustStockDialog({
       toast.error(getErrorMessage(error) || "Failed to adjust stock")
     }
   }
+
+  if (!canAdjust) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

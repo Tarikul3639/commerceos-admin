@@ -29,15 +29,20 @@ export function SuppliersContent() {
   })
   const [createOpen, setCreateOpen] = useState(false)
   const permission = usePermission()
-  const { data, isLoading, isFetching, isError, error } = useGetSuppliersQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-    isActive: active === "all" ? undefined : active === "active",
-  })
+  const canRead = permission.has(Permission.SUPPLIER_READ)
+  const canCreate = permission.has(Permission.SUPPLIER_CREATE)
+  const { data, isLoading, isFetching, isError, error } = useGetSuppliersQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+      isActive: active === "all" ? undefined : active === "active",
+    },
+    { skip: !canRead }
+  )
   return (
     <PageContainer
-      access={permission.has(Permission.SUPPLIER_READ)}
+      access={canRead}
       accessFallback={<UnauthorizedContent />}
       title="Suppliers"
       breadcrumbs={[
@@ -45,7 +50,7 @@ export function SuppliersContent() {
         { label: "Suppliers" },
       ]}
       pageHeaderAction={
-        permission.has(Permission.SUPPLIER_CREATE) && (
+        canCreate && (
           <Button
             onClick={() => setCreateOpen(true)}
             disabled={isLoading || isFetching}
@@ -97,7 +102,9 @@ export function SuppliersContent() {
         columnVisibility
         totalRows={data?.meta.total ?? 0}
       />
-      <SupplierDialog open={createOpen} onOpenChange={setCreateOpen} />
+      {canCreate && (
+        <SupplierDialog open={createOpen} onOpenChange={setCreateOpen} />
+      )}
     </PageContainer>
   )
 }

@@ -15,6 +15,8 @@ import {
 import type { Supplier, SupplierRequest } from "../types/supplier.types"
 import { SupplierForm } from "./supplier-form"
 import type { SupplierFormValues } from "../schemas/supplier.schema"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 export function SupplierDialog({
   open,
@@ -25,10 +27,16 @@ export function SupplierDialog({
   onOpenChange: (open: boolean) => void
   supplier?: Supplier | null
 }) {
+  const permission = usePermission()
+  const canCreate = permission.has(Permission.SUPPLIER_CREATE)
+  const canUpdate = permission.has(Permission.SUPPLIER_UPDATE)
+  const canSubmit = supplier ? canUpdate : canCreate
   const [createSupplier, createState] = useCreateSupplierMutation()
   const [updateSupplier, updateState] = useUpdateSupplierMutation()
   const isLoading = createState.isLoading || updateState.isLoading
   const submit = async (values: SupplierFormValues) => {
+    if (!canSubmit) return
+
     const data: SupplierRequest = {
       name: values.name,
     }
@@ -54,6 +62,8 @@ export function SupplierDialog({
       })
     }
   }
+  if (!canSubmit) return null
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl">
