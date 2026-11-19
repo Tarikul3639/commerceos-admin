@@ -104,6 +104,7 @@ export const baseApi = createApi({
     "General",
     "Shipping",
     "NotificationPreferences",
+    "SecuritySettings",
   ],
 
   endpoints: () => ({}),
