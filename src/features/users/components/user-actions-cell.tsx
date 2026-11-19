@@ -81,6 +81,8 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
   const [restoreUser, { isLoading: isRestoring }] = useRestoreUserMutation()
 
   const handleUpdateUserStatus = async (status: UserStatus) => {
+    if (!canManageStatus) return
+
     try {
       await updateUserStatus({
         userId: user.id,
@@ -96,6 +98,8 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
   }
 
   const handleDeleteUser = async () => {
+    if (!canDelete) return
+
     try {
       await deleteUser(user.id).unwrap()
 
@@ -110,6 +114,8 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
   }
 
   const handleRestoreUser = async () => {
+    if (!canDelete) return
+
     try {
       await restoreUser(user.id).unwrap()
 

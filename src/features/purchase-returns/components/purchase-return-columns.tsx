@@ -139,6 +139,7 @@ function PurchaseReturnActions({
 
   const handleConfirm = async () => {
     if (!confirmAction) return
+    if (confirmAction === "delete" ? !canDelete : !canUpdate) return
 
     try {
       if (confirmAction === "approve") {

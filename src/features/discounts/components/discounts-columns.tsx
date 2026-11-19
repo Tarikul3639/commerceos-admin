@@ -17,7 +17,9 @@ const helper = createColumnHelper<DataTableFeatures, Discount>()
 
 export function getDiscountColumns(
   onEdit: (discount: Discount) => void,
-  onDelete: (discount: Discount) => void
+  onDelete: (discount: Discount) => void,
+  canUpdate: boolean,
+  canDelete: boolean
 ) {
   return helper.columns([
     helper.accessor("code", {
@@ -67,28 +69,36 @@ export function getDiscountColumns(
       size: 90,
       minSize: 90,
       maxSize: 90,
-      cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon">
-              <MoreHorizontal className="size-4" />
-              <span className="sr-only">Discount actions</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onEdit(row.original)}>
-              <SquarePen className="size-4" />
-              Update
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => onDelete(row.original)}
-            >
-              <Trash2 /> Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
+      cell: ({ row }) => {
+        if (!canUpdate && !canDelete) return null
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon">
+                <MoreHorizontal className="size-4" />
+                <span className="sr-only">Discount actions</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {canUpdate && (
+                <DropdownMenuItem onClick={() => onEdit(row.original)}>
+                  <SquarePen className="size-4" />
+                  Update
+                </DropdownMenuItem>
+              )}
+              {canDelete && (
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => onDelete(row.original)}
+                >
+                  <Trash2 /> Delete
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
     }),
   ])
 }

@@ -19,7 +19,7 @@ export const columns = columnHelper.columns([
           <AppImage
             name={product.productName}
             image={product.productImage}
-            className="h-10 w-10 rounded-sm"
+            className="h-16 w-16 rounded-sm after:rounded-sm"
           />
 
           <div className="min-w-0">

@@ -94,6 +94,8 @@ export function ReturnDetailsDialog({ orderReturn }: ReturnDetailsDialogProps) {
   const isBusy = isApproving || isRejecting || isCompleting
 
   const handleApprove = async () => {
+    if (!canUpdate) return
+
     try {
       await approveReturn(orderReturn.id).unwrap()
       toast.success("Return approved")
@@ -103,6 +105,8 @@ export function ReturnDetailsDialog({ orderReturn }: ReturnDetailsDialogProps) {
   }
 
   const handleReject = async () => {
+    if (!canUpdate) return
+
     const reason = rejectionReason.trim()
     if (reason.length < 3) {
       toast.error("Please enter a rejection reason (at least 3 characters)")
@@ -119,6 +123,8 @@ export function ReturnDetailsDialog({ orderReturn }: ReturnDetailsDialogProps) {
   }
 
   const handleComplete = async () => {
+    if (!canUpdate) return
+
     try {
       await completeReturn(orderReturn.id).unwrap()
       setConfirmCompleteOpen(false)

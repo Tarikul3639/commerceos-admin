@@ -148,6 +148,8 @@ function OrderActionsCell({ order }: { order: Order }) {
   }
 
   const handleStatusChange = async (status: string) => {
+    if (!canUpdate) return
+
     try {
       await updateStatus({
         id: order.id,
@@ -160,6 +162,8 @@ function OrderActionsCell({ order }: { order: Order }) {
   }
 
   const handleCancel = async () => {
+    if (!canUpdate) return
+
     try {
       await cancelOrder({ id: order.id }).unwrap()
       toast.success("Order cancelled and stock restored")

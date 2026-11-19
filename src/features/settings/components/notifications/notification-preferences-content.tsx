@@ -108,15 +108,6 @@ export function NotificationPreferencesContent() {
       }
     >
       <div className="mx-auto w-full space-y-6 pb-8">
-        <section className="space-y-1">
-          <h2 className="text-sm font-semibold tracking-tight">
-            Delivery preferences
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Choose how your team receives important store activity updates.
-          </p>
-        </section>
-
         {error ? (
           <Alert variant="destructive">
             <AlertTitle>Could not load notification settings</AlertTitle>
@@ -161,7 +152,10 @@ export function NotificationPreferencesContent() {
         ) : (
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Notification channels</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Bell className="size-4 text-muted-foreground" />
+                Notification channels
+              </CardTitle>
               <CardDescription>
                 Enable or disable each channel for the notification types below.
                 Changes are saved automatically.

@@ -47,15 +47,17 @@ export function DiscountsContent() {
   })
 
   const openCreate = () => {
+    if (!permission.has(Permission.DISCOUNT_CREATE)) return
     setSelected(null)
     setFormOpen(true)
   }
   const openEdit = (discount: Discount) => {
+    if (!permission.has(Permission.DISCOUNT_UPDATE)) return
     setSelected(discount)
     setFormOpen(true)
   }
   const handleDelete = async () => {
-    if (!deleteTarget) return
+    if (!permission.has(Permission.DISCOUNT_DELETE) || !deleteTarget) return
     try {
       await deleteDiscount(deleteTarget.id).unwrap()
       toast.success("Discount deleted")
@@ -86,7 +88,12 @@ export function DiscountsContent() {
         title="Coupon codes"
         description="Manage percentage and fixed-amount coupon codes, validity dates and order thresholds."
         data={data?.data ?? []}
-        columns={getDiscountColumns(openEdit, setDeleteTarget)}
+        columns={getDiscountColumns(
+          openEdit,
+          setDeleteTarget,
+          permission.has(Permission.DISCOUNT_UPDATE),
+          permission.has(Permission.DISCOUNT_DELETE)
+        )}
         isLoading={isLoading}
         isFetching={isFetching}
         isError={isError}

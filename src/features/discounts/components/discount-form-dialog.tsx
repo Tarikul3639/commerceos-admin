@@ -27,6 +27,8 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { Field, FieldError } from "@/components/ui/field"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import {
   useCreateDiscountMutation,
@@ -66,6 +68,10 @@ const emptyForm: DiscountFormValues = {
 }
 
 export function DiscountFormDialog({ open, onOpenChange, discount }: Props) {
+  const permission = usePermission()
+  const canSubmit = discount
+    ? permission.has(Permission.DISCOUNT_UPDATE)
+    : permission.has(Permission.DISCOUNT_CREATE)
   const [createDiscount, createState] = useCreateDiscountMutation()
   const [updateDiscount, updateState] = useUpdateDiscountMutation()
   const loading = createState.isLoading || updateState.isLoading
@@ -101,6 +107,11 @@ export function DiscountFormDialog({ open, onOpenChange, discount }: Props) {
   }, [discount, form, open])
 
   const submit = async (values: DiscountFormValues) => {
+    if (!canSubmit) {
+      toast.error("You do not have permission to perform this action")
+      return
+    }
+
     const payload: DiscountPayload = {
       code: values.code.trim().toUpperCase(),
       description: values.description.trim() || undefined,
@@ -360,7 +371,7 @@ export function DiscountFormDialog({ open, onOpenChange, discount }: Props) {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || !canSubmit}>
               {loading
                 ? "Saving..."
                 : isEdit

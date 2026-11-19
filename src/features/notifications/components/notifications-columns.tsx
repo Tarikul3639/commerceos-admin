@@ -28,6 +28,8 @@ import type {
   NotificationType,
 } from "../types/notification.types"
 import { NotificationDetailsDialog } from "./notification-details-dialog"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 const helper = createColumnHelper<DataTableFeatures, Notification>()
 
@@ -97,6 +99,9 @@ export const notificationColumns = helper.columns([
 ])
 
 function NotificationActions({ notification }: { notification: Notification }) {
+  const permission = usePermission()
+  const canUpdate = permission.has(Permission.NOTIFICATION_UPDATE)
+  const canDelete = permission.has(Permission.NOTIFICATION_DELETE)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [markRead, { isLoading: isMarkingRead }] =
@@ -115,52 +120,62 @@ function NotificationActions({ notification }: { notification: Notification }) {
         >
           <Eye className="size-4" />
         </Button>
-        {!notification.isRead && (
+        {canUpdate && !notification.isRead && (
           <Button
             variant="ghost"
             size="icon-sm"
             aria-label="Mark notification as read"
             disabled={isMarkingRead}
-            onClick={() => markRead(notification.id)}
+            onClick={() => {
+              if (canUpdate) void markRead(notification.id)
+            }}
           >
             <MailCheck className="size-4" />
           </Button>
         )}
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Delete notification"
-          className="text-destructive hover:text-destructive"
-          onClick={() => setDeleteOpen(true)}
-        >
-          <Trash2 className="size-4" />
-        </Button>
+        {canDelete && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Delete notification"
+            className="text-destructive hover:text-destructive"
+            onClick={() => setDeleteOpen(true)}
+          >
+            <Trash2 className="size-4" />
+          </Button>
+        )}
       </div>
       <NotificationDetailsDialog
         notificationId={notification.id}
         open={detailsOpen}
         onOpenChange={setDetailsOpen}
       />
-      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete notification?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This notification will be permanently removed from your inbox.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              variant="destructive"
-              disabled={isDeleting}
-              onClick={() => deleteNotification(notification.id)}
-            >
-              {isDeleting ? "Deleting..." : "Delete"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {canDelete && (
+        <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete notification?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This notification will be permanently removed from your inbox.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                variant="destructive"
+                disabled={isDeleting}
+                onClick={() => {
+                  if (canDelete) void deleteNotification(notification.id)
+                }}
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </>
   )
 }

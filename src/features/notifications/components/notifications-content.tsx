@@ -115,15 +115,21 @@ export function NotificationsContent() {
           </>
         }
         toolbarActions={
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={!query.data?.meta.unreadCount || isMarkingAll}
-            onClick={() => markAllRead()}
-          >
-            <CheckCheck className="size-4" />
-            {isMarkingAll ? "Marking..." : "Read all"}
-          </Button>
+          permission.has(Permission.NOTIFICATION_UPDATE) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={!query.data?.meta.unreadCount || isMarkingAll}
+              onClick={() => {
+                if (permission.has(Permission.NOTIFICATION_UPDATE)) {
+                  void markAllRead()
+                }
+              }}
+            >
+              <CheckCheck className="size-4" />
+              {isMarkingAll ? "Marking..." : "Read all"}
+            </Button>
+          )
         }
         pagination={pagination}
         onPaginationChange={setPagination}
