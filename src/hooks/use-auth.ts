@@ -19,10 +19,15 @@ export function useAuth() {
     }
   }, [data, dispatch])
 
+  // Use the query result immediately instead of waiting for the Redux effect.
+  // This prevents the dashboard guard from redirecting during the render
+  // between a successful /me response and the setUser dispatch.
+  const authenticatedUser = user ?? data ?? null
+
   return {
-    user,
+    user: authenticatedUser,
     isLoading,
-    isAuthenticated: !!user,
+    isAuthenticated: !!authenticatedUser,
     isError,
   }
 }

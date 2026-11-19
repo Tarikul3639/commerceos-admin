@@ -16,6 +16,7 @@ const PUBLIC_AUTH_ENDPOINTS = [
   "/auth/user/register",
   "/auth/user/forgot-password",
   "/auth/user/reset-password",
+  "/auth/user/change-password",
 ]
 
 const baseQuery = fetchBaseQuery({

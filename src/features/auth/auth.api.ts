@@ -3,6 +3,7 @@ import { baseApi } from "@/lib/api/base-api"
 import type {
   ChangePasswordRequest,
   ChangePasswordResponse,
+  UpdateCurrentUserProfileRequest,
   CurrentUserResponse,
   ForgotPasswordRequest,
   ForgotPasswordResponse,
@@ -31,6 +32,19 @@ export const authApi = baseApi.injectEndpoints({
         url: "/auth/user/me",
         method: "GET",
       }),
+      providesTags: ["Auth"],
+    }),
+
+    updateCurrentUserProfile: builder.mutation<
+      { message: string; data: CurrentUserResponse },
+      UpdateCurrentUserProfileRequest
+    >({
+      query: (body) => ({
+        url: "/auth/user/profile",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Auth"],
     }),
 
     logout: builder.mutation<void, void>({
@@ -105,6 +119,7 @@ export const {
   useLoginMutation,
   useGetCurrentUserQuery,
   useLazyGetCurrentUserQuery,
+  useUpdateCurrentUserProfileMutation,
   useLogoutMutation,
   useLogoutAllMutation,
   useChangePasswordMutation,

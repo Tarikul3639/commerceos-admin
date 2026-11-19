@@ -112,7 +112,7 @@ export function SecuritySettingsContent() {
       accessTokenLifetimeMinutes: 15,
       refreshTokenLifetimeDays: 7,
       rememberMeRefreshLifetimeDays: 30,
-      minimumPasswordLength: 12,
+      minimumPasswordLength: 8,
       maximumFailedLoginAttempts: 5,
       accountLockoutDurationMinutes: 15,
     },

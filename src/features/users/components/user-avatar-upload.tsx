@@ -46,10 +46,27 @@ export function UserAvatarUpload({
       return
     }
 
-    const maxSize = 5 * 1024 * 1024
+    const maxSize = 1 * 1024 * 1024
 
     if (file.size > maxSize) {
-      toast.error("Avatar must be smaller than 5MB.")
+      toast.error("Avatar must be smaller than 1MB.")
+
+      return
+    }
+
+    try {
+      const image = await createImageBitmap(file)
+      const isSquare = image.width === image.height
+
+      image.close()
+
+      if (!isSquare) {
+        toast.error("Please upload a square image.")
+
+        return
+      }
+    } catch {
+      toast.error("Unable to read the selected image.")
 
       return
     }
@@ -84,27 +101,37 @@ export function UserAvatarUpload({
   return (
     <div className="flex flex-col items-center gap-3">
       {/* Avatar */}
-      <div className="relative">
-        <Avatar className="h-24 w-24">
-          <AvatarImage src={value || undefined} alt="User avatar" />
+      <div className="group relative">
+        <Label
+          htmlFor="user-avatar"
+          className="block cursor-pointer rounded-full"
+          aria-label={value ? "Change avatar" : "Upload avatar"}
+        >
+          <Avatar className="h-24 w-24">
+            <AvatarImage src={value || undefined} alt="User avatar" />
 
-          <AvatarFallback>
-            <ImagePlus className="h-8 w-8 text-muted-foreground" />
-          </AvatarFallback>
-        </Avatar>
+            <AvatarFallback>
+              <ImagePlus className="h-8 w-8 text-muted-foreground" />
+            </AvatarFallback>
+          </Avatar>
+        </Label>
 
         {value && !isUploading && !disabled && (
-          <Button
-            type="button"
-            variant="destructive"
-            size="icon"
-            className="absolute -top-1 -right-1 h-6 w-6 rounded-full"
-            onClick={handleRemove}
-          >
-            <X className="h-3 w-3" />
+          <>
+            <div className="pointer-events-none absolute inset-0 rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100" />
 
-            <span className="sr-only">Remove avatar</span>
-          </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon-xs"
+              className="absolute -top-1 right-0 rounded-full! bg-destructive text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:bg-destructive/90"
+              onClick={handleRemove}
+            >
+              <X />
+
+              <span className="sr-only">Remove avatar</span>
+            </Button>
+          </>
         )}
       </div>
 
@@ -121,12 +148,12 @@ export function UserAvatarUpload({
       {/* Upload button */}
       <Button
         type="button"
-        variant="outline"
-        size="sm"
+        variant="secondary"
+        size="xs"
         disabled={disabled || isUploading}
         asChild
       >
-        <Label htmlFor="user-avatar" className="cursor-pointer text-sm">
+        <Label htmlFor="user-avatar" className="cursor-pointer">
           {isUploading ? (
             <>
               <Loader2 className="animate-spin" />
@@ -140,6 +167,12 @@ export function UserAvatarUpload({
           )}
         </Label>
       </Button>
+
+      {/* Description */}
+      <p className="text-center text-xs text-muted-foreground">
+        Square image only. JPG, PNG or WebP. Maximum file size: 1MB.
+      </p>
+
 
       {/* File name */}
       {fileName && (

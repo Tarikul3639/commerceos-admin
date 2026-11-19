@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect } from "react"
+import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import { PageLoader } from "@/components/shared/page-loader"
 import { AppShell } from "@/components/layout/app-shell"
@@ -9,14 +11,19 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
+  const router = useRouter()
+  const pathname = usePathname()
   const { user, isLoading, isAuthenticated } = useAuth()
 
-  if (isLoading) {
-    return <PageLoader />
-  }
+  useEffect(() => {
+    if (!isLoading && (!isAuthenticated || !user)) {
+      const callbackUrl = encodeURIComponent(pathname)
+      router.replace(`/login?callbackUrl=${callbackUrl}`)
+    }
+  }, [isAuthenticated, isLoading, pathname, router, user])
 
-  if (!isAuthenticated || !user) {
-    return null
+  if (isLoading || !isAuthenticated || !user) {
+    return <PageLoader />
   }
 
   return <AppShell>{children}</AppShell>

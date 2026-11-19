@@ -7,10 +7,19 @@ export interface CurrentUserResponse {
   email: string
   phone: string | null
   avatar: string | null
+  publicId: string | null
   role: Role
   permissions: Permission[]
   isVerified: boolean
   lastLoginAt: string | null
+  createdAt: string
+}
+
+export interface UpdateCurrentUserProfileRequest {
+  name?: string
+  phone?: string | null
+  avatar?: string | null
+  publicId?: string | null
 }
 
 export interface CurrentUserPayload {
