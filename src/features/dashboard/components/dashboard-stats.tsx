@@ -2,8 +2,6 @@ import {
   DollarSign,
   ShoppingBag,
   ShoppingCart,
-  Users,
-  UsersRound,
   Boxes,
 } from "lucide-react"
 

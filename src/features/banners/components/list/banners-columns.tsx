@@ -83,96 +83,96 @@ export const columns = helper.columns([
     size: 80,
     minSize: 80,
     maxSize: 80,
-    cell: ({ row }) => {
-      const banner = row.original
-      const [deleteOpen, setDeleteOpen] = useState(false)
-      const [deleteBanner, { isLoading: isDeleting }] =
-        useDeleteBannerMutation()
-      const permission = usePermission()
-      const canRead = permission.has(Permission.BANNER_READ)
-      const canUpdate = permission.has(Permission.BANNER_UPDATE)
-      const canDelete = permission.has(Permission.BANNER_DELETE)
-
-      const handleDelete = async () => {
-        try {
-          await deleteBanner(banner.id).unwrap()
-          toast.success("Banner deleted successfully")
-          setDeleteOpen(false)
-        } catch (error) {
-          toast.error(getErrorMessage(error) || "Failed to delete banner")
-        }
-      }
-
-      if (!canRead && !canUpdate && !canDelete) return null
-
-      return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon">
-                <MoreHorizontal className="size-4" />
-                <span className="sr-only">Open banner actions</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {canRead && (
-                  <DropdownMenuItem asChild>
-                    <Link href={`/dashboard/banners/${banner.id}`}>
-                      <Info />
-                      Details
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-                {canUpdate && (
-                  <DropdownMenuItem asChild>
-                    <Link href={`/dashboard/banners/${banner.id}/update`}>
-                      <SquarePen className="size-4" />
-                      Update
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuGroup>
-              {canDelete && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>Danger</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      variant="destructive"
-                      onClick={() => setDeleteOpen(true)}
-                    >
-                      <Trash2 />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {canDelete && (
-            <ConfirmDialog
-              open={deleteOpen}
-              onOpenChange={setDeleteOpen}
-              title="Delete banner"
-              description={
-                <>
-                  Delete <strong>{banner.title || "this banner"}</strong>? Its
-                  Cloudinary images will also be deleted.
-                </>
-              }
-              confirmLabel={isDeleting ? "Deleting..." : "Delete"}
-              onConfirm={handleDelete}
-            />
-          )}
-        </>
-      )
-    },
+    cell: ({ row }) => <BannerActions banner={row.original} />,
   }),
 ])
+
+function BannerActions({ banner }: { banner: Banner }) {
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteBanner, { isLoading: isDeleting }] = useDeleteBannerMutation()
+  const permission = usePermission()
+  const canRead = permission.has(Permission.BANNER_READ)
+  const canUpdate = permission.has(Permission.BANNER_UPDATE)
+  const canDelete = permission.has(Permission.BANNER_DELETE)
+
+  const handleDelete = async () => {
+    try {
+      await deleteBanner(banner.id).unwrap()
+      toast.success("Banner deleted successfully")
+      setDeleteOpen(false)
+    } catch (error) {
+      toast.error(getErrorMessage(error) || "Failed to delete banner")
+    }
+  }
+
+  if (!canRead && !canUpdate && !canDelete) return null
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="secondary" size="icon">
+            <MoreHorizontal className="size-4" />
+            <span className="sr-only">Open banner actions</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {canRead && (
+              <DropdownMenuItem asChild>
+                <Link href={`/dashboard/banners/${banner.id}`}>
+                  <Info />
+                  Details
+                </Link>
+              </DropdownMenuItem>
+            )}
+            {canUpdate && (
+              <DropdownMenuItem asChild>
+                <Link href={`/dashboard/banners/${banner.id}/update`}>
+                  <SquarePen className="size-4" />
+                  Update
+                </Link>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuGroup>
+          {canDelete && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Danger</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => setDeleteOpen(true)}
+                >
+                  <Trash2 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {canDelete && (
+        <ConfirmDialog
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          title="Delete banner"
+          description={
+            <>
+              Delete <strong>{banner.title || "this banner"}</strong>? Its
+              Cloudinary images will also be deleted.
+            </>
+          }
+          confirmLabel={isDeleting ? "Deleting..." : "Delete"}
+          onConfirm={handleDelete}
+        />
+      )}
+    </>
+  )
+}
 
 function formatDate(value: string | null) {
   return value ? new Date(value).toLocaleDateString() : "—"

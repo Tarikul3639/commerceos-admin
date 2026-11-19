@@ -54,7 +54,6 @@ interface AnalyticsSalesVsPurchaseChartProps {
 }
 
 export function AnalyticsSalesVsPurchaseChart({
-  data,
   isLoading,
   isFetching,
 }: AnalyticsSalesVsPurchaseChartProps) {

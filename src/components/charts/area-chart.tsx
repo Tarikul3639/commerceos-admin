@@ -1,7 +1,6 @@
 "use client"
 
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { TakaIcon } from "@/components/icons/taka-icon"
 
 import {
   Card,

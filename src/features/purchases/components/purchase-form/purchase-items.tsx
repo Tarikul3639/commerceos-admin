@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import {
   Controller,
   type Control,
@@ -134,9 +135,12 @@ export function PurchaseItems({
                                   onSelect={() => field.onChange(product.id)}
                                 >
                                   <div className="flex min-w-0 items-center gap-3">
-                                    <img
+                                    <Image
                                       src={product.image ?? "/placeholder.png"}
                                       alt={product.name}
+                                      width={40}
+                                      height={40}
+                                      unoptimized
                                       className="size-10 shrink-0 rounded-md border object-cover"
                                     />
 

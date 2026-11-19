@@ -3,7 +3,6 @@
 import { useState } from "react"
 
 import { Inbox } from "lucide-react"
-import type { PaginationState } from "@tanstack/react-table"
 
 import { DataTable } from "@/components/data-table"
 
@@ -24,16 +23,11 @@ export function DashboardRecentOrders({
 }: DashboardRecentOrdersProps) {
   const [search, setSearch] = useState<string>("")
 
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-
   return (
     <div className="h-full max-h-150 min-h-80 min-w-0">
       <DataTable
         columns={columns}
-        data={recentOrders}
+        data={orders.length ? orders : recentOrders}
         title="Recent Orders"
         description="Latest customer orders"
         search={{

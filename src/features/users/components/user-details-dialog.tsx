@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, Phone, ShieldCheck, UserRound } from "lucide-react"
+import { Mail, Phone, ShieldCheck } from "lucide-react"
 
 import {
   Dialog,

@@ -43,7 +43,7 @@ export function DashboardCustomerOverview({
   customers,
   isLoading = false,
 }: DashboardCustomerOverviewProps) {
-  const currentCustomers = customerSummary
+  const currentCustomers = customers ?? customerSummary
 
   const totalCustomers = currentCustomers.totalCustomers
   const activeCustomers = currentCustomers.activeCustomers

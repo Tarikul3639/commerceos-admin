@@ -14,6 +14,7 @@ import { useUpdateBrandMutation } from "../api/brands.api"
 import type { BrandFormValues } from "../schemas/brand.schema"
 import type { Brand } from "../types/brands.types"
 import { BrandForm } from "./brand-form"
+import { getErrorMessage } from "@/lib/utils/error"
 
 interface UpdateBrandDialogProps {
   open: boolean
@@ -46,8 +47,8 @@ export function UpdateBrandDialog({
       toast.success("Brand updated successfully")
 
       onOpenChange(false)
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to update brand")
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || "Failed to update brand")
     }
   }
 

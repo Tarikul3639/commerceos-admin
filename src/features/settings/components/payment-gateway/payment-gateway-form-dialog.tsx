@@ -59,11 +59,13 @@ export function PaymentGatewayFormDialog({
 
   useEffect(() => {
     if (!open) return
-
-    setProvider(config?.provider ?? "MANUAL")
-    setDisplayName(config?.displayName ?? "")
-    setIsEnabled(config?.isEnabled ?? false)
-    setMode(config?.mode ?? "TEST")
+    const frame = requestAnimationFrame(() => {
+      setProvider(config?.provider ?? "MANUAL")
+      setDisplayName(config?.displayName ?? "")
+      setIsEnabled(config?.isEnabled ?? false)
+      setMode(config?.mode ?? "TEST")
+    })
+    return () => cancelAnimationFrame(frame)
   }, [open, config])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {

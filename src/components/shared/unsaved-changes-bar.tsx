@@ -29,21 +29,18 @@ export function UnsavedChangesBar({
   onDiscard,
   className,
 }: UnsavedChangesBarProps) {
-  const [mounted, setMounted] = useState(open)
+  const [mounted, setMounted] = useState(false)
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (!open) {
-      setVisible(false)
-      return
-    }
-
-    setMounted(true)
-
     const frame = requestAnimationFrame(() => {
-      setVisible(true)
+      if (open) {
+        setMounted(true)
+        setVisible(true)
+      } else {
+        setVisible(false)
+      }
     })
-
     return () => cancelAnimationFrame(frame)
   }, [open])
 

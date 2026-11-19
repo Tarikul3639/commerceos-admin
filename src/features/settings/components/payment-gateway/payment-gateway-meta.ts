@@ -3,7 +3,6 @@ import {
   CreditCard,
   Smartphone,
   Wallet,
-  type LucideIcon,
 } from "lucide-react"
 
 import type {

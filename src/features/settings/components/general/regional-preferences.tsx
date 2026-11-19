@@ -28,7 +28,7 @@ export function RegionalPreferences({ control }: RegionalPreferencesProps) {
       <CardHeader>
         <CardTitle>Regional Preferences</CardTitle>
         <CardDescription>
-          Choose your store's default currency and timezone.
+          Choose your store&apos;s default currency and timezone.
         </CardDescription>
       </CardHeader>
 

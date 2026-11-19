@@ -61,7 +61,7 @@ export function DashboardOrderStatus({
   isLoading = false,
   query,
 }: DashboardOrderStatusProps) {
-  const currentOrders = orderSummary
+  const currentOrders = orders ?? orderSummary
 
   const orderStatusData = [
     {

@@ -71,7 +71,7 @@ export function GeneralSettingsContent() {
       currency: data.currency,
       timezone: data.timezone,
     })
-  }, [data, form.reset])
+  }, [data, form])
 
   const onSubmit = async (values: GeneralSettingsFormValues) => {
     try {

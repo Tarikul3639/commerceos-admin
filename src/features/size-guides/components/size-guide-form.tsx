@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Plus, Trash2 } from "lucide-react"
 
@@ -60,9 +60,9 @@ export function SizeGuideForm({
 
   const {
     register,
+    control,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<SizeGuideFormValues>({
     resolver: zodResolver(sizeGuideSchema),
@@ -73,7 +73,7 @@ export function SizeGuideForm({
     },
   })
 
-  const unit = watch("unit")
+  const unit = useWatch({ control, name: "unit" })
 
   const addColumn = () => {
     let index = columns.length + 1

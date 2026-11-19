@@ -1,7 +1,6 @@
 import type { LucideIcon } from "lucide-react"
 
 import {
-  BarChart3,
   Bell,
   Boxes,
   ChartNoAxesCombined,
@@ -9,7 +8,6 @@ import {
   LayoutDashboard,
   Mail,
   Package,
-  Settings,
   ShoppingCart,
   CreditCard,
   Ruler,
@@ -17,9 +15,6 @@ import {
   Tags,
   UserCog,
   Users,
-  CreditCard as PaymentIcon,
-  Truck,
-  SlidersHorizontal,
   Settings2,
 } from "lucide-react"
 
@@ -146,6 +141,11 @@ export const navigation: NavigationGroup[] = [
         icon: ClipboardList,
         permission: Permission.PURCHASE_READ,
         children: [
+          {
+            title: "Create Purchase",
+            href: "/dashboard/purchases/create",
+            permission: Permission.PURCHASE_CREATE,
+          },
           {
             title: "All Purchases",
             href: "/dashboard/purchases",

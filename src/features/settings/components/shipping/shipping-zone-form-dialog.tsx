@@ -42,9 +42,12 @@ export function ShippingZoneFormDialog({
 
   useEffect(() => {
     if (!open) return
-    setDistrictCity(zone?.districtCity ?? "")
-    setRate(zone?.rate ?? "")
-    setIsActive(zone?.isActive ?? true)
+    const frame = requestAnimationFrame(() => {
+      setDistrictCity(zone?.districtCity ?? "")
+      setRate(zone?.rate ?? "")
+      setIsActive(zone?.isActive ?? true)
+    })
+    return () => cancelAnimationFrame(frame)
   }, [open, zone])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {

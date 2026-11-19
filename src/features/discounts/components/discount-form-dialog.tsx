@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 
@@ -76,7 +76,7 @@ export function DiscountFormDialog({ open, onOpenChange, discount }: Props) {
     defaultValues: emptyForm,
   })
 
-  const discountType = form.watch("type")
+  const discountType = useWatch({ control: form.control, name: "type" })
 
   useEffect(() => {
     if (!open) return

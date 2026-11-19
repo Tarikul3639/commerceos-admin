@@ -2,7 +2,6 @@
 
 import { Heart, Plus, Share2, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useIsMobile } from "@/hooks/use-mobile"
 
 interface ProductActionsProps {
   disabled?: boolean
@@ -21,7 +20,6 @@ export function ProductActions({
   onFavorite,
   onShare,
 }: ProductActionsProps) {
-  const isMobile = useIsMobile()
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">

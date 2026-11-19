@@ -1,29 +1,11 @@
 "use client"
 
+import Image from "next/image"
 import { ChevronLeft, ChevronRight, RotateCcw, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
-
-const demoImages = [
-  {
-    src: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
-    alt: "Smartphone",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
-    alt: "Laptop",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
-    alt: "Headphones",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-    alt: "Smart watch",
-  },
-]
 
 export interface ImageViewerItem {
   src: string
@@ -70,18 +52,14 @@ export function ImageViewer({
   const currentImage = images[currentIndex]
 
   useEffect(() => {
-    if (open) {
+    if (!open) return
+    const frame = requestAnimationFrame(() => {
       setCurrentIndex(initialIndex)
       setZoom(1)
-      setPosition({
-        x: 0,
-        y: 0,
-      })
-      setOrigin({
-        x: 0,
-        y: 0,
-      })
-    }
+      setPosition({ x: 0, y: 0 })
+      setOrigin({ x: 0, y: 0 })
+    })
+    return () => cancelAnimationFrame(frame)
   }, [open, initialIndex])
 
   useEffect(() => {
@@ -299,10 +277,13 @@ export function ImageViewer({
             isDragging && "cursor-grabbing"
           )}
         >
-          <img
+          <Image
             ref={imageRef}
             src={currentImage.src}
             alt={currentImage.alt ?? ""}
+            width={1600}
+            height={1200}
+            unoptimized
             style={{
               transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
               transformOrigin: `${origin.x}px ${origin.y}px`,
@@ -359,9 +340,12 @@ export function ImageViewer({
                     : "border-transparent opacity-60 hover:opacity-100"
                 )}
               >
-                <img
+                <Image
                   src={image.src}
                   alt={image.alt ?? ""}
+                  width={56}
+                  height={56}
+                  unoptimized
                   className="size-full object-cover"
                 />
               </button>

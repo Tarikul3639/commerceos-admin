@@ -200,23 +200,26 @@ export function ProductOptions({
   const isBusy = disabled || isCreating || isUpdating || isDeleting
 
   useEffect(() => {
-    setForms((current) => {
-      const savedForms: OptionDraft[] = options.map((option) => ({
-        id: option.id,
-        optionId: option.id,
-        name: option.name,
-        type: option.type,
-        values: option.values.map((item) => ({
-          id: item.id,
-          value: item.value,
-          colorHex: item.colorHex ?? "#000000",
-        })),
-      }))
+    const frame = requestAnimationFrame(() => {
+      setForms((current) => {
+        const savedForms: OptionDraft[] = options.map((option) => ({
+          id: option.id,
+          optionId: option.id,
+          name: option.name,
+          type: option.type,
+          values: option.values.map((item) => ({
+            id: item.id,
+            value: item.value,
+            colorHex: item.colorHex ?? "#000000",
+          })),
+        }))
 
-      const unsavedForms = current.filter((form) => !form.optionId)
+        const unsavedForms = current.filter((form) => !form.optionId)
 
-      return [...savedForms, ...unsavedForms]
+        return [...savedForms, ...unsavedForms]
+      })
     })
+    return () => cancelAnimationFrame(frame)
   }, [options])
 
   const updateForm = (
@@ -509,7 +512,7 @@ export function ProductOptions({
                   )}
                   {form.optionId ? (
                     <FieldDescription>
-                      Values can't be edited after saving. Delete this option to
+                      Values can&apos;t be edited after saving. Delete this option to
                       create it again with different values.
                     </FieldDescription>
                   ) : (

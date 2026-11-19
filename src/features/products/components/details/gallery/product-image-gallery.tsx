@@ -43,7 +43,7 @@ export function ProductImageGallery({
     } else {
       thumbnailApi.scrollTo(activeIndex + 2)
     }
-  }, [thumbnailApi, activeIndex])
+  }, [thumbnailApi, activeIndex, images.length])
 
   if (!images.length) {
     return (

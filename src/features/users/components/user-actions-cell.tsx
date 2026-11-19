@@ -308,7 +308,7 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
 
             <AlertDialogDescription>
               Are you sure you want to restore <strong>{user.name}</strong>?
-              This action will reactivate the user's account.
+              This action will reactivate the user&apos;s account.
             </AlertDialogDescription>
           </AlertDialogHeader>
 

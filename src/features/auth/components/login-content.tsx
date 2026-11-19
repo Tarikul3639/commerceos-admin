@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { siteConfig } from "@/config/site"
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, useWatch, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   loginSchema,
@@ -32,7 +32,7 @@ export function LoginContent() {
 
   const {
     register,
-    watch,
+    control,
     setValue,
     handleSubmit,
     formState: { isValid, errors },
@@ -44,6 +44,8 @@ export function LoginContent() {
       remember: true,
     },
   })
+
+  const remember = useWatch({ control, name: "remember" })
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
@@ -192,7 +194,7 @@ export function LoginContent() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="remember"
-                  checked={watch("remember")}
+                  checked={remember}
                   onCheckedChange={(checked) =>
                     setValue("remember", checked === true)
                   }

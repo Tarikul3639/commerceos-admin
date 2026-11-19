@@ -59,7 +59,11 @@ export function ShippingSettingsContent() {
   const [deleteTarget, setDeleteTarget] = useState<ShippingZone | null>(null)
 
   useEffect(() => {
-    if (data) setThreshold(data.freeShippingThreshold ?? "")
+    if (!data) return
+    const frame = requestAnimationFrame(() => {
+      setThreshold(data.freeShippingThreshold ?? "")
+    })
+    return () => cancelAnimationFrame(frame)
   }, [data])
 
   const isSavingZone = isCreatingZone || isUpdatingZone

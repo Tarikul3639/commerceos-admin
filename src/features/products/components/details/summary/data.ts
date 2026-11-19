@@ -1,4 +1,4 @@
-;[
+export const productVariantDemoData = [
   {
     id: "6f39e761-1cb2-4fd4-9f43-94a1785ceb12",
     value: "Black",

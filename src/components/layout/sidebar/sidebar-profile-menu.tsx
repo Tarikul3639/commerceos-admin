@@ -36,7 +36,7 @@ export function SidebarProfileMenu({
 
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
 
-  const [logoutMutation, { isLoading: isLoggingOut }] = useLogoutMutation()
+  const [logoutMutation] = useLogoutMutation()
 
   const handleLogout = async () => {
     try {

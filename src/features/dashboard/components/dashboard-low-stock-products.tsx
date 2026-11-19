@@ -23,7 +23,7 @@ export function DashboardLowStockProducts({
   return (
     <DataTable
       columns={columns}
-      data={lowStockProducts}
+      data={products.length ? products : lowStockProducts}
       title="Low Stock Products"
       description="Products that are low in stock"
       isLoading={isLoading}

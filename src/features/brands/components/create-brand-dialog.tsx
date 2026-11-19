@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button"
 import { useCreateBrandMutation } from "../api/brands.api"
 import type { BrandFormValues } from "../schemas/brand.schema"
 import { BrandForm } from "./brand-form"
+import { getErrorMessage } from "@/lib/utils/error"
 
 interface CreateBrandDialogProps {
   open: boolean
@@ -49,8 +50,8 @@ export function CreateBrandDialog({
       toast.success("Brand created successfully")
 
       onOpenChange(false)
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to create brand")
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || "Failed to create brand")
     }
   }
 

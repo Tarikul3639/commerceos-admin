@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { createColumnHelper } from "@tanstack/react-table"
 import { DataTableFeatures } from "@/components/data-table"
 import { PermissionsActions } from "./permissions-actions"

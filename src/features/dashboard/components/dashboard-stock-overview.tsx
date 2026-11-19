@@ -4,7 +4,6 @@ import {
   Archive,
   Boxes,
   CircleDollarSign,
-  Layers3,
   Package,
 } from "lucide-react"
 
@@ -15,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter,
 } from "@/components/ui/card"
 
 import {
@@ -53,7 +51,7 @@ export function DashboardStockOverview({
   stock,
   isLoading = false,
 }: DashboardStockOverviewProps) {
-  const currentStock = stockSummary
+  const currentStock = stock ?? stockSummary
 
   const healthyCount = Math.max(
     currentStock.totalProducts -

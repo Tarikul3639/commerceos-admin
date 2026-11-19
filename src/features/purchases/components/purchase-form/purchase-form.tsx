@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useFieldArray, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 
@@ -93,9 +93,11 @@ export function PurchaseForm({ purchase, onSuccess }: PurchaseFormProps) {
   })
 
   const isLoading = isCreating || isUpdating
-  const values = form.watch()
+  useWatch({ control: form.control })
+  const values = form.getValues()
+  const formItems = values.items
 
-  const subtotal = values.items.reduce(
+  const subtotal = formItems.reduce(
     (sum, item) =>
       sum + Number(item.unitPrice || 0) * Number(item.quantity || 0),
     0

@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge"
 import type { ProductDetails } from "../../../types/product-details.types"
 import { ProductPrice } from "./product-price"
 

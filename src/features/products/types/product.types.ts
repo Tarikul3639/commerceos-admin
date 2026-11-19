@@ -47,7 +47,7 @@ export interface ProductQueryParams {
 }
 
 // Products response
-export interface ProductsResponse extends PaginatedResponse<ProductListItem> {}
+export type ProductsResponse = PaginatedResponse<ProductListItem>
 
 // Create product request
 export interface CreateProductRequest {

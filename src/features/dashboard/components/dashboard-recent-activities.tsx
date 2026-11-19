@@ -21,7 +21,7 @@ export function DashboardRecentActivities({
   return (
     <DataTable
       columns={columns}
-      data={recentActivities}
+      data={activities.length ? activities : recentActivities}
       title="Recent Activities"
       description="Latest activities on the dashboard"
       isLoading={isLoading}

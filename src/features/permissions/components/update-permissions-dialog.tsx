@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Loader2, Search, X } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -42,9 +42,10 @@ export function UpdatePermissionsDialog({
     useUpdateRolePermissionsMutation()
 
   useEffect(() => {
-    if (rolePermissions) {
-      setSelectedPermissions(rolePermissions.permissions)
-    }
+    const frame = requestAnimationFrame(() => {
+      setSelectedPermissions(rolePermissions?.permissions ?? [])
+    })
+    return () => cancelAnimationFrame(frame)
   }, [rolePermissions])
 
   const handlePermissionChange = (permission: Permission, checked: boolean) => {

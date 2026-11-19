@@ -34,9 +34,14 @@ export function SidebarNavigation() {
   return (
     <SidebarContent>
       {navigation.map((group) => {
-        const visibleItems = group.items.filter(
-          (item) => !item.permission || has(item.permission)
-        )
+        const visibleItems = group.items.filter((item) => {
+          const hasVisibleChild =
+            item.children?.some(
+              (child) => !child.permission || has(child.permission)
+            ) ?? false
+
+          return !item.permission || has(item.permission) || hasVisibleChild
+        })
 
         if (visibleItems.length === 0) {
           return null

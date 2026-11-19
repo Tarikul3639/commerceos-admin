@@ -1,6 +1,6 @@
 "use client"
 
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Box, Tag, Layers, Save } from "lucide-react"
 
@@ -88,7 +88,6 @@ export function ProductBasicInfo({
     register,
     control,
     handleSubmit,
-    watch,
     formState: { errors, isValid, isDirty },
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -106,9 +105,13 @@ export function ProductBasicInfo({
     },
   })
 
-  const purchasePrice = Number(watch("purchasePrice")) || 0
-  const sellingPrice = Number(watch("sellingPrice")) || 0
-  const subDescriptionLength = (watch("subDescription") ?? "").length
+  const [purchasePriceValue, sellingPriceValue, subDescription] = useWatch({
+    control,
+    name: ["purchasePrice", "sellingPrice", "subDescription"],
+  })
+  const purchasePrice = Number(purchasePriceValue) || 0
+  const sellingPrice = Number(sellingPriceValue) || 0
+  const subDescriptionLength = (subDescription ?? "").length
   const profit = sellingPrice - purchasePrice
   const margin = sellingPrice > 0 ? (profit / sellingPrice) * 100 : 0
 

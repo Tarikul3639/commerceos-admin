@@ -1,10 +1,10 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Camera, Loader2 } from "lucide-react"
+import { Camera } from "lucide-react"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm, useWatch } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -65,8 +65,8 @@ export function BrandForm({
     })
   }, [brand, form])
 
-  const avatarUrl = form.watch("image")
-  const name = form.watch("name")
+  const avatarUrl = useWatch({ control: form.control, name: "image" })
+  const name = useWatch({ control: form.control, name: "name" })
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>

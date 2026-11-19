@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Camera, Loader2, Trash2 } from "lucide-react"
 
@@ -73,8 +73,8 @@ export function CustomerForm({
     })
   }, [customer, form])
 
-  const avatarUrl = form.watch("avatarUrl")
-  const name = form.watch("name")
+  const avatarUrl = useWatch({ control: form.control, name: "avatarUrl" })
+  const name = useWatch({ control: form.control, name: "name" })
 
   const handleAvatarUpload = async (
     event: React.ChangeEvent<HTMLInputElement>

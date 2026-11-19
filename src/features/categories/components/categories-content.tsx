@@ -4,7 +4,6 @@ import { useState } from "react"
 import {
   parseAsInteger,
   parseAsString,
-  parseAsStringEnum,
   useQueryStates,
 } from "nuqs"
 

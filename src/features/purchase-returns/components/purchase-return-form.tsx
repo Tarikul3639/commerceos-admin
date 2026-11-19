@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm, useWatch } from "react-hook-form"
 import { createColumnHelper } from "@tanstack/react-table"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check, ChevronsUpDown } from "lucide-react"
@@ -48,7 +48,6 @@ import {
   useGetPurchasesQuery,
 } from "@/features/purchases/api/purchase.api"
 import type {
-  Purchase,
   PurchaseItem,
 } from "@/features/purchases/types/purchase.types"
 import {
@@ -115,7 +114,8 @@ export function PurchaseReturnForm({
       items: [],
     },
   })
-  const values = form.watch()
+  useWatch({ control: form.control })
+  const values = form.getValues()
 
   useEffect(() => {
     if (!purchase || returnsLoading) return
@@ -130,8 +130,11 @@ export function PurchaseReturnForm({
     })
   }, [purchase, returnsLoading, returnedByPurchaseItem, form])
 
-  const remainingFor = (item: PurchaseItem) =>
-    Math.max(item.quantity - (returnedByPurchaseItem.get(item.id) ?? 0), 0)
+  const remainingFor = useCallback(
+    (item: PurchaseItem) =>
+      Math.max(item.quantity - (returnedByPurchaseItem.get(item.id) ?? 0), 0),
+    [returnedByPurchaseItem]
+  )
 
   const columns = useMemo(
     () =>
@@ -221,7 +224,7 @@ export function PurchaseReturnForm({
           ),
         },
       ]),
-    [form.control, isSubmitting, returnedByPurchaseItem, values.items]
+    [form.control, isSubmitting, remainingFor, values.items]
   )
 
   const subtotal = (purchase?.items ?? []).reduce(

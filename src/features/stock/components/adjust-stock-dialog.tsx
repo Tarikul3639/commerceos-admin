@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { toast } from "sonner"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -45,7 +45,8 @@ export function AdjustStockDialog({
     },
   })
 
-  const quantity = Number(form.watch("quantity") || 0)
+  const watchedQuantity = useWatch({ control: form.control, name: "quantity" })
+  const quantity = Number(watchedQuantity || 0)
   const finalStock = (stock?.quantity ?? 0) + quantity
 
   useEffect(() => {

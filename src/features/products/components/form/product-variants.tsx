@@ -493,7 +493,6 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
                   {variants.map((variant) => {
                     const isEditing = editingId === variant.id
                     const isSaving = savingId === variant.id
-                    const isDeleting = deletingId === variant.id
 
                     return (
                       <TableRow

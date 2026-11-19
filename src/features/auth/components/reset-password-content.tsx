@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { ArrowLeft, Eye, EyeOff, LockKeyhole } from "lucide-react"
 
@@ -24,6 +25,7 @@ import { useResetPasswordMutation } from "@/features/auth/auth.api"
 import { getErrorMessage } from "@/lib/utils/error"
 
 export function ResetPasswordContent() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const resetToken = searchParams.get("token")
   const [showPassword, setShowPassword] = useState(false)
@@ -56,7 +58,7 @@ export function ResetPasswordContent() {
       }).unwrap()
 
       toast.success("Password reset successful! Redirecting to login...")
-      window.location.href = "/login"
+      router.push("/login")
     } catch (error) {
       console.error("Reset password request failed:", error)
     }

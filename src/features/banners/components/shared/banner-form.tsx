@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { FieldError, FieldGroup, FieldSeparator } from "@/components/ui/field"
+import { FieldError, FieldGroup } from "@/components/ui/field"
 
 import { BannerPosition, BannerType } from "../../types/banners.types"
 import {

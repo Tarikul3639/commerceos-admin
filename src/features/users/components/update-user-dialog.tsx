@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -106,7 +106,7 @@ export function UpdateUserDialog({
           <DialogTitle>Update User</DialogTitle>
 
           <DialogDescription>
-            Update the user's account information.
+            Update the user&apos;s account information.
           </DialogDescription>
         </DialogHeader>
 

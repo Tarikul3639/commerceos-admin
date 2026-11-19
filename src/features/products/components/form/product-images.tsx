@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import { v4 as uuidv4 } from "uuid"
 import { X, CloudUpload, Upload } from "lucide-react"
@@ -271,9 +272,12 @@ export function ProductImages({ productId }: { productId: string }) {
                   key={image.id}
                   className="group relative aspect-square overflow-hidden rounded-lg border"
                 >
-                  <img
+                  <Image
                     src={image.imageUrl}
                     alt={`Product image ${index + 1}`}
+                    width={400}
+                    height={400}
+                    unoptimized
                     className="size-full object-cover"
                   />
 
@@ -294,9 +298,12 @@ export function ProductImages({ productId }: { productId: string }) {
                   key={image.id}
                   className="group relative aspect-square overflow-hidden rounded-lg border"
                 >
-                  <img
+                  <Image
                     src={image.preview}
                     alt={image.file.name}
+                    width={400}
+                    height={400}
+                    unoptimized
                     className="size-full object-cover"
                   />
 
