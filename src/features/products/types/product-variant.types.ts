@@ -28,7 +28,6 @@ export interface CreateProductVariantRequest {
   title?: string
   sku: string
   barcode?: string
-  stock?: number
   optionValueIds?: string[]
 }
 

@@ -15,6 +15,7 @@ interface PaymentGatewayCardProps {
   onEdit: () => void
   onToggle: () => void
   isUpdating: boolean
+  canUpdate: boolean
 }
 
 export function PaymentGatewayCard({
@@ -22,6 +23,7 @@ export function PaymentGatewayCard({
   onEdit,
   onToggle,
   isUpdating,
+  canUpdate,
 }: PaymentGatewayCardProps) {
   const meta = providerMeta[config.provider]
   const Icon = meta.icon
@@ -78,40 +80,42 @@ export function PaymentGatewayCard({
         </span>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
-        <Label
-          htmlFor={`gateway-${config.id}`}
-          className="flex cursor-pointer items-center gap-2.5 text-xs text-muted-foreground"
-        >
-          <Switch
-            id={`gateway-${config.id}`}
-            checked={config.isEnabled}
-            onCheckedChange={onToggle}
+      {canUpdate && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+          <Label
+            htmlFor={`gateway-${config.id}`}
+            className="flex cursor-pointer items-center gap-2.5 text-xs text-muted-foreground"
+          >
+            <Switch
+              id={`gateway-${config.id}`}
+              checked={config.isEnabled}
+              onCheckedChange={onToggle}
+              disabled={isUpdating}
+              aria-label={`Toggle ${config.displayName}`}
+            />
+
+            {isUpdating ? (
+              <span className="flex items-center gap-1.5">
+                <Loader2 className="size-4 animate-spin" />
+                Saving…
+              </span>
+            ) : (
+              "Available at checkout"
+            )}
+          </Label>
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="xs"
+            onClick={onEdit}
             disabled={isUpdating}
-            aria-label={`Toggle ${config.displayName}`}
-          />
-
-          {isUpdating ? (
-            <span className="flex items-center gap-1.5">
-              <Loader2 className="size-4 animate-spin" />
-              Saving…
-            </span>
-          ) : (
-            "Available at checkout"
-          )}
-        </Label>
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="xs"
-          onClick={onEdit}
-          disabled={isUpdating}
-        >
-          <SquarePen className="size-4" />
-          Update
-        </Button>
-      </div>
+          >
+            <SquarePen className="size-4" />
+            Update
+          </Button>
+        </div>
+      )}
     </Card>
   )
 }

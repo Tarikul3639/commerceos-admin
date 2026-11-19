@@ -66,10 +66,11 @@ const categories = [
 
 export function NotificationPreferencesContent() {
   const permission = usePermission()
+  const canRead = permission.has(Permission.SETTING_READ)
   const canUpdate = permission.has(Permission.SETTING_UPDATE)
 
   const { data, isLoading, isFetching, error, refetch } =
-    useGetNotificationPreferencesQuery()
+    useGetNotificationPreferencesQuery(undefined, { skip: !canRead })
 
   const [updatePreferences, { isLoading: isSaving }] =
     useUpdateNotificationPreferencesMutation()
@@ -90,7 +91,7 @@ export function NotificationPreferencesContent() {
 
   return (
     <PageContainer
-      access={permission.has(Permission.SETTING_READ)}
+      access={canRead}
       accessFallback={<UnauthorizedContent />}
       title="Notification Settings"
       breadcrumbs={breadcrumbs}

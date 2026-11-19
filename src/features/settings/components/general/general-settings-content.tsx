@@ -7,6 +7,9 @@ import { toast } from "sonner"
 
 import { PageContainer } from "@/components/layout/page-container"
 import { UnsavedChangesBar } from "@/components/shared/unsaved-changes-bar"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import {
   generalSettingsSchema,
@@ -39,7 +42,12 @@ const breadcrumbs = [
 ]
 
 export function GeneralSettingsContent() {
-  const { data, isLoading, isError } = useGetGeneralSettingsQuery()
+  const { has } = usePermission()
+  const canRead = has(Permission.SETTING_READ)
+  const canUpdate = has(Permission.SETTING_UPDATE)
+  const { data, isLoading, isError } = useGetGeneralSettingsQuery(undefined, {
+    skip: !canRead,
+  })
 
   const [updateSettings, { isLoading: isSaving }] =
     useUpdateGeneralSettingsMutation()
@@ -106,6 +114,8 @@ export function GeneralSettingsContent() {
     })
   }
 
+  if (!canRead) return <PermissionDenied />
+
   if (isLoading) {
     return (
       <PageContainer title="General Settings" breadcrumbs={breadcrumbs}>
@@ -130,14 +140,14 @@ export function GeneralSettingsContent() {
   return (
     <PageContainer title="General Settings" breadcrumbs={breadcrumbs}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-8">
-        <div className="space-y-6">
+        <fieldset disabled={!canUpdate} className="space-y-6">
           <CompanyInformation control={form.control} />
           <BrandingSettings control={form.control} />
           <RegionalPreferences control={form.control} />
-        </div>
+        </fieldset>
 
         <UnsavedChangesBar
-          open={form.formState.isDirty}
+          open={canUpdate && form.formState.isDirty}
           isSaving={isSaving}
           // position="bottom"
           message="You have unsaved changes. Save them before leaving."

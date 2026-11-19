@@ -123,6 +123,7 @@ export const navigation: NavigationGroup[] = [
         title: "Size Guides",
         href: "/dashboard/size-guides",
         icon: Ruler,
+        permission: Permission.PRODUCT_READ,
       },
     ],
   },

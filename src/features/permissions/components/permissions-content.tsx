@@ -1,19 +1,22 @@
 "use client"
 
 import { PageContainer } from "@/components/layout/page-container"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 import { DataTable } from "@/components/data-table"
 import { useGetRolesPermissionsQuery } from "../api/permissions.api"
 import { columns } from "./permissions-columns"
-import { rolePermissions } from "../permissions.data"
 
 export function PermissionsContent() {
-  let {
+  const canRead = usePermission().has(Permission.PERMISSION_READ)
+  const {
     data: rolesPermissions,
     isLoading,
     isFetching,
-  } = useGetRolesPermissionsQuery()
+  } = useGetRolesPermissionsQuery(undefined, { skip: !canRead })
 
-  // rolesPermissions = rolePermissions
+  if (!canRead) return <PermissionDenied />
 
   return (
     <PageContainer

@@ -14,6 +14,9 @@ import {
 import { UpdatePermissionsDialog } from "./update-permissions-dialog"
 import { RolePermissionsDialog } from "./role-permissions-dialog"
 
+import { Permission } from "@/config/permissions.config"
+import { Role } from "@/config/roles.config"
+import { usePermission } from "@/hooks/use-permission"
 import type { RolePermissions } from "../types/permissions.types"
 
 interface PermissionsActionsProps {
@@ -25,24 +28,31 @@ export function PermissionsActions({
 }: PermissionsActionsProps) {
   const [isViewOpen, setIsViewOpen] = useState(false)
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
+  const { has, role } = usePermission()
+  const canUpdate =
+    role === Role.SUPER_ADMIN &&
+    has(Permission.PERMISSION_UPDATE) &&
+    rolePermissions.role !== Role.SUPER_ADMIN
 
   return (
     <>
       <TooltipProvider>
         <div className="flex w-full items-center justify-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setIsUpdateOpen(true)}
-              >
-                <SquarePen className="size-4" />
-                <span className="sr-only">Update</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Update permissions</TooltipContent>
-          </Tooltip>
+          {canUpdate && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsUpdateOpen(true)}
+                >
+                  <SquarePen className="size-4" />
+                  <span className="sr-only">Update</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Update permissions</TooltipContent>
+            </Tooltip>
+          )}
 
           <Tooltip>
             <TooltipTrigger asChild>

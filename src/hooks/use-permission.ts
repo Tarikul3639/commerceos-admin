@@ -59,6 +59,7 @@ export function usePermission() {
   )
 
   return {
+    role: user?.role ?? null,
     has,
     hasAny,
     hasAll,

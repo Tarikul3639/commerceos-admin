@@ -70,12 +70,9 @@ export const columns = columnHelper.columns([
       const product = info.row.original
 
       return (
-        <Link
-          href={`/dashboard/categories/${product.category.id}`}
-          className="text-sm whitespace-nowrap hover:text-primary hover:underline"
-        >
+        <span className="text-sm whitespace-nowrap">
           {product.category.name}
-        </Link>
+        </span>
       )
     },
   }),
@@ -95,14 +92,7 @@ export const columns = columnHelper.columns([
         return <span className="text-sm text-muted-foreground">—</span>
       }
 
-      return (
-        <Link
-          href={`/dashboard/brands/${brand.id}`}
-          className="text-sm whitespace-nowrap hover:text-primary hover:underline"
-        >
-          {brand.name}
-        </Link>
-      )
+      return <span className="text-sm whitespace-nowrap">{brand.name}</span>
     },
   }),
 
@@ -121,14 +111,7 @@ export const columns = columnHelper.columns([
         return <span className="text-sm text-muted-foreground">—</span>
       }
 
-      return (
-        <Link
-          href={`/dashboard/size-guides/${sizeGuide.id}`}
-          className="text-sm whitespace-nowrap hover:text-primary hover:underline"
-        >
-          {sizeGuide.name}
-        </Link>
-      )
+      return <span className="text-sm whitespace-nowrap">{sizeGuide.name}</span>
     },
   }),
 

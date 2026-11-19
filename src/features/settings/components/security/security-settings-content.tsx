@@ -94,9 +94,10 @@ const fields: {
 
 export function SecuritySettingsContent() {
   const permission = usePermission()
+  const canRead = permission.has(Permission.SETTING_READ)
   const canUpdate = permission.has(Permission.SETTING_UPDATE)
   const { data, isLoading, isFetching, error, refetch } =
-    useGetSecuritySettingsQuery()
+    useGetSecuritySettingsQuery(undefined, { skip: !canRead })
   const [updateSettings, { isLoading: isSaving }] =
     useUpdateSecuritySettingsMutation()
 
@@ -131,7 +132,9 @@ export function SecuritySettingsContent() {
 
   async function onSubmit(values: SecuritySettingsFormValues) {
     try {
-      await updateSettings(values satisfies UpdateSecuritySettingsRequest).unwrap()
+      await updateSettings(
+        values satisfies UpdateSecuritySettingsRequest
+      ).unwrap()
       toast.success("Security settings updated")
     } catch (error) {
       toast.error(
@@ -142,7 +145,7 @@ export function SecuritySettingsContent() {
 
   return (
     <PageContainer
-      access={permission.has(Permission.SETTING_READ)}
+      access={canRead}
       accessFallback={<UnauthorizedContent />}
       title="Security Settings"
       breadcrumbs={breadcrumbs}

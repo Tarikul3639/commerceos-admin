@@ -12,6 +12,7 @@ interface PaymentGatewayListProps {
   onAdd: () => void
   /** id of the gateway currently being toggled (only that card is locked) */
   updatingId: string | null
+  canUpdate: boolean
 }
 
 export function PaymentGatewayList({
@@ -20,6 +21,7 @@ export function PaymentGatewayList({
   onToggle,
   onAdd,
   updatingId,
+  canUpdate,
 }: PaymentGatewayListProps) {
   if (configs.length === 0) {
     return (
@@ -35,10 +37,12 @@ export function PaymentGatewayList({
           use at checkout.
         </p>
 
-        <Button size="sm" className="mt-5 gap-1.5" onClick={onAdd}>
-          <Plus className="size-4" />
-          Add gateway
-        </Button>
+        {canUpdate && (
+          <Button size="sm" className="mt-5 gap-1.5" onClick={onAdd}>
+            <Plus className="size-4" />
+            Add gateway
+          </Button>
+        )}
       </div>
     )
   }
@@ -52,6 +56,7 @@ export function PaymentGatewayList({
           onEdit={() => onEdit(config)}
           onToggle={() => onToggle(config)}
           isUpdating={updatingId === config.id}
+          canUpdate={canUpdate}
         />
       ))}
     </div>

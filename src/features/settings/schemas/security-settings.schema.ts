@@ -11,8 +11,7 @@ export const securitySettingsSchema = z
   })
   .refine(
     (values) =>
-      values.rememberMeRefreshLifetimeDays >=
-      values.refreshTokenLifetimeDays,
+      values.rememberMeRefreshLifetimeDays >= values.refreshTokenLifetimeDays,
     {
       message:
         "Remember-me lifetime must be at least the standard session lifetime.",

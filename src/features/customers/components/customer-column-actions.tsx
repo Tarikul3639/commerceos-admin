@@ -21,6 +21,8 @@ import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
 import { CustomerViewDialog } from "./customer-view-dialog"
 import { UpdateCustomerDialog } from "./update-customer-dialog"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import {
   useDeleteCustomerMutation,
@@ -38,6 +40,9 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false)
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
+  const { has } = usePermission()
+  const canUpdate = has(Permission.CUSTOMER_UPDATE)
+  const canDelete = has(Permission.CUSTOMER_DELETE)
 
   const [deleteCustomer, { isLoading: isDeleting }] =
     useDeleteCustomerMutation()
@@ -110,10 +115,12 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
               Details
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
-              <SquarePen className="size-4" />
-              Update
-            </DropdownMenuItem>
+            {canUpdate && (
+              <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
+                <SquarePen className="size-4" />
+                Update
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
@@ -122,7 +129,7 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
           <DropdownMenuGroup>
             <DropdownMenuLabel>Danger</DropdownMenuLabel>
 
-            {!isDeleted ? (
+            {!isDeleted && canDelete && (
               <DropdownMenuItem
                 variant="destructive"
                 disabled={isDeleting || isRestoring}
@@ -131,7 +138,8 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
                 <Trash2 className="size-4" />
                 Delete
               </DropdownMenuItem>
-            ) : (
+            )}
+            {isDeleted && canUpdate && (
               <DropdownMenuItem
                 disabled={isDeleting || isRestoring}
                 onClick={() => setIsRestoreDialogOpen(true)}

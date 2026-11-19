@@ -6,6 +6,9 @@ import { Plus } from "lucide-react"
 import type { PaginationState } from "@tanstack/react-table"
 
 import { PageContainer } from "@/components/layout/page-container"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+import { Permission } from "@/config/permissions.config"
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,6 +24,9 @@ import type { ProductStatus } from "../../types/product.types"
 import { columns } from "./products-columns"
 
 export function ProductsContent() {
+  const { has } = usePermission()
+  const canRead = has(Permission.PRODUCT_READ)
+  const canCreate = has(Permission.PRODUCT_CREATE)
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState<ProductStatus | undefined>()
   const [pagination, setPagination] = useState<PaginationState>({
@@ -28,12 +34,17 @@ export function ProductsContent() {
     pageSize: 10,
   })
 
-  const { data, isLoading, isError, error } = useGetProductsQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search,
-    status,
-  })
+  const { data, isLoading, isError, error } = useGetProductsQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search,
+      status,
+    },
+    { skip: !canRead }
+  )
+
+  if (!canRead) return <PermissionDenied />
 
   const handleStatusFilter = (value: string) => {
     setStatus(value === "all" ? undefined : (value as ProductStatus))
@@ -51,12 +62,14 @@ export function ProductsContent() {
         { label: "Products" },
       ]}
       pageHeaderAction={
-        <Button asChild>
-          <Link href="/dashboard/products/create">
-            <Plus />
-            Create
-          </Link>
-        </Button>
+        canCreate ? (
+          <Button asChild>
+            <Link href="/dashboard/products/create">
+              <Plus />
+              Create
+            </Link>
+          </Button>
+        ) : null
       }
     >
       <DataTable

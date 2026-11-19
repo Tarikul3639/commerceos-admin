@@ -201,15 +201,17 @@ function OrderActionsCell({ order }: { order: Order }) {
                 )}
               </SelectContent>
             </Select>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label="Cancel order"
-              className="text-destructive hover:text-destructive"
-              onClick={() => setCancelOpen(true)}
-            >
-              <XCircle className="size-4" />
-            </Button>
+            {order.paymentStatus !== "PAID" && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Cancel order"
+                className="text-destructive hover:text-destructive"
+                onClick={() => setCancelOpen(true)}
+              >
+                <XCircle className="size-4" />
+              </Button>
+            )}
           </>
         )}
 

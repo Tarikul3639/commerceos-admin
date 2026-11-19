@@ -1,9 +1,12 @@
 "use client"
 
 import Link from "next/link"
-import { ExternalLink, SquarePen } from "lucide-react"
+import { SquarePen } from "lucide-react"
 
 import { LoadingState } from "@/components/shared/loading-state"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+import { Permission } from "@/config/permissions.config"
 import { ErrorState } from "@/components/shared/error-state"
 import { PageContainer } from "@/components/layout/page-container"
 import { Button } from "@/components/ui/button"
@@ -22,11 +25,17 @@ interface ProductDetailsContentProps {
 export function ProductDetailsContent({
   productId,
 }: ProductDetailsContentProps) {
+  const { has } = usePermission()
+  const canRead = has(Permission.PRODUCT_READ)
+  const canUpdate = has(Permission.PRODUCT_UPDATE)
+
   const {
     data: product,
     isLoading,
     isError,
-  } = useGetProductDetailsQuery(productId)
+  } = useGetProductDetailsQuery(productId, { skip: !canRead })
+
+  if (!canRead) return <PermissionDenied />
 
   if (isLoading) {
     return <LoadingState message="Loading product details..." />
@@ -64,24 +73,14 @@ export function ProductDetailsContent({
       ]}
       pageHeaderAction={
         <div className="flex items-center">
-          <Button asChild variant="ghost" size="icon-sm">
-            <Link
-              href={`/products/${product.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary"
-            >
-              <ExternalLink className="size-4" />
-              <span className="sr-only">View product</span>
-            </Link>
-          </Button>
-
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/dashboard/products/${product.id}/update`}>
-              <SquarePen className="size-4" />
-              Update
-            </Link>
-          </Button>
+          {canUpdate && (
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/dashboard/products/${product.id}/update`}>
+                <SquarePen className="size-4" />
+                Update
+              </Link>
+            </Button>
+          )}
 
           <Badge variant={statusVariant} className="ml-2">
             {product.status}

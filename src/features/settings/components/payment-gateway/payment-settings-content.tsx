@@ -5,6 +5,9 @@ import { KeyRound, Plus, RefreshCw } from "lucide-react"
 import { toast } from "sonner"
 
 import { PageContainer } from "@/components/layout/page-container"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -32,6 +35,9 @@ const breadcrumbs = [
 ]
 
 export function PaymentSettingsContent() {
+  const { has } = usePermission()
+  const canRead = has(Permission.SETTING_READ)
+  const canUpdate = has(Permission.SETTING_UPDATE)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingConfig, setEditingConfig] = useState<PaymentGateway | null>(
     null
@@ -44,7 +50,7 @@ export function PaymentSettingsContent() {
     isFetching,
     error,
     refetch,
-  } = useGetPaymentGatewaysQuery()
+  } = useGetPaymentGatewaysQuery(undefined, { skip: !canRead })
 
   const [createConfig, { isLoading: isCreating }] =
     useCreatePaymentGatewayMutation()
@@ -56,11 +62,13 @@ export function PaymentSettingsContent() {
   const liveCount = configs.filter((c) => c.mode === "LIVE").length
 
   async function handleCreate(values: CreatePaymentGatewayRequest) {
+    if (!canUpdate) return
     await createConfig(values).unwrap()
     setDialogOpen(false)
   }
 
   async function handleUpdate(id: string, values: UpdatePaymentGatewayRequest) {
+    if (!canUpdate) return
     await updateConfig({ id, body: values }).unwrap()
     setDialogOpen(false)
     setEditingConfig(null)
@@ -68,6 +76,7 @@ export function PaymentSettingsContent() {
 
   // Quick toggle from the card: locks only that card, never touches the dialog.
   async function handleToggle(config: PaymentGateway) {
+    if (!canUpdate) return
     const next = !config.isEnabled
     setTogglingId(config.id)
     try {
@@ -93,6 +102,8 @@ export function PaymentSettingsContent() {
     setDialogOpen(true)
   }
 
+  if (!canRead) return <PermissionDenied />
+
   return (
     <PageContainer
       title="Payment Settings"
@@ -110,11 +121,13 @@ export function PaymentSettingsContent() {
             <span className="hidden sm:inline">Refresh</span>
           </Button>
 
-          <Button onClick={handleAdd} size="sm">
-            <Plus />
-            <span className="hidden sm:inline">Add gateway</span>
-            <span className="sm:hidden">Add</span>
-          </Button>
+          {canUpdate && (
+            <Button onClick={handleAdd} size="sm">
+              <Plus />
+              <span className="hidden sm:inline">Add gateway</span>
+              <span className="sm:hidden">Add</span>
+            </Button>
+          )}
         </div>
       }
     >
@@ -170,6 +183,7 @@ export function PaymentSettingsContent() {
                 onToggle={(config) => void handleToggle(config)}
                 onAdd={handleAdd}
                 updatingId={togglingId}
+                canUpdate={canUpdate}
               />
             </div>
           )}
@@ -186,7 +200,7 @@ export function PaymentSettingsContent() {
         </Alert>
 
         <PaymentGatewayFormDialog
-          open={dialogOpen}
+          open={canUpdate && dialogOpen}
           onOpenChange={(open) => {
             setDialogOpen(open)
             if (!open) setEditingConfig(null)

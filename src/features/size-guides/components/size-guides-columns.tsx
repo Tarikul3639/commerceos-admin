@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { useDeleteSizeGuideMutation } from "../api/size-guides.api"
 import type { SizeGuide } from "../types/size-guide.types"
@@ -63,6 +65,9 @@ function SizeGuideActionsCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
   const [viewOpen, setViewOpen] = useState(false)
   const [updateOpen, setUpdateOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const { has } = usePermission()
+  const canUpdate = has(Permission.PRODUCT_UPDATE)
+  const canDelete = has(Permission.PRODUCT_DELETE)
 
   const [deleteSizeGuide, { isLoading }] = useDeleteSizeGuideMutation()
 
@@ -102,21 +107,26 @@ function SizeGuideActionsCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
               Details
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => setUpdateOpen(true)}>
-              <SquarePen className="size-4" />
-              Update
-            </DropdownMenuItem>
+            {canUpdate && (
+              <DropdownMenuItem onClick={() => setUpdateOpen(true)}>
+                <SquarePen className="size-4" />
+                Update
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
 
-          <DropdownMenuSeparator />
-
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={() => setDeleteOpen(true)}
-          >
-            <Trash2 className="size-4" />
-            Delete
-          </DropdownMenuItem>
+          {canDelete && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={() => setDeleteOpen(true)}
+              >
+                <Trash2 className="size-4" />
+                Delete
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

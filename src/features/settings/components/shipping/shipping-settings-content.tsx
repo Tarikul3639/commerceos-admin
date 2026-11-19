@@ -38,10 +38,11 @@ const breadcrumbs = [
 
 export function ShippingSettingsContent() {
   const permission = usePermission()
+  const canRead = permission.has(Permission.SETTING_READ)
   const canUpdate = permission.has(Permission.SETTING_UPDATE)
 
   const { data, isLoading, isFetching, error, refetch } =
-    useGetShippingSettingsQuery()
+    useGetShippingSettingsQuery(undefined, { skip: !canRead })
 
   const [updateSettings, { isLoading: isSavingSettings }] =
     useUpdateShippingSettingsMutation()
@@ -119,7 +120,7 @@ export function ShippingSettingsContent() {
 
   return (
     <PageContainer
-      access={permission.has(Permission.SETTING_READ)}
+      access={canRead}
       accessFallback={<UnauthorizedContent />}
       title="Shipping Settings"
       breadcrumbs={breadcrumbs}

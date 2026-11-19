@@ -25,6 +25,8 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
 import { getErrorMessage } from "@/lib/utils/error"
+import { Permission } from "@/config/permissions.config"
+import { usePermission } from "@/hooks/use-permission"
 
 import { ViewCategoryDialog } from "./view-category-dialog"
 import { UpdateCategoryDialog } from "./update-category-dialog"
@@ -61,6 +63,9 @@ function CategoryActionsCell({ category }: { category: Category }) {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const { has } = usePermission()
+  const canUpdate = has(Permission.CATEGORY_UPDATE)
+  const canDelete = has(Permission.CATEGORY_DELETE)
 
   const [deleteCategory, { isLoading: isDeleting }] =
     useDeleteCategoryMutation()
@@ -103,27 +108,30 @@ function CategoryActionsCell({ category }: { category: Category }) {
               Details
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
-              <SquarePen className="size-4" />
-              Update
-            </DropdownMenuItem>
+            {canUpdate && (
+              <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
+                <SquarePen className="size-4" />
+                Update
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
 
-          <DropdownMenuSeparator />
-
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>Danger</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => setIsDeleteDialogOpen(true)}
-            >
-              <Trash2 className="size-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
+          {canDelete && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Danger</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
+                  <Trash2 className="size-4" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

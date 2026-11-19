@@ -2,6 +2,10 @@
 
 import { useState } from "react"
 
+import { Permission } from "@/config/permissions.config"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+
 import { useGetDashboardOverviewQuery } from "../dashboard.api"
 import type { DashboardQuery } from "../dashboard.types"
 
@@ -20,6 +24,7 @@ import { DashboardLowStockProducts } from "./dashboard-low-stock-products"
 import { DashboardRecentActivities } from "./dashboard-recent-activities"
 
 export function DashboardContent() {
+  const canRead = usePermission().has(Permission.DASHBOARD_READ)
   const [query, setQuery] = useState<DashboardQuery>({
     period: "30d",
   })
@@ -29,7 +34,9 @@ export function DashboardContent() {
     isLoading,
     isFetching,
     isError,
-  } = useGetDashboardOverviewQuery(query)
+  } = useGetDashboardOverviewQuery(query, { skip: !canRead })
+
+  if (!canRead) return <PermissionDenied />
 
   const loading = isLoading || isFetching
 

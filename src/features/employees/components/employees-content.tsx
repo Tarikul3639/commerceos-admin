@@ -5,6 +5,9 @@ import type { PaginationState } from "@tanstack/react-table"
 
 import { DataTable } from "@/components/data-table"
 import { PageContainer } from "@/components/layout/page-container"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+import { Permission } from "@/config/permissions.config"
 import { useGetUsersQuery } from "@/features/users/api/user.api"
 import type {
   UserQueryParams,
@@ -17,6 +20,9 @@ import { CreateEmployeeDialog } from "./create-employee-dialog"
 import { columns } from "@/features/users/components/user-columns"
 
 export function EmployeesContent() {
+  const { has } = usePermission()
+  const canRead = has(Permission.USER_READ)
+  const canCreate = has(Permission.USER_CREATE)
   const [query, setQuery] = useQueryStates({
     page: parseAsInteger.withDefault(1),
     limit: parseAsInteger.withDefault(10),
@@ -36,7 +42,9 @@ export function EmployeesContent() {
     ...(query.sortOrder ? { sortOrder: query.sortOrder as SortOrder } : {}),
   }
 
-  const { data, isLoading, isFetching } = useGetUsersQuery(params)
+  const { data, isLoading, isFetching } = useGetUsersQuery(params, {
+    skip: !canRead,
+  })
   const employees = data?.data ?? []
   const meta = data?.meta
   const pagination: PaginationState = {
@@ -51,6 +59,8 @@ export function EmployeesContent() {
     setQuery({ page: next.pageIndex + 1, limit: next.pageSize })
   }
 
+  if (!canRead) return <PermissionDenied />
+
   return (
     <PageContainer
       title="Employees"
@@ -58,7 +68,7 @@ export function EmployeesContent() {
         { label: "Dashboard", href: "/dashboard" },
         { label: "Employees" },
       ]}
-      pageHeaderAction={<CreateEmployeeDialog />}
+      pageHeaderAction={canCreate ? <CreateEmployeeDialog /> : null}
     >
       <DataTable
         columns={columns}

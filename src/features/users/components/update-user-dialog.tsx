@@ -18,6 +18,7 @@ import {
 
 import { getErrorMessage } from "@/lib/utils/error"
 import { Role } from "@/config/roles.config"
+import { useRole } from "@/hooks/use-role"
 
 import { useUpdateUserMutation } from "../api/user.api"
 import { userSchema, type UserFormValues } from "../schemas/user.schema"
@@ -36,6 +37,10 @@ export function UpdateUserDialog({
   open,
   onOpenChange,
 }: UpdateUserDialogProps) {
+  const { hasRole } = useRole()
+  const allowedRoles = hasRole(Role.SUPER_ADMIN)
+    ? [Role.ADMIN, Role.MANAGER, Role.EMPLOYEE]
+    : [Role.MANAGER, Role.EMPLOYEE]
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
 
   const form = useForm<UserFormValues>({
@@ -106,7 +111,11 @@ export function UpdateUserDialog({
         </DialogHeader>
 
         <form id="update-user-form" onSubmit={form.handleSubmit(onSubmit)}>
-          <UserForm form={form} isSubmitting={isSubmitting} />
+          <UserForm
+            form={form}
+            isSubmitting={isSubmitting}
+            allowedRoles={allowedRoles}
+          />
         </form>
 
         <DialogFooter className="flex-row justify-end">

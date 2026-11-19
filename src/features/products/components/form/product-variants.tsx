@@ -67,7 +67,6 @@ type VariantForm = {
   title: string
   sku: string
   barcode: string
-  stock: string
   optionValueIds: string[]
 }
 
@@ -75,7 +74,6 @@ type EditableVariant = {
   title: string
   sku: string
   barcode: string
-  stock: string
   optionValueIds: string[]
 }
 
@@ -83,7 +81,6 @@ const emptyForm: VariantForm = {
   title: "",
   sku: "",
   barcode: "",
-  stock: "0",
   optionValueIds: [],
 }
 
@@ -107,7 +104,6 @@ function toEditableVariant(variant: ProductVariant): EditableVariant {
     title: variant.title ?? "",
     sku: variant.sku,
     barcode: variant.barcode ?? "",
-    stock: String(variant.stock),
     optionValueIds: [],
   }
 }
@@ -222,15 +218,9 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
 
   async function handleCreate() {
     const sku = form.sku.trim()
-    const stock = Number(form.stock)
 
     if (!sku) {
       toast.error("SKU is required")
-      return
-    }
-
-    if (form.stock.trim() === "" || !Number.isInteger(stock) || stock < 0) {
-      toast.error("Stock must be a non-negative integer")
       return
     }
 
@@ -250,7 +240,6 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
       title: form.title.trim() || undefined,
       sku,
       barcode: form.barcode.trim() || undefined,
-      stock,
       optionValueIds,
     }
 
@@ -283,15 +272,9 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
     if (!editForm) return
 
     const sku = editForm.sku.trim()
-    const stock = Number(editForm.stock)
 
     if (!sku) {
       toast.error("SKU is required")
-      return
-    }
-
-    if (editForm.stock.trim() === "" || !Number.isInteger(stock) || stock < 0) {
-      toast.error("Stock must be a non-negative integer")
       return
     }
 
@@ -316,7 +299,6 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
           title: editForm.title.trim() || undefined,
           sku,
           barcode: editForm.barcode.trim() || undefined,
-          stock,
           optionValueIds,
         },
       }).unwrap()
@@ -364,6 +346,7 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
           <CardTitle>Add Variant</CardTitle>
           <CardDescription>
             Select values from existing product options and create a variant.
+            New variants start at 0 stock; manage quantities in Stock.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -437,17 +420,6 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
                 value={form.barcode}
                 onChange={(event) => updateForm("barcode", event.target.value)}
                 placeholder="Enter barcode"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>Stock *</Label>
-              <Input
-                type="number"
-                min={0}
-                step={1}
-                value={form.stock}
-                onChange={(event) => updateForm("stock", event.target.value)}
               />
             </div>
           </div>
@@ -626,22 +598,7 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
                         </TableCell>
 
                         <TableCell className="min-w-24">
-                          {isEditing && editForm ? (
-                            <Input
-                              type="number"
-                              min={0}
-                              step={1}
-                              value={editForm.stock}
-                              onChange={(event) =>
-                                setEditForm({
-                                  ...editForm,
-                                  stock: event.target.value,
-                                })
-                              }
-                            />
-                          ) : (
-                            variant.stock
-                          )}
+                          {variant.stock}
                         </TableCell>
 
                         <TableCell>

@@ -2,12 +2,16 @@
 
 import { useParams } from "next/navigation"
 import { PageContainer } from "@/components/layout/page-container"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+import { Permission } from "@/config/permissions.config"
 import { LoadingState } from "@/components/shared/loading-state"
 import { ErrorState } from "@/components/shared/error-state"
 import { useGetProductDetailsQuery } from "../../api/product.api"
 import { UpdateProductForm } from "./update-product-form"
 
 export function UpdateProductContent() {
+  const canUpdate = usePermission().has(Permission.PRODUCT_UPDATE)
   const { id: productId } = useParams<{ id: string }>()
 
   const {
@@ -15,7 +19,9 @@ export function UpdateProductContent() {
     isLoading,
     isError,
     refetch,
-  } = useGetProductDetailsQuery(productId)
+  } = useGetProductDetailsQuery(productId, { skip: !canUpdate })
+
+  if (!canUpdate) return <PermissionDenied />
 
   if (isLoading) {
     return <LoadingState message="Loading product details..." />

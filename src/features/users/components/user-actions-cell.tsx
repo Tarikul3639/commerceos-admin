@@ -40,6 +40,10 @@ import {
 import { UpdateUserDialog } from "./update-user-dialog"
 import { UserDetailsDialog } from "./user-details-dialog"
 import { useIsMe } from "@/hooks/use-is-me"
+import { usePermission } from "@/hooks/use-permission"
+import { Permission } from "@/config/permissions.config"
+import { Role } from "@/config/roles.config"
+import { useRole } from "@/hooks/use-role"
 
 import {
   useDeleteUserMutation,
@@ -55,6 +59,15 @@ interface UserActionsCellProps {
 
 export function UserActionsCell({ user }: UserActionsCellProps) {
   const isMe = useIsMe(user.id)
+  const { has } = usePermission()
+  const { hasRole } = useRole()
+  const isSuperAdmin = hasRole(Role.SUPER_ADMIN)
+  const isProtectedTarget =
+    user.role === Role.SUPER_ADMIN ||
+    (user.role === Role.ADMIN && !isSuperAdmin)
+  const canUpdate = has(Permission.USER_UPDATE)
+  const canDelete = has(Permission.USER_DELETE)
+  const canManageStatus = isSuperAdmin && canUpdate
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
@@ -116,6 +129,14 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
     )
   }
 
+  if (isProtectedTarget) {
+    return (
+      <div className="flex w-full items-center justify-center">
+        <Badge variant="secondary">Protected</Badge>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="flex w-full justify-center">
@@ -142,43 +163,72 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
                 Details
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={() => setIsUpdateOpen(true)}>
-                <SquarePen className="size-4" />
-                Update
-              </DropdownMenuItem>
+              {canUpdate && (
+                <DropdownMenuItem onClick={() => setIsUpdateOpen(true)}>
+                  <SquarePen className="size-4" />
+                  Update
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
 
             {/* Status */}
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
-                Status
-              </DropdownMenuLabel>
+            {canManageStatus && (
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
+                  Status
+                </DropdownMenuLabel>
 
-              {user.status === UserStatus.ACTIVE && (
-                <>
-                  <DropdownMenuItem
-                    disabled={isUpdatingStatus}
-                    onClick={() => handleUpdateUserStatus(UserStatus.INACTIVE)}
-                  >
-                    <CirclePause className="h-4 w-4" />
-                    Deactivate
-                  </DropdownMenuItem>
+                {user.status === UserStatus.ACTIVE && (
+                  <>
+                    <DropdownMenuItem
+                      disabled={isUpdatingStatus}
+                      onClick={() =>
+                        handleUpdateUserStatus(UserStatus.INACTIVE)
+                      }
+                    >
+                      <CirclePause className="h-4 w-4" />
+                      Deactivate
+                    </DropdownMenuItem>
 
-                  <DropdownMenuItem
-                    variant="destructive"
-                    disabled={isUpdatingStatus}
-                    onClick={() => handleUpdateUserStatus(UserStatus.SUSPENDED)}
-                  >
-                    <XCircle className="h-4 w-4" />
-                    Suspend
-                  </DropdownMenuItem>
-                </>
-              )}
+                    <DropdownMenuItem
+                      variant="destructive"
+                      disabled={isUpdatingStatus}
+                      onClick={() =>
+                        handleUpdateUserStatus(UserStatus.SUSPENDED)
+                      }
+                    >
+                      <XCircle className="h-4 w-4" />
+                      Suspend
+                    </DropdownMenuItem>
+                  </>
+                )}
 
-              {user.status === UserStatus.INACTIVE && (
-                <>
+                {user.status === UserStatus.INACTIVE && (
+                  <>
+                    <DropdownMenuItem
+                      disabled={isUpdatingStatus}
+                      onClick={() => handleUpdateUserStatus(UserStatus.ACTIVE)}
+                    >
+                      <CircleCheck className="h-4 w-4" />
+                      Activate
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      variant="destructive"
+                      disabled={isUpdatingStatus}
+                      onClick={() =>
+                        handleUpdateUserStatus(UserStatus.SUSPENDED)
+                      }
+                    >
+                      <XCircle className="h-4 w-4" />
+                      Suspend
+                    </DropdownMenuItem>
+                  </>
+                )}
+
+                {user.status === UserStatus.SUSPENDED && (
                   <DropdownMenuItem
                     disabled={isUpdatingStatus}
                     onClick={() => handleUpdateUserStatus(UserStatus.ACTIVE)}
@@ -186,41 +236,22 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
                     <CircleCheck className="h-4 w-4" />
                     Activate
                   </DropdownMenuItem>
+                )}
 
+                {user.status === UserStatus.DELETED && (
                   <DropdownMenuItem
-                    variant="destructive"
                     disabled={isUpdatingStatus}
-                    onClick={() => handleUpdateUserStatus(UserStatus.SUSPENDED)}
+                    onClick={() => setIsRestoreOpen(true)}
                   >
-                    <XCircle className="h-4 w-4" />
-                    Suspend
+                    <ShieldPlus className="h-4 w-4" />
+                    Restore
                   </DropdownMenuItem>
-                </>
-              )}
-
-              {user.status === UserStatus.SUSPENDED && (
-                <DropdownMenuItem
-                  disabled={isUpdatingStatus}
-                  onClick={() => handleUpdateUserStatus(UserStatus.ACTIVE)}
-                >
-                  <CircleCheck className="h-4 w-4" />
-                  Activate
-                </DropdownMenuItem>
-              )}
-
-              {user.status === UserStatus.DELETED && (
-                <DropdownMenuItem
-                  disabled={isUpdatingStatus}
-                  onClick={() => setIsRestoreOpen(true)}
-                >
-                  <ShieldPlus className="h-4 w-4" />
-                  Restore
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuGroup>
+                )}
+              </DropdownMenuGroup>
+            )}
 
             {/* Danger Zone */}
-            {user.status !== UserStatus.DELETED && (
+            {canDelete && user.status !== UserStatus.DELETED && (
               <>
                 <DropdownMenuSeparator />
 

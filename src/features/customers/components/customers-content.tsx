@@ -12,6 +12,9 @@ import type { PaginationState } from "@tanstack/react-table"
 
 import { PageContainer } from "@/components/layout/page-container"
 import { DataTable } from "@/components/data-table"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+import { Permission } from "@/config/permissions.config"
 
 import { customerColumns } from "./customers-columns"
 import { CreateCustomerDialog } from "./create-customer-dialog"
@@ -23,6 +26,9 @@ import type {
 } from "../types/customers.types"
 
 export function CustomersContent() {
+  const { has } = usePermission()
+  const canRead = has(Permission.CUSTOMER_READ)
+  const canCreate = has(Permission.CUSTOMER_CREATE)
   const [isOpen, setIsOpen] = useState(false)
 
   // Keep pagination, search, and sorting state in the URL.
@@ -42,13 +48,16 @@ export function CustomersContent() {
   })
 
   // Fetch customers using the current URL query parameters.
-  const { data, isLoading, isFetching } = useGetCustomersQuery({
-    page: params.page,
-    limit: params.limit,
-    search: params.search || undefined,
-    sortBy: params.sortBy ?? undefined,
-    sortOrder: params.sortOrder ?? undefined,
-  })
+  const { data, isLoading, isFetching } = useGetCustomersQuery(
+    {
+      page: params.page,
+      limit: params.limit,
+      search: params.search || undefined,
+      sortBy: params.sortBy ?? undefined,
+      sortOrder: params.sortOrder ?? undefined,
+    },
+    { skip: !canRead }
+  )
 
   const customers = data?.data ?? []
   const meta = data?.meta
@@ -72,6 +81,8 @@ export function CustomersContent() {
     })
   }
 
+  if (!canRead) return <PermissionDenied />
+
   return (
     <PageContainer
       title="Customers"
@@ -80,7 +91,9 @@ export function CustomersContent() {
         { label: "Customers" },
       ]}
       pageHeaderAction={
-        <CreateCustomerDialog open={isOpen} onOpenChange={setIsOpen} />
+        canCreate ? (
+          <CreateCustomerDialog open={isOpen} onOpenChange={setIsOpen} />
+        ) : null
       }
     >
       <DataTable

@@ -2,6 +2,10 @@
 
 import { useState } from "react"
 
+import { Permission } from "@/config/permissions.config"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+
 import {
   useGetRevenueChartQuery,
   useGetSalesPurchaseChartQuery,
@@ -19,24 +23,31 @@ import { AnalyticsTopProducts } from "./analytics-top-products"
 import { AnalyticsPurchaseSummary } from "./analytics-purchase-summary"
 
 export function AnalyticsContent() {
+  const canRead = usePermission().has(Permission.ANALYTICS_READ)
   const [query, setQuery] = useState<AnalyticsQuery>({
     period: "30d",
   })
 
   const { data: revenue, isLoading: isRevenueLoading } =
-    useGetRevenueChartQuery(query)
+    useGetRevenueChartQuery(query, { skip: !canRead })
 
   const { data: purchaseSummary, isLoading: isPurchaseLoading } =
-    useGetPurchaseSummaryQuery(query)
+    useGetPurchaseSummaryQuery(query, { skip: !canRead })
 
   const {
     data: salesPurchase,
     isLoading: isSalesPurchaseLoading,
     isFetching: isSalesPurchaseFetching,
-  } = useGetSalesPurchaseChartQuery(query)
+  } = useGetSalesPurchaseChartQuery(query, { skip: !canRead })
 
-  const { data: topProducts } = useGetTopProductsQuery(query)
-  const { data: topCustomers } = useGetTopCustomersQuery(query)
+  const { data: topProducts } = useGetTopProductsQuery(query, {
+    skip: !canRead,
+  })
+  const { data: topCustomers } = useGetTopCustomersQuery(query, {
+    skip: !canRead,
+  })
+
+  if (!canRead) return <PermissionDenied />
 
   return (
     <div className="space-y-6">

@@ -6,6 +6,9 @@ import type { PaginationState } from "@tanstack/react-table"
 
 import { DataTable } from "@/components/data-table"
 import { PageContainer } from "@/components/layout/page-container"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+import { Permission } from "@/config/permissions.config"
 
 import { useGetUsersQuery } from "../api/user.api"
 import type {
@@ -19,6 +22,9 @@ import { CreateUserDialog } from "./create-user-dialog"
 import { columns } from "./user-columns"
 
 export function UsersContent() {
+  const { has } = usePermission()
+  const canRead = has(Permission.USER_READ)
+  const canCreate = has(Permission.USER_CREATE)
   const [query, setQuery] = useQueryStates({
     page: parseAsInteger.withDefault(1),
     limit: parseAsInteger.withDefault(10),
@@ -51,7 +57,9 @@ export function UsersContent() {
     }),
   }
 
-  const { data, isLoading, isFetching } = useGetUsersQuery(params)
+  const { data, isLoading, isFetching } = useGetUsersQuery(params, {
+    skip: !canRead,
+  })
 
   const users = data?.data ?? []
   const meta = data?.meta
@@ -73,6 +81,8 @@ export function UsersContent() {
     })
   }
 
+  if (!canRead) return <PermissionDenied />
+
   return (
     <PageContainer
       title="Users"
@@ -80,7 +90,7 @@ export function UsersContent() {
         { label: "Dashboard", href: "/dashboard" },
         { label: "Users" },
       ]}
-      pageHeaderAction={<CreateUserDialog />}
+      pageHeaderAction={canCreate ? <CreateUserDialog /> : null}
     >
       <DataTable
         columns={columns}

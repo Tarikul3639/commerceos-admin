@@ -19,6 +19,7 @@ import {
 
 import { getErrorMessage } from "@/lib/utils/error"
 import { Role } from "@/config/roles.config"
+import { useRole } from "@/hooks/use-role"
 
 import { useCreateUserMutation } from "../api/user.api"
 import { userSchema, type UserFormValues } from "../schemas/user.schema"
@@ -27,6 +28,10 @@ import { UserForm } from "./user-form"
 
 export function CreateUserDialog() {
   const [open, setOpen] = useState(false)
+  const { hasRole } = useRole()
+  const allowedRoles = hasRole(Role.SUPER_ADMIN)
+    ? [Role.ADMIN, Role.MANAGER, Role.EMPLOYEE]
+    : [Role.MANAGER, Role.EMPLOYEE]
 
   const [createUser, { isLoading: isCreating }] = useCreateUserMutation()
 
@@ -91,7 +96,11 @@ export function CreateUserDialog() {
         </DialogHeader>
 
         <form id="create-user-form" onSubmit={form.handleSubmit(onSubmit)}>
-          <UserForm form={form} isSubmitting={isSubmitting} />
+          <UserForm
+            form={form}
+            isSubmitting={isSubmitting}
+            allowedRoles={allowedRoles}
+          />
         </form>
 
         <DialogFooter className="flex-row justify-end">

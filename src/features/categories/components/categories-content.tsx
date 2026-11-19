@@ -9,6 +9,9 @@ import {
 } from "nuqs"
 
 import { PageContainer } from "@/components/layout/page-container"
+import { PermissionDenied } from "@/components/shared/permission-denied"
+import { usePermission } from "@/hooks/use-permission"
+import { Permission } from "@/config/permissions.config"
 import { CreateCategoryDialog } from "./create-category-dialog"
 import { DataTable } from "@/components/data-table"
 import { PaginationState } from "@tanstack/react-table"
@@ -18,6 +21,9 @@ import { useGetCategoriesQuery } from "../api/categories.api"
 import { categories } from "../data/categories.data"
 
 export function CategoriesContent() {
+  const { has } = usePermission()
+  const canRead = has(Permission.CATEGORY_READ)
+  const canCreate = has(Permission.CATEGORY_CREATE)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [params, setParams] = useQueryStates({
     page: parseAsInteger.withDefault(1),
@@ -31,9 +37,13 @@ export function CategoriesContent() {
     pageSize: params.limit,
   }
 
-  const { data, isLoading, isFetching } = useGetCategoriesQuery(params)
+  const { data, isLoading, isFetching } = useGetCategoriesQuery(params, {
+    skip: !canRead,
+  })
   const categoriesData = data?.data || categories
   const paginatedMeta = data?.meta || { total: 0, page: 1, limit: 10 }
+
+  if (!canRead) return <PermissionDenied />
 
   return (
     <PageContainer
@@ -43,10 +53,12 @@ export function CategoriesContent() {
         { label: "Categories" },
       ]}
       pageHeaderAction={
-        <CreateCategoryDialog
-          open={isCreateDialogOpen}
-          onOpenChange={setIsCreateDialogOpen}
-        />
+        canCreate ? (
+          <CreateCategoryDialog
+            open={isCreateDialogOpen}
+            onOpenChange={setIsCreateDialogOpen}
+          />
+        ) : null
       }
     >
       <DataTable
