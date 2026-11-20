@@ -48,16 +48,18 @@ export function ActivityLogUserAgent({ userAgent }: ActivityLogUserAgentProps) {
   }
 
   return (
-    <div className="space-y-3">
-      <div className="grid gap-3 sm:grid-cols-3">
+    <div className="min-w-0 space-y-3">
+      <div className="grid min-w-0 gap-2">
         <div className="rounded-md border p-3">
           <p className="mb-1 text-xs text-muted-foreground">Browser</p>
-          <p className="text-sm font-medium">{browser || "Unknown"}</p>
+          <p className="text-sm font-medium wrap-break-word">
+            {browser || "Unknown"}
+          </p>
         </div>
 
         <div className="rounded-md border p-3">
           <p className="mb-1 text-xs text-muted-foreground">Operating System</p>
-          <p className="text-sm font-medium">{os || "Unknown"}</p>
+          <p className="text-sm font-medium wrap-break-word">{os || "Unknown"}</p>
         </div>
 
         <div className="rounded-md border p-3">
@@ -71,7 +73,7 @@ export function ActivityLogUserAgent({ userAgent }: ActivityLogUserAgentProps) {
       </div>
 
       <details className="group rounded-md border">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-3">
+        <summary className="flex xl:flex-col cursor-pointer list-none items-center justify-between gap-3 p-3">
           <span className="text-sm font-medium">Raw User-Agent</span>
 
           <Badge variant="secondary">View details</Badge>

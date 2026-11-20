@@ -65,8 +65,10 @@ export function ActivityLogsContent() {
       ]}
     >
       <DataTable
-        title="Activity Logs"
-        description="Review and search activity across your workspace."
+        className="mt-0 w-full max-w-full min-w-0"
+        toolbarClassName="min-w-0 items-stretch sm:items-center"
+        title="Activity history"
+        description="Review, search, and filter actions performed across your workspace."
         columns={activityLogColumns}
         data={data?.data ?? []}
         isLoading={isLoading}
@@ -78,9 +80,10 @@ export function ActivityLogsContent() {
           value: search,
           onChange: (value) => updateFilter(() => setSearch(value)),
           placeholder: "Search activities...",
+          className: "w-full sm:w-56",
         }}
         toolbarFilters={
-          <>
+          <div className="grid w-full min-w-0 grid-cols-1 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center">
             <Select
               value={type ?? "all"}
               onValueChange={(value) =>
@@ -89,7 +92,11 @@ export function ActivityLogsContent() {
                 )
               }
             >
-              <SelectTrigger size="sm" aria-label="Filter by type">
+              <SelectTrigger
+                size="sm"
+                className="w-full sm:w-36"
+                aria-label="Filter by type"
+              >
                 <SelectValue placeholder="All types" />
               </SelectTrigger>
               <SelectContent>
@@ -111,7 +118,11 @@ export function ActivityLogsContent() {
                 )
               }
             >
-              <SelectTrigger size="sm" aria-label="Filter by module">
+              <SelectTrigger
+                size="sm"
+                className="w-full sm:w-40"
+                aria-label="Filter by module"
+              >
                 <SelectValue placeholder="All modules" />
               </SelectTrigger>
               <SelectContent>
@@ -124,7 +135,7 @@ export function ActivityLogsContent() {
               </SelectContent>
             </Select>
             <Input
-              className="h-8 w-32"
+              className="h-8 w-full sm:w-36"
               value={action}
               onChange={(event) =>
                 updateFilter(() => setAction(event.target.value))
@@ -132,7 +143,7 @@ export function ActivityLogsContent() {
               placeholder="Action"
               aria-label="Filter by action"
             />
-          </>
+          </div>
         }
         manualPagination
         pagination={pagination}

@@ -20,10 +20,10 @@ export function ActivityLogDiffTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-md border">
+    <div className="w-full min-w-0 overflow-hidden rounded-md border">
       <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] border-b bg-muted/50">
-        <div className="p-3 text-sm font-semibold">Previous</div>
-        <div className="border-l p-3 text-sm font-semibold">New</div>
+        <div className="min-w-0 p-3 text-sm font-semibold">Previous</div>
+        <div className="min-w-0 border-l p-3 text-sm font-semibold">New</div>
       </div>
 
       {rows.map((row) => (

@@ -12,13 +12,13 @@ type ActivityLogOverviewProps = {
 
 export function ActivityLogOverview({ activity }: ActivityLogOverviewProps) {
   return (
-    <div className="space-y-3">
+    <div className="min-w-0 space-y-3">
       <div>
         <p className="mb-0.5 text-xs text-muted-foreground">Action</p>
-        <h3 className="text-sm font-semibold">{activity.action}</h3>
+        <h3 className="text-sm font-semibold break-words">{activity.action}</h3>
 
         {activity.description && (
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-sm break-words text-muted-foreground">
             {activity.description}
           </p>
         )}
@@ -28,10 +28,12 @@ export function ActivityLogOverview({ activity }: ActivityLogOverviewProps) {
         <Badge variant="outline">{activity.type}</Badge>
         <Badge variant="secondary">{activity.module}</Badge>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid min-w-0 gap-3 sm:grid-cols-2">
         <div className="rounded-md border p-2.5">
           <p className="mb-0.5 text-xs text-muted-foreground">Performed By</p>
-          <p className="text-sm font-medium">{getActivityActor(activity)}</p>
+          <p className="text-sm font-medium break-words">
+            {getActivityActor(activity)}
+          </p>
 
           {activity.user?.email && (
             <p className="mt-0.5 text-xs break-all text-muted-foreground">

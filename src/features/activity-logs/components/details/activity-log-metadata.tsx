@@ -59,7 +59,7 @@ function MetadataItem({
 
 export function ActivityLogMetadata({ activity }: { activity: ActivityLog }) {
   return (
-    <div className="grid gap-2 sm:grid-cols-2">
+    <div className="grid min-w-0 gap-2">
       <MetadataItem icon={Hash} label="Activity ID" value={activity.id} />
 
       <MetadataItem
