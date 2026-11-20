@@ -5,6 +5,7 @@ import {
   Boxes,
   ChartNoAxesCombined,
   ClipboardList,
+  Heart,
   LayoutDashboard,
   Mail,
   Package,
@@ -85,7 +86,6 @@ export const navigation: NavigationGroup[] = [
     items: [
       {
         title: "Products",
-        // href: "/dashboard/products",
         icon: Package,
         permission: Permission.PRODUCT_READ,
         children: [
@@ -101,7 +101,6 @@ export const navigation: NavigationGroup[] = [
           },
         ],
       },
-
       {
         title: "Categories",
         href: "/dashboard/categories",
@@ -198,6 +197,12 @@ export const navigation: NavigationGroup[] = [
         icon: ShoppingCart,
         permission: Permission.CART_READ,
       },
+      {
+        title: "Wishlists",
+        href: "/dashboard/wishlists",
+        icon: Heart,
+        permission: Permission.WISHLIST_READ,
+      },
     ],
   },
   {
@@ -247,13 +252,11 @@ export const navigation: NavigationGroup[] = [
           {
             title: "General",
             href: "/dashboard/settings/general",
-            // icon: SlidersHorizontal,
             permission: Permission.SETTING_READ,
           },
           {
             title: "Payments",
             href: "/dashboard/settings/payment-gateways",
-            // icon: PaymentIcon,
             permission: Permission.SETTING_READ,
           },
           {

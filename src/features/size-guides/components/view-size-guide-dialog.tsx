@@ -45,7 +45,7 @@ export function ViewSizeGuideDialog({
           <div className="grid grid-cols-3 gap-3 rounded-md border p-3">
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">Name</p>
-              <p className="mt-1 wrap-break-word text-sm font-medium">
+              <p className="mt-1 text-sm font-medium wrap-break-word">
                 {sizeGuide.name}
               </p>
             </div>
@@ -66,7 +66,7 @@ export function ViewSizeGuideDialog({
           {sizeGuide.description ? (
             <div className="space-y-1">
               <p className="text-sm font-medium">Description</p>
-              <p className="whitespace-pre-wrap wrap-break-word text-sm text-muted-foreground">
+              <p className="text-sm wrap-break-word whitespace-pre-wrap text-muted-foreground">
                 {sizeGuide.description}
               </p>
             </div>
@@ -82,7 +82,7 @@ export function ViewSizeGuideDialog({
                       {sizeGuide.columns.map((column, index) => (
                         <TableHead
                           key={`${column}-${index}`}
-                          className="h-9 whitespace-nowrap text-center"
+                          className="h-9 text-center whitespace-nowrap"
                         >
                           {column}
                         </TableHead>
@@ -96,7 +96,7 @@ export function ViewSizeGuideDialog({
                           {sizeGuide.columns.map((column, columnIndex) => (
                             <TableCell
                               key={`${column}-${columnIndex}`}
-                              className="py-2 whitespace-nowrap text-center"
+                              className="py-2 text-center whitespace-nowrap"
                             >
                               {row[column] ?? "—"}
                             </TableCell>

@@ -199,7 +199,7 @@ export function PurchaseReturnForm({
           cell: ({ row }) =>
             formatCurrency(
               Number(row.original.unitPrice) *
-              Number(values.items[row.index]?.quantity || 0),
+                Number(values.items[row.index]?.quantity || 0),
               { compact: false }
             ),
         },

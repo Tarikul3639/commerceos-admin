@@ -59,7 +59,9 @@ export function ActivityLogUserAgent({ userAgent }: ActivityLogUserAgentProps) {
 
         <div className="rounded-md border p-3">
           <p className="mb-1 text-xs text-muted-foreground">Operating System</p>
-          <p className="text-sm font-medium wrap-break-word">{os || "Unknown"}</p>
+          <p className="text-sm font-medium wrap-break-word">
+            {os || "Unknown"}
+          </p>
         </div>
 
         <div className="rounded-md border p-3">
@@ -73,7 +75,7 @@ export function ActivityLogUserAgent({ userAgent }: ActivityLogUserAgentProps) {
       </div>
 
       <details className="group rounded-md border">
-        <summary className="flex xl:flex-col cursor-pointer list-none items-center justify-between gap-3 p-3">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-3 xl:flex-col">
           <span className="text-sm font-medium">Raw User-Agent</span>
 
           <Badge variant="secondary">View details</Badge>

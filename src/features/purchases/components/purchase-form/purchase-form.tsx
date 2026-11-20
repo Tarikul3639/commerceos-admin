@@ -198,7 +198,7 @@ export function PurchaseForm({ purchase, onSuccess }: PurchaseFormProps) {
         </aside>
       </div>
 
-      <div className="sticky bottom-0 z-0 flex min-w-0 -mx-3 flex-col-reverse gap-3 border-t bg-background/95 p-3 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+      <div className="sticky bottom-0 z-0 -mx-3 flex min-w-0 flex-col-reverse gap-3 border-t bg-background/95 p-3 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted-foreground">
           {isUpdate
             ? isDirty
