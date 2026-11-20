@@ -3,29 +3,14 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import {
-  AlertCircle,
-  ExternalLink,
-  Loader2,
-  SquarePen,
-  Trash2,
-} from "lucide-react"
+import { AlertCircle, Loader2, SquarePen, Trash2 } from "lucide-react"
 import { toast } from "sonner"
-import { Image as ImageIcon } from "lucide-react"
 
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
 import { PageContainer } from "@/components/layout/page-container"
-import { AppImage } from "@/components/media"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Permission } from "@/config/permissions.config"
 import { UnauthorizedContent } from "@/features/permissions/components/unauthorized-content"
 import { usePermission } from "@/hooks/use-permission"
@@ -35,34 +20,52 @@ import {
   useDeleteBannerMutation,
   useGetBannerQuery,
 } from "../../api/banners.api"
+import type { BannerImage } from "../../types/banners.types"
+import { BannerActivityCard } from "./banner-activity-card"
+import { BannerInformationCard } from "./banner-information-card"
+import { BannerPreview } from "./banner-preview"
+import { BannerScheduleCard } from "./banner-schedule-card"
+import { formatDate, formatEnumLabel } from "../../utils/banner-details.utils"
 
 interface BannerDetailsContentProps {
   bannerId: string
 }
 
+/** Coordinates banner detail data, permission checks, and destructive actions. */
 export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
   const router = useRouter()
   const permission = usePermission()
-
   const [deleteOpen, setDeleteOpen] = useState(false)
-
   const canRead = permission.has(Permission.BANNER_READ)
   const canDelete = permission.has(Permission.BANNER_DELETE)
+  const canUpdate = permission.has(Permission.BANNER_UPDATE)
   const {
     data: banner,
     isLoading,
     isError,
-  } = useGetBannerQuery(bannerId, {
-    skip: !canRead,
-  })
+  } = useGetBannerQuery(bannerId, { skip: !canRead })
   const [deleteBanner, { isLoading: isDeleting }] = useDeleteBannerMutation()
 
+  // Preserve compatibility with older API responses that only expose imageUrl.
+  const images: BannerImage[] = banner?.images?.length
+    ? banner.images
+    : banner?.imageUrl
+      ? [
+          {
+            id: banner.id,
+            imageUrl: banner.imageUrl,
+            publicId: banner.imagePublicId,
+            sortOrder: 0,
+          },
+        ]
+      : []
+
+  /** Deletes the banner after permission validation and returns to the list. */
   const handleDelete = async () => {
     if (!canDelete || !banner) return
 
     try {
       await deleteBanner(banner.id).unwrap()
-
       toast.success("Banner deleted successfully")
       router.push("/dashboard/banners")
     } catch (error) {
@@ -78,30 +81,30 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
       breadcrumbs={[
         { label: "Dashboard", href: "/dashboard" },
         { label: "Banners", href: "/dashboard/banners" },
-        { label: "Banner details" },
+        { label: banner?.title || "Details" },
       ]}
       pageHeaderAction={
-        <>
-          {banner && permission.has(Permission.BANNER_UPDATE) && (
+        <div className="flex items-center gap-2">
+          {banner && canUpdate && (
             <Button size="sm" asChild>
               <Link href={`/dashboard/banners/${banner.id}/update`}>
                 <SquarePen className="size-4" />
-                Update
+                Edit banner
               </Link>
             </Button>
           )}
-
           {banner && canDelete && (
             <Button
               size="sm"
-              variant="destructive"
+              variant="outline"
+              className="text-destructive hover:text-destructive"
               onClick={() => setDeleteOpen(true)}
             >
-              <Trash2 />
+              <Trash2 className="size-4" />
               Delete
             </Button>
           )}
-        </>
+        </div>
       }
     >
       {isLoading ? (
@@ -112,94 +115,41 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertTitle>Unable to load banner</AlertTitle>
-          <AlertDescription>Failed to load banner details.</AlertDescription>
+          <AlertDescription>
+            Unable to load this banner. Please try again.
+          </AlertDescription>
         </Alert>
       ) : (
         <div className="space-y-5">
-          <Card>
-            <CardHeader>
-              <CardTitle>Banner preview</CardTitle>
-              <CardDescription>
-                Preview of the banner images as they will appear on the
-                storefront.
-              </CardDescription>
-            </CardHeader>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant={banner.isActive ? "default" : "secondary"}>
+                {banner.isActive ? "Active" : "Inactive"}
+              </Badge>
+              <Badge variant="outline">{formatEnumLabel(banner.type)}</Badge>
+              <Badge variant="outline">
+                {formatEnumLabel(banner.position)}
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Last updated {formatDate(banner.updatedAt)}
+            </p>
+          </div>
 
-            <CardContent className="grid space-y-6 gap-x-8 gap-y-6 md:grid-cols-2">
-              <Preview
-                label="Desktop banner"
-                image={banner.imageUrl}
-                title={banner.title}
-                aspect="desktop"
+          <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,0.85fr)]">
+            <div className="min-w-0 space-y-5">
+              <BannerPreview title={banner.title} images={images} />
+              <BannerInformationCard banner={banner} />
+            </div>
+
+            <div className="min-w-0 space-y-5">
+              <BannerScheduleCard
+                startAt={banner.startAt}
+                endAt={banner.endAt}
               />
-
-              {banner.mobileImageUrl && (
-                <Preview
-                  label="Mobile banner"
-                  image={banner.mobileImageUrl}
-                  title={banner.title}
-                  aspect="mobile"
-                />
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Banner information</CardTitle>
-            </CardHeader>
-
-            <CardContent className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="grid grid-cols-2 gap-5 lg:contents">
-                <Detail label="Title" value={banner.title || "—"} />
-                <Detail label="Type" value={formatEnumLabel(banner.type)} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-5 lg:contents">
-                <Detail
-                  label="Position"
-                  value={formatEnumLabel(banner.position)}
-                />
-
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Status</p>
-                  <Badge variant={banner.isActive ? "default" : "secondary"}>
-                    {banner.isActive ? "Active" : "Inactive"}
-                  </Badge>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-5 lg:contents">
-                <Detail label="Link" value={banner.link || "—"} />
-                <Detail label="Button text" value={banner.buttonText || "—"} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-5 lg:contents">
-                <Detail
-                  label="Open in new tab"
-                  value={banner.openInNewTab ? "Yes" : "No"}
-                />
-                <Detail label="Sort order" value={String(banner.sortOrder)} />
-              </div>
-
-              <Detail label="Start date" value={formatDate(banner.startAt)} />
-              <Detail label="End date" value={formatDate(banner.endAt)} />
-
-              <div className="grid grid-cols-2 gap-5 lg:contents">
-                <Detail
-                  label="Created by"
-                  value={banner.createdBy?.name || "—"}
-                />
-                <Detail
-                  label="Updated by"
-                  value={banner.updatedBy?.name || "—"}
-                />
-              </div>
-
-              <Detail label="Created at" value={formatDate(banner.createdAt)} />
-              <Detail label="Updated at" value={formatDate(banner.updatedAt)} />
-            </CardContent>
-          </Card>
+              <BannerActivityCard banner={banner} />
+            </div>
+          </div>
         </div>
       )}
 
@@ -210,8 +160,8 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
           title="Delete banner"
           description={
             <>
-              Delete <strong>{banner.title || "this banner"}</strong>? Its
-              Cloudinary images will also be deleted.
+              Delete <strong>{banner.title || "this banner"}</strong>? All
+              associated banner images will also be deleted.
             </>
           }
           confirmLabel={isDeleting ? "Deleting..." : "Delete"}
@@ -220,90 +170,4 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
       )}
     </PageContainer>
   )
-}
-
-function Preview({
-  label,
-  title,
-  image,
-  aspect,
-}: {
-  label: string
-  title: string | null
-  image: string | null
-  aspect: "desktop" | "mobile"
-}) {
-  const aspectClass = aspect === "desktop" ? "aspect-[3/1]" : "aspect-[2/1]"
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium">{label}</p>
-
-        {image && (
-          <Button asChild variant="ghost" size="sm" className="h-8">
-            <a href={image} target="_blank" rel="noreferrer">
-              <ExternalLink />
-              View
-            </a>
-          </Button>
-        )}
-      </div>
-
-      {image ? (
-        <div
-          className={`relative overflow-hidden rounded-lg border bg-muted ${aspectClass}`}
-        >
-          <AppImage
-            name={title || label}
-            image={image}
-            clickable
-            className="h-full w-full rounded-md object-cover after:inset-0 after:rounded-md"
-          />
-        </div>
-      ) : (
-        <div
-          className={`flex ${aspectClass} items-center justify-center rounded-lg border bg-muted/30 text-sm text-muted-foreground`}
-        >
-          <div className="flex flex-col items-center gap-2 text-center">
-            <div className="flex size-12 items-center justify-center rounded-full bg-muted">
-              <ImageIcon className="size-6 text-muted-foreground" />
-            </div>
-
-            <p>No {label.toLowerCase()} image</p>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function Detail({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="min-w-0 space-y-1">
-      <p className="text-sm font-medium">{label}</p>
-
-      <p className="text-sm wrap-break-word text-muted-foreground">{value}</p>
-    </div>
-  )
-}
-
-function formatDate(value: string | null) {
-  return value
-    ? new Date(value).toLocaleString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour12: true,
-        hour: "numeric",
-        minute: "numeric",
-      })
-    : "—"
-}
-
-function formatEnumLabel(value: string) {
-  return value
-    .split("_")
-    .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
-    .join(" ")
 }

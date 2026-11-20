@@ -35,16 +35,16 @@ interface BannerFormProps {
   isLoading?: boolean
 }
 
+/** Convert API timestamps into values accepted by datetime-local inputs. */
 function toDateTimeInput(value: string | null | undefined) {
   if (!value) return ""
-
   const date = new Date(value)
-
   return new Date(date.getTime() - date.getTimezoneOffset() * 60_000)
     .toISOString()
     .slice(0, 16)
 }
 
+/** Shared create/update form for responsive multi-image banners. */
 export function BannerForm({
   banner,
   onSubmit,
@@ -53,15 +53,21 @@ export function BannerForm({
   isLoading = false,
 }: BannerFormProps) {
   const [isMediaUploading, setIsMediaUploading] = useState(false)
-
   const form = useForm<BannerFormValues>({
     resolver: zodResolver(bannerSchema),
     defaultValues: {
       title: banner?.title ?? "",
-      imageUrl: banner?.imageUrl ?? "",
-      imagePublicId: banner?.imagePublicId ?? "",
-      mobileImageUrl: banner?.mobileImageUrl ?? "",
-      mobileImagePublicId: banner?.mobileImagePublicId ?? "",
+      images: banner?.images?.length
+        ? banner.images
+        : banner?.imageUrl
+          ? [
+              {
+                imageUrl: banner.imageUrl,
+                publicId: banner.imagePublicId,
+                sortOrder: 0,
+              },
+            ]
+          : [],
       type: banner?.type ?? BannerType.PROMOTION,
       position: banner?.position ?? BannerPosition.HOME_TOP,
       link: banner?.link ?? "",
@@ -74,13 +80,22 @@ export function BannerForm({
     },
   })
 
+  const { isDirty } = form.formState
+
   useEffect(() => {
     form.reset({
       title: banner?.title ?? "",
-      imageUrl: banner?.imageUrl ?? "",
-      imagePublicId: banner?.imagePublicId ?? "",
-      mobileImageUrl: banner?.mobileImageUrl ?? "",
-      mobileImagePublicId: banner?.mobileImagePublicId ?? "",
+      images: banner?.images?.length
+        ? banner.images
+        : banner?.imageUrl
+          ? [
+              {
+                imageUrl: banner.imageUrl,
+                publicId: banner.imagePublicId,
+                sortOrder: 0,
+              },
+            ]
+          : [],
       type: banner?.type ?? BannerType.PROMOTION,
       position: banner?.position ?? BannerPosition.HOME_TOP,
       link: banner?.link ?? "",
@@ -100,21 +115,20 @@ export function BannerForm({
     >
       <Card>
         <CardHeader>
-          <CardTitle>Banner Media</CardTitle>
+          <CardTitle>Banner Images</CardTitle>
           <CardDescription>
-            Upload the desktop and mobile images for this banner.
+            Upload multiple images in one responsive size. They will be used on
+            both phones and desktop screens.
           </CardDescription>
         </CardHeader>
-
         <CardContent>
           <BannerMediaSection
             form={form}
             onUploadingChange={setIsMediaUploading}
           />
-
-          {form.formState.errors.imageUrl && (
+          {form.formState.errors.images?.message && (
             <FieldError className="mt-3">
-              {form.formState.errors.imageUrl.message}
+              {form.formState.errors.images.message}
             </FieldError>
           )}
         </CardContent>
@@ -128,7 +142,6 @@ export function BannerForm({
             display settings.
           </CardDescription>
         </CardHeader>
-
         <CardContent>
           <FieldGroup>
             <BannerBasicSection control={form.control} />
@@ -148,8 +161,12 @@ export function BannerForm({
         >
           Cancel
         </Button>
-
-        <Button type="submit" disabled={isLoading || isMediaUploading}>
+        <Button
+          type="submit"
+          disabled={
+            isLoading || isMediaUploading || (Boolean(banner) && !isDirty)
+          }
+        >
           {isLoading
             ? "Saving..."
             : isMediaUploading

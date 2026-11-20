@@ -39,10 +39,7 @@ export function UpdateBannerContent() {
         id: banner.id,
         data: {
           title: values.title || null,
-          imageUrl: values.imageUrl,
-          imagePublicId: values.imagePublicId,
-          mobileImageUrl: values.mobileImageUrl || null,
-          mobileImagePublicId: values.mobileImagePublicId || null,
+          images: values.images,
           type: values.type,
           position: values.position,
           link: values.link.trim() || null,

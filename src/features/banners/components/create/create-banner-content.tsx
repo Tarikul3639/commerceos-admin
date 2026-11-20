@@ -23,10 +23,7 @@ export function CreateBannerContent() {
     try {
       const banner = await createBanner({
         title: values.title || undefined,
-        imageUrl: values.imageUrl,
-        imagePublicId: values.imagePublicId,
-        mobileImageUrl: values.mobileImageUrl || undefined,
-        mobileImagePublicId: values.mobileImagePublicId || undefined,
+        images: values.images,
         type: values.type,
         position: values.position,
         link: values.link.trim() || undefined,
