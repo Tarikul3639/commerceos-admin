@@ -39,12 +39,15 @@ export function DiscountsContent() {
   const [selected, setSelected] = useState<Discount | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Discount | null>(null)
   const [deleteDiscount, deleteState] = useDeleteDiscountMutation()
-  const { data, isLoading, isFetching, isError, error } = useGetDiscountsQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-    isActive: status === "all" ? undefined : status === "active",
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetDiscountsQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+      isActive: status === "all" ? undefined : status === "active",
+    },
+    { skip: !permission.has(Permission.DISCOUNT_READ) }
+  )
 
   const openCreate = () => {
     if (!permission.has(Permission.DISCOUNT_CREATE)) return

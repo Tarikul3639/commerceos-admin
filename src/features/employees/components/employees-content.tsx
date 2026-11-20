@@ -42,9 +42,12 @@ export function EmployeesContent() {
     ...(query.sortOrder ? { sortOrder: query.sortOrder as SortOrder } : {}),
   }
 
-  const { data, isLoading, isFetching } = useGetUsersQuery(params, {
-    skip: !canRead,
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetUsersQuery(
+    params,
+    {
+      skip: !canRead,
+    }
+  )
   const employees = data?.data ?? []
   const meta = data?.meta
   const pagination: PaginationState = {
@@ -77,6 +80,8 @@ export function EmployeesContent() {
         description="Managers and employees with access to the CommerceOS workspace"
         isLoading={isLoading}
         isFetching={isFetching && !isLoading}
+        isError={isError}
+        error={error}
         columnVisibility
         initialColumnVisibility={{ last_login: false, created_at: false }}
         emptyText="No employees found"

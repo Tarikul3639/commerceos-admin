@@ -34,17 +34,20 @@ export function NotificationsContent() {
   })
   const permission = usePermission()
 
-  const query = useGetNotificationsQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    type: type === "ALL" ? undefined : type,
-    isRead:
-      readStatus === "ALL"
-        ? undefined
-        : readStatus === "READ"
-          ? "true"
-          : "false",
-  })
+  const query = useGetNotificationsQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      type: type === "ALL" ? undefined : type,
+      isRead:
+        readStatus === "ALL"
+          ? undefined
+          : readStatus === "READ"
+            ? "true"
+            : "false",
+    },
+    { skip: !permission.has(Permission.NOTIFICATION_READ) }
+  )
   const [markAllRead, { isLoading: isMarkingAll }] =
     useMarkAllNotificationsReadMutation()
 

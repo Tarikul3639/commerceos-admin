@@ -2,7 +2,6 @@ import { DataTable } from "@/components/data-table"
 import { columns } from "./analytics-top-products-columns"
 
 import type { TopProduct } from "../analytics.types"
-import { products as topProducts } from "../analytics.data"
 
 interface AnalyticsTopProductsProps {
   products?: TopProduct[]
@@ -12,9 +11,9 @@ interface AnalyticsTopProductsProps {
 
 export function AnalyticsTopProducts({
   products = [],
+  isLoading = false,
+  isFetching = false,
 }: AnalyticsTopProductsProps) {
-  products = topProducts
-
   return (
     <div className="h-full max-h-150 min-h-0 min-w-0">
       <DataTable
@@ -22,8 +21,8 @@ export function AnalyticsTopProducts({
         data={products}
         title="Top Products"
         description="Most popular products based on sales"
-        isLoading={false}
-        isFetching={false}
+        isLoading={isLoading}
+        isFetching={isFetching}
         columnVisibility
         emptyText="No top products"
       />

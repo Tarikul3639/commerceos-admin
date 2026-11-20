@@ -21,7 +21,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 
 import type { CustomerSummary } from "../dashboard.types"
-import { customerSummary } from "../dashboard.data"
 
 interface DashboardCustomerOverviewProps {
   customers?: CustomerSummary
@@ -43,7 +42,13 @@ export function DashboardCustomerOverview({
   customers,
   isLoading = false,
 }: DashboardCustomerOverviewProps) {
-  const currentCustomers = customers ?? customerSummary
+  const currentCustomers = customers ?? {
+    totalCustomers: 0,
+    newCustomers: 0,
+    activeCustomers: 0,
+    returningCustomers: 0,
+    customerGrowth: 0,
+  }
 
   const totalCustomers = currentCustomers.totalCustomers
   const activeCustomers = currentCustomers.activeCustomers

@@ -29,7 +29,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { formatCurrency } from "@/lib/utils/format-currency"
 
 import type { SalesPurchaseChartData } from "../analytics.types"
-import { salesPurchaseChartData } from "../analytics.data"
 import { useIsMobile } from "@/hooks/use-mobile"
 
 const chartConfig = {
@@ -54,11 +53,11 @@ interface AnalyticsSalesVsPurchaseChartProps {
 }
 
 export function AnalyticsSalesVsPurchaseChart({
+  data = [],
   isLoading,
   isFetching,
 }: AnalyticsSalesVsPurchaseChartProps) {
-  // const chartData = data ?? []
-  const chartData = salesPurchaseChartData
+  const chartData = data
   const loading = isLoading || isFetching
 
   const isMobile = useIsMobile()
@@ -79,6 +78,10 @@ export function AnalyticsSalesVsPurchaseChart({
         {loading ? (
           <div className="h-[200px] w-full px-3 sm:h-[220px] sm:px-4">
             <Skeleton className="h-full w-full" />
+          </div>
+        ) : chartData.length === 0 ? (
+          <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
+            No sales or purchase data for the selected period.
           </div>
         ) : (
           <ChartContainer

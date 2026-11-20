@@ -29,12 +29,15 @@ export function EmailsContent() {
     pageSize: 10,
   })
 
-  const { data, isLoading, isFetching, isError, error } = useGetEmailLogsQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-    status: status === "ALL" ? undefined : status,
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetEmailLogsQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+      status: status === "ALL" ? undefined : status,
+    },
+    { skip: !permission.has(Permission.EMAIL_READ) }
+  )
 
   const resetPage = () =>
     setPagination((current) => ({ ...current, pageIndex: 0 }))

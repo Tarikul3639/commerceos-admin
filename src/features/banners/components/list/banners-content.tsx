@@ -20,7 +20,6 @@ import { usePermission } from "@/hooks/use-permission"
 import { useGetBannersQuery } from "../../api/banners.api"
 import { BannerPosition, BannerType } from "../../types/banners.types"
 import { columns } from "./banners-columns"
-// import { data as mockData } from "../../data/banner.data"
 
 export function BannersContent() {
   const [search, setSearch] = useState("")
@@ -32,14 +31,17 @@ export function BannersContent() {
     pageSize: 10,
   })
   const permission = usePermission()
-  const { data, isLoading, isFetching, isError, error } = useGetBannersQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-    type: type === "all" ? undefined : (type as BannerType),
-    position: position === "all" ? undefined : (position as BannerPosition),
-    isActive: status === "all" ? undefined : status === "active",
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetBannersQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+      type: type === "all" ? undefined : (type as BannerType),
+      position: position === "all" ? undefined : (position as BannerPosition),
+      isActive: status === "all" ? undefined : status === "active",
+    },
+    { skip: !permission.has(Permission.BANNER_READ) }
+  )
 
   const resetPage = () =>
     setPagination((current) => ({ ...current, pageIndex: 0 }))

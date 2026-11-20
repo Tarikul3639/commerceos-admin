@@ -20,11 +20,14 @@ export function CartsContent() {
   })
   const permission = usePermission()
 
-  const { data, isLoading, isFetching, isError, error } = useGetCartsQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetCartsQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+    },
+    { skip: !permission.has(Permission.CART_READ) }
+  )
 
   const handleSearch = (value: string) => {
     setSearch(value)

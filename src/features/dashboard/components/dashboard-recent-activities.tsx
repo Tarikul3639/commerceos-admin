@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import type { RecentActivity } from "../dashboard.types"
 import { DataTable } from "@/components/data-table"
 import { columns } from "./dashboard-recent-activities-columns"
-import { recentActivities } from "../dashboard.data"
 
 interface DashboardRecentActivitiesProps {
   activities?: RecentActivity[]
@@ -21,7 +20,7 @@ export function DashboardRecentActivities({
   return (
     <DataTable
       columns={columns}
-      data={activities.length ? activities : recentActivities}
+      data={activities}
       title="Recent Activities"
       description="Latest activities on the dashboard"
       isLoading={isLoading}
@@ -30,7 +29,7 @@ export function DashboardRecentActivities({
       showPagination={false}
       toolbarActions={
         <Button variant="link" size="sm" asChild>
-          <Link href="/activities">
+          <Link href="/dashboard/activity-logs">
             View All <ArrowRight className="size-4" />
           </Link>
         </Button>

@@ -8,7 +8,6 @@ import type { LowStockProduct } from "../dashboard.types"
 import { columns } from "./dashboard-low-stock-products-columns"
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
-import { lowStockProducts } from "../dashboard.data"
 
 interface DashboardLowStockProductsProps {
   products?: LowStockProduct[]
@@ -23,7 +22,7 @@ export function DashboardLowStockProducts({
   return (
     <DataTable
       columns={columns}
-      data={products.length ? products : lowStockProducts}
+      data={products}
       title="Low Stock Products"
       description="Products that are low in stock"
       isLoading={isLoading}
@@ -33,7 +32,7 @@ export function DashboardLowStockProducts({
       showPagination={false}
       toolbarActions={
         <Button variant="link" size="sm" asChild>
-          <Link href="/products">
+          <Link href="/dashboard/products">
             View All <ArrowRight className="size-4" />
           </Link>
         </Button>

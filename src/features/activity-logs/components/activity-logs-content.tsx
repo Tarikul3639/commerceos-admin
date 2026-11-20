@@ -37,14 +37,17 @@ export function ActivityLogsContent() {
   })
 
   const { data, isLoading, isFetching, isError, error } =
-    useGetActivityLogsQuery({
-      page: pagination.pageIndex + 1,
-      limit: pagination.pageSize,
-      search: search || undefined,
-      action: action || undefined,
-      type,
-      module,
-    })
+    useGetActivityLogsQuery(
+      {
+        page: pagination.pageIndex + 1,
+        limit: pagination.pageSize,
+        search: search || undefined,
+        action: action || undefined,
+        type,
+        module,
+      },
+      { skip: !permission.has(Permission.ACTIVITY_LOG_READ) }
+    )
 
   const updateFilter = (update: () => void) => {
     update()

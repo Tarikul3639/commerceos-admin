@@ -30,11 +30,14 @@ export function PurchaseReturnListContent() {
     pageSize: 10,
   })
   const { data, isLoading, isFetching, isError, error } =
-    useGetPurchaseReturnsQuery({
-      page: pagination.pageIndex + 1,
-      limit: pagination.pageSize,
-      status: status === "all" ? undefined : (status as PurchaseReturnStatus),
-    })
+    useGetPurchaseReturnsQuery(
+      {
+        page: pagination.pageIndex + 1,
+        limit: pagination.pageSize,
+        status: status === "all" ? undefined : (status as PurchaseReturnStatus),
+      },
+      { skip: !permission.has(Permission.PURCHASE_READ) }
+    )
   return (
     <PageContainer
       access={permission.has(Permission.PURCHASE_READ)}

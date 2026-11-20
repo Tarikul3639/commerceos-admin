@@ -2,7 +2,6 @@ import { DataTable } from "@/components/data-table"
 import { columns } from "./analytics-top-customers-columns"
 
 import type { TopCustomer } from "../analytics.types"
-import { topCustomers } from "../analytics.data"
 
 interface AnalyticsTopCustomersProps {
   customers?: TopCustomer[]
@@ -12,9 +11,9 @@ interface AnalyticsTopCustomersProps {
 
 export function AnalyticsTopCustomers({
   customers = [],
+  isLoading = false,
+  isFetching = false,
 }: AnalyticsTopCustomersProps) {
-  customers = topCustomers
-
   return (
     <div className="h-full max-h-150 min-h-0 min-w-0">
       <DataTable
@@ -22,8 +21,8 @@ export function AnalyticsTopCustomers({
         data={customers}
         title="Top Customers"
         description="Most valuable customers based on orders"
-        isLoading={false}
-        isFetching={false}
+        isLoading={isLoading}
+        isFetching={isFetching}
         columnVisibility
         emptyText="No top customers"
       />

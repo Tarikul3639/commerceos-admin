@@ -57,9 +57,12 @@ export function UsersContent() {
     }),
   }
 
-  const { data, isLoading, isFetching } = useGetUsersQuery(params, {
-    skip: !canRead,
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetUsersQuery(
+    params,
+    {
+      skip: !canRead,
+    }
+  )
 
   const users = data?.data ?? []
   const meta = data?.meta
@@ -99,6 +102,8 @@ export function UsersContent() {
         description="List of all users"
         isLoading={isLoading}
         isFetching={isFetching && !isLoading}
+        isError={isError}
+        error={error}
         columnVisibility
         initialColumnVisibility={{
           last_login: false,

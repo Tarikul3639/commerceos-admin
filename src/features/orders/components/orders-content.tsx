@@ -32,13 +32,16 @@ export function OrdersContent() {
   })
   const permission = usePermission()
 
-  const { data, isLoading, isFetching, isError, error } = useGetOrdersQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-    status: status === "ALL" ? undefined : status,
-    paymentStatus: paymentStatus === "ALL" ? undefined : paymentStatus,
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetOrdersQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+      status: status === "ALL" ? undefined : status,
+      paymentStatus: paymentStatus === "ALL" ? undefined : paymentStatus,
+    },
+    { skip: !permission.has(Permission.ORDER_READ) }
+  )
 
   const resetPage = () =>
     setPagination((current) => ({ ...current, pageIndex: 0 }))

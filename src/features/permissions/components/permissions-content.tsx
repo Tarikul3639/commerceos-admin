@@ -14,6 +14,8 @@ export function PermissionsContent() {
     data: rolesPermissions,
     isLoading,
     isFetching,
+    isError,
+    error,
   } = useGetRolesPermissionsQuery(undefined, { skip: !canRead })
 
   if (!canRead) return <PermissionDenied />
@@ -32,6 +34,8 @@ export function PermissionsContent() {
         columns={columns}
         data={rolesPermissions || []}
         isLoading={isLoading || isFetching}
+        isError={isError}
+        error={error}
         showPagination={false}
       />
     </PageContainer>

@@ -4,6 +4,8 @@ import { useState } from "react"
 
 import { Permission } from "@/config/permissions.config"
 import { PermissionDenied } from "@/components/shared/permission-denied"
+import { ErrorState } from "@/components/shared/error-state"
+import { PageLoader } from "@/components/shared/page-loader"
 import { usePermission } from "@/hooks/use-permission"
 
 import { useGetDashboardOverviewQuery } from "../dashboard.api"
@@ -34,11 +36,16 @@ export function DashboardContent() {
     isLoading,
     isFetching,
     isError,
+    refetch,
   } = useGetDashboardOverviewQuery(query, { skip: !canRead })
 
   if (!canRead) return <PermissionDenied />
+  if (isLoading && !overview) return <PageLoader />
+  if (isError || !overview) {
+    return <ErrorState onRetry={() => void refetch()} />
+  }
 
-  const loading = isLoading || isFetching
+  const loading = isFetching
 
   return (
     <div className="grid min-w-0 gap-3">

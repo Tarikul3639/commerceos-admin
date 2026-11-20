@@ -35,14 +35,17 @@ export function PaymentsContent() {
   })
   const permission = usePermission()
 
-  const { data, isLoading, isFetching, isError, error } = useGetPaymentsQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-    method: method === "ALL" ? undefined : method,
-    status: status === "ALL" ? undefined : status,
-    type: type === "ALL" ? undefined : type,
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetPaymentsQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+      method: method === "ALL" ? undefined : method,
+      status: status === "ALL" ? undefined : status,
+      type: type === "ALL" ? undefined : type,
+    },
+    { skip: !permission.has(Permission.ORDER_READ) }
+  )
 
   const resetPage = () =>
     setPagination((current) => ({ ...current, pageIndex: 0 }))

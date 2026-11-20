@@ -48,7 +48,7 @@ export function CustomersContent() {
   })
 
   // Fetch customers using the current URL query parameters.
-  const { data, isLoading, isFetching } = useGetCustomersQuery(
+  const { data, isLoading, isFetching, isError, error } = useGetCustomersQuery(
     {
       page: params.page,
       limit: params.limit,
@@ -103,6 +103,8 @@ export function CustomersContent() {
         data={customers}
         isLoading={isLoading}
         isFetching={isFetching && !isLoading}
+        isError={isError}
+        error={error}
         columnVisibility
         initialColumnVisibility={{
           address: false,

@@ -30,12 +30,15 @@ export function ReturnsContent() {
   const permission = usePermission()
 
   const { data, isLoading, isFetching, isError, error } =
-    useGetOrderReturnsQuery({
-      page: pagination.pageIndex + 1,
-      limit: pagination.pageSize,
-      search: search || undefined,
-      status: status === "ALL" ? undefined : status,
-    })
+    useGetOrderReturnsQuery(
+      {
+        page: pagination.pageIndex + 1,
+        limit: pagination.pageSize,
+        search: search || undefined,
+        status: status === "ALL" ? undefined : status,
+      },
+      { skip: !permission.has(Permission.ORDER_READ) }
+    )
 
   const resetPage = () =>
     setPagination((current) => ({ ...current, pageIndex: 0 }))

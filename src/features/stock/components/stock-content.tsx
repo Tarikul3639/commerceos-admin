@@ -25,12 +25,15 @@ export function StockContent() {
     pageSize: 10,
   })
   const permission = usePermission()
-  const { data, isLoading, isFetching, isError, error } = useGetStocksQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search: search || undefined,
-    lowStock: lowStock || undefined,
-  })
+  const { data, isLoading, isFetching, isError, error } = useGetStocksQuery(
+    {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: search || undefined,
+      lowStock: lowStock || undefined,
+    },
+    { skip: !permission.has(Permission.STOCK_READ) }
+  )
 
   const resetPage = () =>
     setPagination((current) => ({ ...current, pageIndex: 0 }))

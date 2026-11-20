@@ -22,7 +22,6 @@ import { formatCurrency } from "@/lib/utils/format-currency"
 import { useIsMobile } from "@/hooks/use-mobile"
 
 import type { RevenueChartData } from "../analytics.types"
-import { revenueChartData } from "../analytics.data"
 
 const chartConfig = {
   revenue: {
@@ -38,8 +37,6 @@ export function AnalyticsRevenue({
   revenue?: RevenueChartData[]
   isLoading: boolean
 }) {
-  revenue = revenueChartData
-
   const isMobile = useIsMobile()
 
   const data =
@@ -62,6 +59,10 @@ export function AnalyticsRevenue({
         {isLoading ? (
           <div className="h-[200px] w-full px-3 sm:h-[220px] sm:px-4">
             <Skeleton className="h-full w-full" />
+          </div>
+        ) : data.length === 0 ? (
+          <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
+            No revenue data for the selected period.
           </div>
         ) : (
           <ChartContainer

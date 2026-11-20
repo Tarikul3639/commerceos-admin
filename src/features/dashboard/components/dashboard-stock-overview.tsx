@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  Archive,
-  Boxes,
-  CircleDollarSign,
-  Package,
-} from "lucide-react"
+import { Archive, Boxes, CircleDollarSign, Package } from "lucide-react"
 
 import { Pie, PieChart, ResponsiveContainer } from "recharts"
 import {
@@ -25,7 +20,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 
 import type { StockSummary } from "../dashboard.types"
-import { stockSummary } from "../dashboard.data"
 
 interface DashboardStockOverviewProps {
   stock?: StockSummary
@@ -51,7 +45,13 @@ export function DashboardStockOverview({
   stock,
   isLoading = false,
 }: DashboardStockOverviewProps) {
-  const currentStock = stock ?? stockSummary
+  const currentStock = stock ?? {
+    totalProducts: 0,
+    totalStockQuantity: 0,
+    totalStockValue: "0",
+    lowStockCount: 0,
+    outOfStockCount: 0,
+  }
 
   const healthyCount = Math.max(
     currentStock.totalProducts -

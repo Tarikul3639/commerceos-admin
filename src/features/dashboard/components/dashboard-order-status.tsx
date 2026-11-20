@@ -22,7 +22,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 import type { OrderSummary, DashboardQuery } from "../dashboard.types"
 import { PERIOD_OPTIONS } from "../dashboard.constants"
-import { orderSummary } from "../dashboard.data"
 
 interface DashboardOrderStatusProps {
   orders?: OrderSummary
@@ -61,7 +60,14 @@ export function DashboardOrderStatus({
   isLoading = false,
   query,
 }: DashboardOrderStatusProps) {
-  const currentOrders = orders ?? orderSummary
+  const currentOrders = orders ?? {
+    totalOrders: 0,
+    pendingOrders: 0,
+    processingOrders: 0,
+    shippedOrders: 0,
+    deliveredOrders: 0,
+    cancelledOrders: 0,
+  }
 
   const orderStatusData = [
     {

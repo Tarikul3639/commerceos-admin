@@ -7,7 +7,6 @@ import { Inbox } from "lucide-react"
 import { DataTable } from "@/components/data-table"
 
 import type { RecentOrder } from "../dashboard.types"
-import { recentOrders } from "../dashboard.data"
 import { columns } from "./dashboard-recent-orders-columns"
 
 interface DashboardRecentOrdersProps {
@@ -27,7 +26,7 @@ export function DashboardRecentOrders({
     <div className="h-full max-h-150 min-h-80 min-w-0">
       <DataTable
         columns={columns}
-        data={orders.length ? orders : recentOrders}
+        data={orders}
         title="Recent Orders"
         description="Latest customer orders"
         search={{

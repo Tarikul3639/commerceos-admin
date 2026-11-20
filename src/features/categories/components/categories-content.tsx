@@ -1,11 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import {
-  parseAsInteger,
-  parseAsString,
-  useQueryStates,
-} from "nuqs"
+import { parseAsInteger, parseAsString, useQueryStates } from "nuqs"
 
 import { PageContainer } from "@/components/layout/page-container"
 import { PermissionDenied } from "@/components/shared/permission-denied"
@@ -16,8 +12,6 @@ import { DataTable } from "@/components/data-table"
 import { PaginationState } from "@tanstack/react-table"
 import { columns } from "./categories-columns"
 import { useGetCategoriesQuery } from "../api/categories.api"
-
-import { categories } from "../data/categories.data"
 
 export function CategoriesContent() {
   const { has } = usePermission()
@@ -36,11 +30,14 @@ export function CategoriesContent() {
     pageSize: params.limit,
   }
 
-  const { data, isLoading, isFetching } = useGetCategoriesQuery(params, {
-    skip: !canRead,
-  })
-  const categoriesData = data?.data || categories
-  const paginatedMeta = data?.meta || { total: 0, page: 1, limit: 10 }
+  const { data, isLoading, isFetching, isError, error } = useGetCategoriesQuery(
+    params,
+    {
+      skip: !canRead,
+    }
+  )
+  const categoriesData = data?.data ?? []
+  const paginatedMeta = data?.meta ?? { total: 0, page: 1, limit: 10 }
 
   if (!canRead) return <PermissionDenied />
 
@@ -67,6 +64,8 @@ export function CategoriesContent() {
         data={categoriesData}
         isLoading={isLoading}
         isFetching={isFetching}
+        isError={isError}
+        error={error}
         columnVisibility={true}
 
         // Pass the current search state and a handler to update it.
