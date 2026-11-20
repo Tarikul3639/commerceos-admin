@@ -42,7 +42,7 @@ export function SearchCommand({
       onOpenChange={onOpenChange}
       title="Global search"
       description="Search records available to your account."
-      className="top-[10%] sm:top-[12%] max-w-[95vw] sm:max-w-xl translate-y-0"
+      className="top-[10%] max-w-[95vw] translate-y-0 sm:top-[12%] sm:max-w-xl"
       showCloseButton={false}
     >
       <Command shouldFilter={false} className="rounded-xl">

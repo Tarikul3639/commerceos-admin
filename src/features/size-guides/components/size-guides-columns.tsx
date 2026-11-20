@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { createColumnHelper } from "@tanstack/react-table"
 import {
   ArrowUpDown,
@@ -29,29 +30,28 @@ import { usePermission } from "@/hooks/use-permission"
 
 import { useDeleteSizeGuideMutation } from "../api/size-guides.api"
 import type { SizeGuide } from "../types/size-guide.types"
-import { UpdateSizeGuideDialog } from "./update-size-guide-dialog"
 import { ViewSizeGuideDialog } from "./view-size-guide-dialog"
 
 const columnHelper = createColumnHelper<DataTableFeatures, SizeGuide>()
 
-// Column definitions for the size guides table
+/** Renders the clickable size guide name and its details dialog. */
 function SizeGuideNameCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
   const [viewOpen, setViewOpen] = useState(false)
 
   return (
     <>
       <div className="min-w-0">
-        <div
-          className="cursor-pointer font-medium transition-colors hover:text-primary"
+        <button
+          type="button"
+          className="text-left font-medium transition-colors hover:text-primary"
           onClick={() => setViewOpen(true)}
         >
           {sizeGuide.name}
-        </div>
+        </button>
         <div className="truncate text-xs text-muted-foreground">
           {sizeGuide.id}
         </div>
       </div>
-
       <ViewSizeGuideDialog
         sizeGuide={sizeGuide}
         open={viewOpen}
@@ -61,22 +61,22 @@ function SizeGuideNameCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
   )
 }
 
+/** Renders row actions for viewing, updating, and deleting a size guide. */
 function SizeGuideActionsCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
+  const router = useRouter()
   const [viewOpen, setViewOpen] = useState(false)
-  const [updateOpen, setUpdateOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const { has } = usePermission()
   const canUpdate = has(Permission.PRODUCT_UPDATE)
   const canDelete = has(Permission.PRODUCT_DELETE)
-
   const [deleteSizeGuide, { isLoading }] = useDeleteSizeGuideMutation()
 
+  /** Deletes the current size guide after confirmation. */
   const handleDelete = async () => {
     if (!canDelete) return
 
     try {
       await deleteSizeGuide(sizeGuide.id).unwrap()
-
       toast.success("Size guide deleted successfully")
       setDeleteOpen(false)
     } catch (error) {
@@ -98,25 +98,25 @@ function SizeGuideActionsCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
             <MoreHorizontal className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-
             <DropdownMenuItem onClick={() => setViewOpen(true)}>
               <Info className="size-4" />
               Details
             </DropdownMenuItem>
-
             {canUpdate && (
-              <DropdownMenuItem onClick={() => setUpdateOpen(true)}>
+              <DropdownMenuItem
+                onClick={() =>
+                  router.push(`/dashboard/size-guides/${sizeGuide.id}/update`)
+                }
+              >
                 <SquarePen className="size-4" />
                 Update
               </DropdownMenuItem>
             )}
           </DropdownMenuGroup>
-
           {canDelete && (
             <>
               <DropdownMenuSeparator />
@@ -131,19 +131,11 @@ function SizeGuideActionsCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-
       <ViewSizeGuideDialog
         sizeGuide={sizeGuide}
         open={viewOpen}
         onOpenChange={setViewOpen}
       />
-
-      <UpdateSizeGuideDialog
-        sizeGuide={sizeGuide}
-        open={updateOpen}
-        onOpenChange={setUpdateOpen}
-      />
-
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
@@ -162,6 +154,7 @@ function SizeGuideActionsCell({ sizeGuide }: { sizeGuide: SizeGuide }) {
   )
 }
 
+/** Defines the size guide table columns. */
 export const columns = columnHelper.columns([
   {
     accessorKey: "name",
@@ -175,7 +168,6 @@ export const columns = columnHelper.columns([
         <ArrowUpDown className="ml-2 size-4" />
       </Button>
     ),
-    // Use a custom cell component for the name column to safely use hooks or state
     cell: ({ row }) => <SizeGuideNameCell sizeGuide={row.original} />,
   },
   {

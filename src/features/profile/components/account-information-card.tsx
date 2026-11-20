@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import type { CurrentUserResponse } from "@/features/auth/auth.types"
 
@@ -15,9 +21,7 @@ function formatDate(value: string | null | undefined) {
   }).format(new Date(value))
 }
 
-export function AccountInformationCard({
-  user,
-}: AccountInformationCardProps) {
+export function AccountInformationCard({ user }: AccountInformationCardProps) {
   return (
     <Card>
       <CardHeader>

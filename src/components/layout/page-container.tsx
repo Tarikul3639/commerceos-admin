@@ -49,7 +49,9 @@ export function PageContainer({
   }
 
   return (
-    <main className={cn("flex flex-1 flex-col gap-4 sm:gap-5", className)}>
+    <main
+      className={cn("flex min-w-0 flex-1 flex-col gap-4 sm:gap-5", className)}
+    >
       {/* Page Header */}
       {(title || breadcrumbs || infoContent || pageHeaderAction) && (
         <div className="flex flex-col gap-3 sm:gap-4">

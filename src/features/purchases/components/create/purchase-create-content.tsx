@@ -4,14 +4,15 @@ import { PageContainer } from "@/components/layout/page-container"
 import { PermissionDenied } from "@/components/shared/permission-denied"
 import { Permission } from "@/config/permissions.config"
 import { usePermission } from "@/hooks/use-permission"
-import { PurchaseForm } from "../../components/purchase-form"
-import { useRouter } from "next/navigation"
 
+import { PurchaseForm } from "../../components/purchase-form"
+
+/** Renders the purchase creation page for users with create access. */
 export function PurchaseCreateContent() {
   const canCreate = usePermission().has(Permission.PURCHASE_CREATE)
-  const router = useRouter()
 
   if (!canCreate) return <PermissionDenied />
+
   return (
     <PageContainer
       title="Create purchase"
@@ -21,11 +22,7 @@ export function PurchaseCreateContent() {
         { label: "Create" },
       ]}
     >
-      <PurchaseForm
-        onSuccess={() => {
-          router.push("/dashboard/purchases")
-        }}
-      />
+      <PurchaseForm />
     </PageContainer>
   )
 }

@@ -7,7 +7,13 @@ import { toast } from "sonner"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useChangePasswordMutation } from "@/features/auth/auth.api"
@@ -105,8 +111,8 @@ export function ChangePasswordForm() {
             <ShieldCheck className="size-4" />
             <AlertTitle>Account security</AlertTitle>
             <AlertDescription>
-              After a successful password change, all existing refresh
-              sessions are revoked.
+              After a successful password change, all existing refresh sessions
+              are revoked.
             </AlertDescription>
           </Alert>
 

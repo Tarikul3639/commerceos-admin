@@ -1,9 +1,4 @@
-import {
-  DollarSign,
-  ShoppingBag,
-  ShoppingCart,
-  Boxes,
-} from "lucide-react"
+import { DollarSign, ShoppingBag, ShoppingCart, Boxes } from "lucide-react"
 
 import { StatCard, StatCardGrid } from "@/components/stat-card"
 import type { DashboardOverview } from "../dashboard.types"

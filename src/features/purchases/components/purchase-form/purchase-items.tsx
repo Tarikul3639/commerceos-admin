@@ -9,7 +9,7 @@ import {
   type UseFieldArrayAppend,
   type UseFieldArrayRemove,
 } from "react-hook-form"
-import { Check, ChevronsUpDown, Plus, Trash2 } from "lucide-react"
+import { Check, ChevronsUpDown, Package, Plus, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -34,19 +34,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-
 import { cn } from "@/lib/utils"
 
-import type { PurchaseFormValues } from "../../schemas/purchase.schema"
 import type { ProductListItem } from "@/features/products/types/product.types"
-
-const getProductLabel = (product: ProductListItem) => {
-  const skus = (product.variants ?? [])
-    .filter((variant) => variant.isActive)
-    .map((variant) => variant.sku)
-    .join(", ")
-  return skus ? `${product.name} · ${skus}` : product.name
-}
+import type { PurchaseFormValues } from "../../schemas/purchase.schema"
 
 interface PurchaseItemsProps {
   control: Control<PurchaseFormValues>
@@ -58,6 +49,17 @@ interface PurchaseItemsProps {
   errors: FieldErrors<PurchaseFormValues>
 }
 
+/** Builds a searchable label from a product and its active variant SKUs. */
+function getProductLabel(product: ProductListItem): string {
+  const skus = (product.variants ?? [])
+    .filter((variant) => variant.isActive)
+    .map((variant) => variant.sku)
+    .join(", ")
+
+  return skus ? `${product.name} · ${skus}` : product.name
+}
+
+/** Renders editable product rows for a supplier purchase. */
 export function PurchaseItems({
   control,
   fields,
@@ -68,182 +70,219 @@ export function PurchaseItems({
   errors,
 }: PurchaseItemsProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">Purchase items</CardTitle>
-
-        <CardDescription>
-          Add products, quantities, and purchase prices.
-        </CardDescription>
+    <Card className="overflow-hidden">
+      <CardHeader className="border-b bg-muted/20">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border bg-background">
+              <Package className="size-5 text-muted-foreground" />
+            </div>
+            <div className="space-y-1">
+              <CardTitle className="text-base">Purchase items</CardTitle>
+              <CardDescription>
+                Add each product once, then set its quantity and unit cost.
+              </CardDescription>
+            </div>
+          </div>
+          <span className="w-fit rounded-full border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
+            {fields.length} {fields.length === 1 ? "item" : "items"}
+          </span>
+        </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        {fields.map((field, index) => (
-          <div key={field.id} className="rounded-lg border bg-muted/20 p-4">
-            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_120px_140px_auto] sm:items-end">
-              {/* Product */}
-              <Controller
-                control={control}
-                name={`items.${index}.productId`}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Product</FieldLabel>
-
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          role="combobox"
-                          disabled={isLoading}
-                          aria-invalid={fieldState.invalid}
-                          className="w-full justify-between font-normal"
-                        >
-                          <span className="truncate">
-                            {field.value
-                              ? (() => {
-                                  const product = products.find(
-                                    (product) => product.id === field.value
-                                  )
-
-                                  return product
-                                    ? getProductLabel(product)
-                                    : "Choose a product"
-                                })()
-                              : "Choose a product"}
-                          </span>
-
-                          <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-
-                      <PopoverContent
-                        align="start"
-                        className="w-(--radix-popover-trigger-width) p-0"
-                      >
-                        <Command>
-                          <CommandInput placeholder="Search products..." />
-
-                          <CommandList>
-                            <CommandEmpty>No product found.</CommandEmpty>
-
-                            <CommandGroup>
-                              {products.map((product) => (
-                                <CommandItem
-                                  key={product.id}
-                                  value={getProductLabel(product)}
-                                  onSelect={() => field.onChange(product.id)}
-                                >
-                                  <div className="flex min-w-0 items-center gap-3">
-                                    <Image
-                                      src={product.image ?? "/placeholder.png"}
-                                      alt={product.name}
-                                      width={40}
-                                      height={40}
-                                      unoptimized
-                                      className="size-10 shrink-0 rounded-md border object-cover"
-                                    />
-
-                                    <div className="flex min-w-0 flex-col">
-                                      <span className="truncate font-medium">
-                                        {product.name}
-                                      </span>
-                                      <span className="truncate text-xs text-muted-foreground">
-                                        {product.variants
-                                          ?.filter(
-                                            (variant) => variant.isActive
-                                          )
-                                          .map((variant) => variant.sku)
-                                          .join(", ")}
-                                      </span>
-                                    </div>
-                                  </div>
-
-                                  <Check
-                                    className={cn(
-                                      "ml-auto size-4 shrink-0",
-                                      field.value === product.id
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              {/* Quantity */}
-              <Controller
-                control={control}
-                name={`items.${index}.quantity`}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Quantity</FieldLabel>
-
-                    <Input
-                      {...field}
-                      type="number"
-                      min={1}
-                      disabled={isLoading}
-                      onChange={(event) =>
-                        field.onChange(event.target.valueAsNumber)
-                      }
-                      aria-invalid={fieldState.invalid}
-                    />
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              {/* Unit price */}
-              <Controller
-                control={control}
-                name={`items.${index}.unitPrice`}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Unit price</FieldLabel>
-
-                    <Input
-                      {...field}
-                      type="number"
-                      step="any"
-                      min={0}
-                      disabled={isLoading}
-                      aria-invalid={fieldState.invalid}
-                    />
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              {/* Remove */}
+      <CardContent className="space-y-4 pt-5">
+        {fields.map((item, index) => (
+          <div key={item.id} className="rounded-xl border bg-card p-3 sm:p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-sm font-medium">Item {index + 1}</p>
               <Button
                 type="button"
                 size="icon"
                 variant="ghost"
-                className="text-muted-foreground hover:text-destructive"
-                aria-label="Remove item"
+                className="size-8 text-muted-foreground hover:text-destructive"
+                aria-label={`Remove item ${index + 1}`}
                 disabled={fields.length === 1 || isLoading}
                 onClick={() => remove(index)}
               >
                 <Trash2 className="size-4" />
               </Button>
+            </div>
+
+            <div className="space-y-4">
+              <Controller
+                control={control}
+                name={`items.${index}.productId`}
+                render={({ field, fieldState }) => {
+                  const selectedProduct = products.find(
+                    (product) => product.id === field.value
+                  )
+
+                  return (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Product <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            role="combobox"
+                            disabled={isLoading}
+                            aria-invalid={fieldState.invalid}
+                            className="h-auto min-h-11 w-full justify-between gap-3 px-3 py-2 font-normal"
+                          >
+                            {selectedProduct ? (
+                              <span className="flex min-w-0 items-center gap-3 text-left">
+                                <Image
+                                  src={
+                                    selectedProduct.image ?? "/placeholder.png"
+                                  }
+                                  alt=""
+                                  width={36}
+                                  height={36}
+                                  unoptimized
+                                  className="size-9 shrink-0 rounded-md border object-cover"
+                                />
+                                <span className="min-w-0">
+                                  <span className="block truncate text-sm font-medium text-foreground">
+                                    {selectedProduct.name}
+                                  </span>
+                                  <span className="block truncate text-xs text-muted-foreground">
+                                    {getProductLabel(selectedProduct) ===
+                                    selectedProduct.name
+                                      ? "Selected product"
+                                      : getProductLabel(
+                                          selectedProduct
+                                        ).replace(
+                                          `${selectedProduct.name} · `,
+                                          ""
+                                        )}
+                                  </span>
+                                </span>
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground">
+                                Select a product
+                              </span>
+                            )}
+                            <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
+                          </Button>
+                        </PopoverTrigger>
+
+                        <PopoverContent
+                          align="start"
+                          className="w-(--radix-popover-trigger-width) p-0"
+                        >
+                          <Command>
+                            <CommandInput placeholder="Search products or SKUs..." />
+                            <CommandList>
+                              <CommandEmpty>No product found.</CommandEmpty>
+                              <CommandGroup>
+                                {products.map((product) => (
+                                  <CommandItem
+                                    key={product.id}
+                                    value={getProductLabel(product)}
+                                    onSelect={() => field.onChange(product.id)}
+                                  >
+                                    <Image
+                                      src={product.image ?? "/placeholder.png"}
+                                      alt=""
+                                      width={36}
+                                      height={36}
+                                      unoptimized
+                                      className="size-9 shrink-0 rounded-md border object-cover"
+                                    />
+                                    <span className="min-w-0 flex-1">
+                                      <span className="block truncate font-medium">
+                                        {product.name}
+                                      </span>
+                                      <span className="block truncate text-xs text-muted-foreground">
+                                        {getProductLabel(product) ===
+                                        product.name
+                                          ? "No active variants"
+                                          : getProductLabel(product).replace(
+                                              `${product.name} · `,
+                                              ""
+                                            )}
+                                      </span>
+                                    </span>
+                                    <Check
+                                      className={cn(
+                                        "ml-auto size-4 shrink-0",
+                                        field.value === product.id
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )
+                }}
+              />
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Controller
+                  control={control}
+                  name={`items.${index}.quantity`}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Quantity <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        type="number"
+                        min={1}
+                        step={1}
+                        disabled={isLoading}
+                        onChange={(event) =>
+                          field.onChange(event.target.valueAsNumber)
+                        }
+                        aria-invalid={fieldState.invalid}
+                        className="h-10"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name={`items.${index}.unitPrice`}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Unit cost <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        type="number"
+                        step="any"
+                        min={0}
+                        disabled={isLoading}
+                        placeholder="0.00"
+                        aria-invalid={fieldState.invalid}
+                        className="h-10"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
             </div>
           </div>
         ))}
@@ -253,22 +292,19 @@ export function PurchaseItems({
             {errors.items.root.message}
           </p>
         )}
+        {errors.items?.message && (
+          <p className="text-sm text-destructive">{errors.items.message}</p>
+        )}
 
         <Button
           type="button"
-          size="sm"
           variant="outline"
-          onClick={() =>
-            append({
-              productId: "",
-              quantity: 1,
-              unitPrice: "",
-            })
-          }
+          className="w-full border-dashed sm:w-auto"
+          onClick={() => append({ productId: "", quantity: 1, unitPrice: "" })}
           disabled={isLoading}
         >
           <Plus className="size-4" />
-          Add item
+          Add another item
         </Button>
       </CardContent>
     </Card>

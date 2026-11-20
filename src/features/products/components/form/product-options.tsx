@@ -512,8 +512,8 @@ export function ProductOptions({
                   )}
                   {form.optionId ? (
                     <FieldDescription>
-                      Values can&apos;t be edited after saving. Delete this option to
-                      create it again with different values.
+                      Values can&apos;t be edited after saving. Delete this
+                      option to create it again with different values.
                     </FieldDescription>
                   ) : (
                     <ValueAdder

@@ -7,13 +7,17 @@ import { UserRound } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import {
-  useUpdateCurrentUserProfileMutation,
-} from "@/features/auth/auth.api"
+import { useUpdateCurrentUserProfileMutation } from "@/features/auth/auth.api"
 import type {
   CurrentUserResponse,
   UpdateCurrentUserProfileRequest,
@@ -142,12 +146,7 @@ export function PersonalInformationForm({
 
           <div className="space-y-2">
             <Label htmlFor="profile-email">Email address</Label>
-            <Input
-              id="profile-email"
-              value={user.email}
-              disabled
-              readOnly
-            />
+            <Input id="profile-email" value={user.email} disabled readOnly />
             <p className="text-xs text-muted-foreground">
               Contact an administrator if your login email needs to change.
             </p>

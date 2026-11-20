@@ -1,8 +1,15 @@
 "use client"
 
 import { Controller, type Control } from "react-hook-form"
+import { Calculator } from "lucide-react"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   Field,
   FieldError,
@@ -10,7 +17,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-
 import { formatCurrency } from "@/lib/utils/format-currency"
 
 import type { PurchaseFormValues } from "../../schemas/purchase.schema"
@@ -19,42 +25,52 @@ interface PurchasePricingProps {
   control: Control<PurchaseFormValues>
   subtotal: number
   total: number
-  values: PurchaseFormValues
+  discount: number
+  tax: number
   isLoading: boolean
 }
 
+/** Shows editable adjustments and a live purchase total. */
 export function PurchasePricing({
   control,
   subtotal,
   total,
-  values,
+  discount,
+  tax,
   isLoading,
 }: PurchasePricingProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">Pricing</CardTitle>
+    <Card className="overflow-hidden">
+      <CardHeader className="border-b bg-muted/20">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-lg border bg-background">
+            <Calculator className="size-5 text-muted-foreground" />
+          </div>
+          <div className="space-y-1">
+            <CardTitle className="text-base">Purchase summary</CardTitle>
+            <CardDescription>Review cost and adjustments.</CardDescription>
+          </div>
+        </div>
       </CardHeader>
 
-      <CardContent className="space-y-6">
-        <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <CardContent className="space-y-5 pt-5">
+        <FieldGroup className="grid grid-cols-2 gap-3 xl:grid-cols-1">
           <Controller
             control={control}
             name="discount"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel>Discount</FieldLabel>
-
                 <Input
                   {...field}
                   type="number"
                   step="any"
                   min={0}
                   disabled={isLoading}
-                  placeholder="0"
+                  placeholder="0.00"
                   aria-invalid={fieldState.invalid}
+                  className="h-10"
                 />
-
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -68,17 +84,16 @@ export function PurchasePricing({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel>Tax</FieldLabel>
-
                 <Input
                   {...field}
                   type="number"
                   step="any"
                   min={0}
                   disabled={isLoading}
-                  placeholder="0"
+                  placeholder="0.00"
                   aria-invalid={fieldState.invalid}
+                  className="h-10"
                 />
-
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -87,47 +102,30 @@ export function PurchasePricing({
           />
         </FieldGroup>
 
-        <div className="ml-auto w-full max-w-sm space-y-3 rounded-lg border bg-muted/20 p-4 text-sm">
-          <div className="flex items-center justify-between">
+        <div className="space-y-3 border-t pt-4 text-sm">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-muted-foreground">Subtotal</span>
-
-            <span>
-              {formatCurrency(subtotal, {
-                compact: false,
-              })}
+            <span className="font-medium tabular-nums">
+              {formatCurrency(subtotal, { compact: false })}
             </span>
           </div>
-
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-muted-foreground">Discount</span>
-
-            <span>
-              -{" "}
-              {formatCurrency(Number(values.discount || 0), {
-                compact: false,
-              })}
+            <span className="tabular-nums">
+              − {formatCurrency(discount, { compact: false })}
             </span>
           </div>
-
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-muted-foreground">Tax</span>
-
-            <span>
-              +{" "}
-              {formatCurrency(Number(values.tax || 0), {
-                compact: false,
-              })}
+            <span className="tabular-nums">
+              + {formatCurrency(tax, { compact: false })}
             </span>
           </div>
-
-          <div className="flex items-center justify-between border-t pt-3">
-            <span className="font-medium">Total</span>
-
-            <span className="text-lg font-semibold">
+          <div className="flex items-end justify-between gap-3 border-t pt-4">
+            <span className="font-semibold">Grand total</span>
+            <span className="text-xl font-semibold tracking-tight tabular-nums">
               {Number.isFinite(total)
-                ? formatCurrency(total, {
-                    compact: false,
-                  })
+                ? formatCurrency(total, { compact: false })
                 : "—"}
             </span>
           </div>

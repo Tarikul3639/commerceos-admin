@@ -47,9 +47,7 @@ import {
   useGetPurchaseQuery,
   useGetPurchasesQuery,
 } from "@/features/purchases/api/purchase.api"
-import type {
-  PurchaseItem,
-} from "@/features/purchases/types/purchase.types"
+import type { PurchaseItem } from "@/features/purchases/types/purchase.types"
 import {
   useCreatePurchaseReturnMutation,
   useGetPurchaseReturnsQuery,
@@ -201,7 +199,7 @@ export function PurchaseReturnForm({
           cell: ({ row }) =>
             formatCurrency(
               Number(row.original.unitPrice) *
-                Number(values.items[row.index]?.quantity || 0),
+              Number(values.items[row.index]?.quantity || 0),
               { compact: false }
             ),
         },

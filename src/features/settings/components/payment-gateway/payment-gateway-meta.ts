@@ -1,9 +1,4 @@
-import {
-  Banknote,
-  CreditCard,
-  Smartphone,
-  Wallet,
-} from "lucide-react"
+import { Banknote, CreditCard, Smartphone, Wallet } from "lucide-react"
 
 import type {
   PaymentGatewayMode,

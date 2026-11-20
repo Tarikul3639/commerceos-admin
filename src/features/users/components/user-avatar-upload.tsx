@@ -118,13 +118,13 @@ export function UserAvatarUpload({
 
         {value && !isUploading && !disabled && (
           <>
-            <div className="pointer-events-none absolute inset-0 rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100" />
+            <div className="pointer-events-none absolute inset-0 rounded-full bg-black/40 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
 
             <Button
               type="button"
               variant="destructive"
               size="icon-xs"
-              className="absolute -top-1 right-0 rounded-full! bg-destructive text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:bg-destructive/90"
+              className="absolute -top-1 right-0 rounded-full! bg-destructive text-destructive-foreground opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-destructive/90"
               onClick={handleRemove}
             >
               <X />
@@ -172,7 +172,6 @@ export function UserAvatarUpload({
       <p className="text-center text-xs text-muted-foreground">
         Square image only. JPG, PNG or WebP. Maximum file size: 1MB.
       </p>
-
 
       {/* File name */}
       {fileName && (

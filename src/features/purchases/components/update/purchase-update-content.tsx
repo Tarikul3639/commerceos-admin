@@ -5,15 +5,15 @@ import { useParams } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 
 import { PageContainer } from "@/components/layout/page-container"
+import { Button } from "@/components/ui/button"
 import { UnauthorizedContent } from "@/features/permissions/components/unauthorized-content"
 import { Permission } from "@/config/permissions.config"
 import { usePermission } from "@/hooks/use-permission"
 
-import { Button } from "@/components/ui/button"
-
 import { useGetPurchaseQuery } from "../../api/purchase.api"
 import { PurchaseForm } from "../../components/purchase-form"
 
+/** Loads and renders an editable purchase when the user has update access. */
 export function PurchaseUpdateContent() {
   const params = useParams<{ id: string }>()
   const permission = usePermission()
@@ -37,9 +37,7 @@ export function PurchaseUpdateContent() {
       breadcrumbs={[
         { label: "Dashboard", href: "/dashboard" },
         { label: "Purchases", href: "/dashboard/purchases" },
-        {
-          label: data?.invoiceNo ?? "Update",
-        },
+        { label: data?.invoiceNo ?? "Update" },
       ]}
       pageHeaderAction={
         <Button asChild variant="outline">
@@ -55,16 +53,20 @@ export function PurchaseUpdateContent() {
       }
     >
       {isLoading ? (
-        <div className="rounded-lg border p-6 text-sm text-muted-foreground">
-          Loading purchase...
+        <div className="rounded-xl border bg-card p-6 text-sm text-muted-foreground">
+          Loading purchase details...
         </div>
       ) : isError || !data ? (
-        <div className="rounded-lg border p-6 text-sm text-destructive">
-          Unable to load purchase details.
+        <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-sm text-destructive">
+          Unable to load purchase details. Please try again.
         </div>
       ) : data.status !== "PENDING" ? (
-        <div className="rounded-lg border p-6 text-sm text-muted-foreground">
-          Only pending purchases can be updated.
+        <div className="rounded-xl border bg-card p-6">
+          <p className="font-medium">This purchase can no longer be edited.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Only pending purchases can be updated. Received or cancelled
+            purchases are read-only.
+          </p>
         </div>
       ) : (
         <PurchaseForm purchase={data} />

@@ -14,6 +14,7 @@ export function PurchaseReturnCreateContent({
   const permission = usePermission()
   return (
     <PageContainer
+      className="w-full max-w-none"
       access={permission.has(Permission.PURCHASE_CREATE)}
       accessFallback={<UnauthorizedContent />}
       title="Create purchase return"
