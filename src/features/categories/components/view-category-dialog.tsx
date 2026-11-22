@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 import {
   Dialog,
   DialogContent,
@@ -38,6 +40,11 @@ export function ViewCategoryDialog({
         </DialogHeader>
 
         <div className="space-y-5">
+          {category.image && (
+            <div className="relative h-56 overflow-hidden rounded-xl border bg-muted">
+              <Image src={category.image} alt={category.name} fill sizes="(max-width: 640px) 100vw, 512px" className="object-cover" />
+            </div>
+          )}
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Name</p>
             <p className="font-medium">{category.name}</p>

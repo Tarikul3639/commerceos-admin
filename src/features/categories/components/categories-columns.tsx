@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
+import { AppImage } from "@/components/media/app-image"
+
 import { getErrorMessage } from "@/lib/utils/error"
 import { Permission } from "@/config/permissions.config"
 import { usePermission } from "@/hooks/use-permission"
@@ -169,6 +171,19 @@ function CategoryActionsCell({ category }: { category: Category }) {
 
 // Table columns
 export const columns = columnHelper.columns([
+  {
+    id: "image",
+    header: "Image",
+    enableSorting: false,
+    size: 100,
+    cell: ({ row }) => (
+      <AppImage
+        name={row.original.name}
+        image={row.original.image}
+        className="h-10 w-10 rounded-md after:rounded-md"
+      />
+    ),
+  },
   {
     accessorKey: "name",
     header: ({ column }) => (

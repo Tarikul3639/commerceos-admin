@@ -116,7 +116,7 @@ export function AdjustStockDialog({
         <form onSubmit={form.handleSubmit(submit)} className="space-y-4">
           <Field data-invalid={!!form.formState.errors.quantity}>
             <FieldLabel htmlFor="stock-adjustment-quantity">
-              Quantity adjustment
+              Quantity adjustment <span className="text-destructive">*</span>
             </FieldLabel>
 
             <Input

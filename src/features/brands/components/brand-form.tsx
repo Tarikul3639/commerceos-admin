@@ -102,31 +102,28 @@ export function BrandForm({
     <form onSubmit={handleSubmit}>
       <FieldGroup className="flex items-center gap-3">
         <div className="relative size-24">
-          <AppImage
-            name={name}
-            image={avatarUrl}
-            clickable={false}
-            className="size-24 text-2xl font-semibold"
-          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading || isLoading}
+            aria-label={avatarUrl ? "Change brand image" : "Upload brand image"}
+            className="group relative block size-24 overflow-hidden rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed"
+          >
+            <AppImage
+              name={name}
+              image={avatarUrl}
+              clickable={false}
+              className="size-24 text-2xl font-semibold"
+            />
+            <span className="absolute inset-0 flex items-center justify-center bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+              {isUploading ? (
+                <span className="text-sm font-semibold">{progress}%</span>
+              ) : (
+                <Camera className="size-5" />
+              )}
+            </span>
+          </button>
 
-          {isUploading && progress !== undefined && (
-            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-accent/80">
-              <span className="text-sm font-semibold text-accent-foreground">
-                {progress}%
-              </span>
-            </div>
-          )}
-
-          {!isUploading && (
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute right-0 bottom-0 flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow transition-transform hover:bg-primary/90 active:scale-95"
-              title="Upload image"
-            >
-              <Camera className="size-4" />
-            </button>
-          )}
 
           <input
             ref={fileInputRef}
@@ -147,7 +144,7 @@ export function BrandForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="brand-name">Name</FieldLabel>
+              <FieldLabel htmlFor="brand-name">Name <span className="text-destructive">*</span></FieldLabel>
 
               <Input
                 {...field}
@@ -166,7 +163,7 @@ export function BrandForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="brand-slug">Slug</FieldLabel>
+              <FieldLabel htmlFor="brand-slug">Slug <span className="text-destructive">*</span></FieldLabel>
 
               <Input
                 {...field}

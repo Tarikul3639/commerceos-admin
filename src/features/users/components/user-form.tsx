@@ -56,7 +56,7 @@ export function UserForm({
       />
       <div className="flex flex-col gap-4 sm:flex-row">
         <Field>
-          <FieldLabel htmlFor="name">Full Name</FieldLabel>
+          <FieldLabel htmlFor="name">Full Name <span className="text-destructive">*</span></FieldLabel>
           <Input
             id="name"
             placeholder="John Doe"
@@ -68,7 +68,7 @@ export function UserForm({
           )}
         </Field>
         <Field className="w-full sm:w-38">
-          <FieldLabel htmlFor="role">Role</FieldLabel>
+          <FieldLabel htmlFor="role">Role <span className="text-destructive">*</span></FieldLabel>
           <Select
             value={role ?? Role.EMPLOYEE}
             onValueChange={(value) =>
@@ -103,7 +103,7 @@ export function UserForm({
         </Field>
       </div>
       <Field>
-        <FieldLabel htmlFor="email">Email Address</FieldLabel>
+        <FieldLabel htmlFor="email">Email Address <span className="text-destructive">*</span></FieldLabel>
         <Input
           id="email"
           type="email"

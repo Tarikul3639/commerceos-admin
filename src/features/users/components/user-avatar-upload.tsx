@@ -1,13 +1,12 @@
 "use client"
 
-import { ImagePlus, Loader2, Upload, X } from "lucide-react"
+import { Camera, ImagePlus, X } from "lucide-react"
 import { useState } from "react"
 
 import { toast } from "sonner"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 
 import { getErrorMessage } from "@/lib/utils/error"
@@ -102,36 +101,39 @@ export function UserAvatarUpload({
     <div className="flex flex-col items-center gap-3">
       {/* Avatar */}
       <div className="group relative">
-        <Label
-          htmlFor="user-avatar"
-          className="block cursor-pointer rounded-full"
+        <button
+          type="button"
+          onClick={() => document.getElementById("user-avatar")?.click()}
+          disabled={disabled || isUploading}
           aria-label={value ? "Change avatar" : "Upload avatar"}
+          className="relative block rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed"
         >
           <Avatar className="h-24 w-24">
             <AvatarImage src={value || undefined} alt="User avatar" />
-
             <AvatarFallback>
               <ImagePlus className="h-8 w-8 text-muted-foreground" />
             </AvatarFallback>
           </Avatar>
-        </Label>
+          <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+            {isUploading ? (
+              <span className="text-xs font-semibold">{progress}%</span>
+            ) : (
+              <Camera className="size-5" />
+            )}
+          </span>
+        </button>
 
         {value && !isUploading && !disabled && (
-          <>
-            <div className="pointer-events-none absolute inset-0 rounded-full bg-black/40 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
-
-            <Button
-              type="button"
-              variant="destructive"
-              size="icon-xs"
-              className="absolute -top-1 right-0 rounded-full! bg-destructive text-destructive-foreground opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-destructive/90"
-              onClick={handleRemove}
-            >
-              <X />
-
-              <span className="sr-only">Remove avatar</span>
-            </Button>
-          </>
+          <Button
+            type="button"
+            variant="destructive"
+            size="icon-xs"
+            className="absolute -top-1 right-0 rounded-full! bg-destructive text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:bg-destructive/90"
+            onClick={handleRemove}
+          >
+            <X />
+            <span className="sr-only">Remove avatar</span>
+          </Button>
         )}
       </div>
 
@@ -144,29 +146,6 @@ export function UserAvatarUpload({
         disabled={disabled || isUploading}
         onChange={handleUpload}
       />
-
-      {/* Upload button */}
-      <Button
-        type="button"
-        variant="secondary"
-        size="xs"
-        disabled={disabled || isUploading}
-        asChild
-      >
-        <Label htmlFor="user-avatar" className="cursor-pointer">
-          {isUploading ? (
-            <>
-              <Loader2 className="animate-spin" />
-              Uploading...
-            </>
-          ) : (
-            <>
-              <Upload />
-              {value ? "Change avatar" : "Upload avatar"}
-            </>
-          )}
-        </Label>
-      </Button>
 
       {/* Description */}
       <p className="text-center text-xs text-muted-foreground">

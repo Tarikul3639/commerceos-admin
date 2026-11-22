@@ -411,7 +411,7 @@ export function ProductOptions({
                 <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_140px]">
                   <Field data-invalid={!!errors[form.id]?.name}>
                     <FieldLabel htmlFor={`name-${form.id}`}>
-                      Option name
+                      Option name <span className="text-destructive">*</span>
                     </FieldLabel>
                     <Input
                       id={`name-${form.id}`}
@@ -432,7 +432,7 @@ export function ProductOptions({
                     )}
                   </Field>
                   <Field>
-                    <FieldLabel htmlFor={`type-${form.id}`}>Type</FieldLabel>
+                    <FieldLabel htmlFor={`type-${form.id}`}>Type <span className="text-destructive">*</span></FieldLabel>
                     <Select
                       value={form.type}
                       onValueChange={(value) =>
@@ -460,7 +460,7 @@ export function ProductOptions({
                 <Field data-invalid={!!errors[form.id]?.values}>
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <FieldLabel>Values</FieldLabel>
+                      <FieldLabel>Values <span className="text-destructive">*</span></FieldLabel>
                       <FieldDescription>
                         {filledValues.length} added
                       </FieldDescription>

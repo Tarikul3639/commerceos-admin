@@ -114,7 +114,7 @@ export function PaymentGatewayFormDialog({
           <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-4">
             {/* Provider */}
             <div className="space-y-1.5">
-              <Label htmlFor="gateway-provider">Provider</Label>
+              <Label htmlFor="gateway-provider">Provider <span className="text-destructive">*</span></Label>
               <Select
                 value={provider}
                 onValueChange={(value) => setProvider(value as PaymentProvider)}
@@ -148,7 +148,7 @@ export function PaymentGatewayFormDialog({
 
             {/* Display name */}
             <div className="space-y-1.5">
-              <Label htmlFor="gateway-name">Display name</Label>
+              <Label htmlFor="gateway-name">Display name <span className="text-destructive">*</span></Label>
               <Input
                 id="gateway-name"
                 value={displayName}

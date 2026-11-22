@@ -119,7 +119,7 @@ export function LoginContent() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email">Email address</Label>
+                <Label htmlFor="email">Email address <span className="text-destructive">*</span></Label>
 
                 <div className="relative">
                   <Mail className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -145,7 +145,7 @@ export function LoginContent() {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Password <span className="text-destructive">*</span></Label>
 
                   <Link
                     href="/forgot-password"

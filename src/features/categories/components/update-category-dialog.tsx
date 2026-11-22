@@ -5,6 +5,7 @@ import { toast } from "sonner"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -44,6 +45,8 @@ export function UpdateCategoryDialog({
           name: data.name,
           slug: data.slug,
           description: data.description || undefined,
+          image: data.image || null,
+          publicId: data.publicId || null,
           isActive: data.isActive,
         },
       }).unwrap()
@@ -63,9 +66,12 @@ export function UpdateCategoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Update Category</DialogTitle>
+          <DialogDescription>
+            Update the details of the category below.
+          </DialogDescription>
         </DialogHeader>
 
         <CategoryForm

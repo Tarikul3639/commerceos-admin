@@ -205,7 +205,7 @@ export function SizeGuideForm({
         </div>
         <div className="grid gap-5 p-5 sm:grid-cols-[minmax(0,1fr)_250px] sm:p-6">
           <Field data-invalid={!!errors.name}>
-            <FieldLabel htmlFor="size-guide-name">Size guide name</FieldLabel>
+            <FieldLabel htmlFor="size-guide-name">Size guide name <span className="text-destructive">*</span></FieldLabel>
             <Input
               id="size-guide-name"
               {...register("name")}
@@ -215,7 +215,7 @@ export function SizeGuideForm({
             {errors.name && <FieldError errors={[errors.name]} />}
           </Field>
           <Field data-invalid={!!errors.unit}>
-            <FieldLabel>Unit</FieldLabel>
+            <FieldLabel>Unit <span className="text-destructive">*</span></FieldLabel>
             <Select
               value={unit}
               onValueChange={(value) =>

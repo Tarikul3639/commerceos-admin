@@ -6,6 +6,7 @@ import { Plus } from "lucide-react"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -47,6 +48,8 @@ export function CreateCategoryDialog({
         name: data.name,
         slug: data.slug,
         description: data.description || undefined,
+        image: data.image || undefined,
+        publicId: data.publicId || undefined,
         isActive: data.isActive,
       }).unwrap()
 
@@ -80,9 +83,12 @@ export function CreateCategoryDialog({
         </Tooltip>
       </TooltipProvider>
 
-      <DialogContent className="max-w-lg">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Category</DialogTitle>
+          <DialogDescription>
+            Fill in the details below to create a new category.
+          </DialogDescription>
         </DialogHeader>
 
         <CategoryForm

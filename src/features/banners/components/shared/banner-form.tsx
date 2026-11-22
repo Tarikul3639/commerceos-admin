@@ -135,7 +135,7 @@ export function BannerForm({
         </CardContent>
       </Card>
 
-      <div className="flex justify-end gap-2 border-t pt-5">
+      <div className="sticky bottom-0 z-20 flex justify-end gap-2 border-t bg-background/95 -mx-4 py-3 backdrop-blur supports-backdrop-filter:bg-background/80">
         <Button
           type="button"
           variant="outline"

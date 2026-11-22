@@ -119,22 +119,29 @@ export function CustomerForm({
       {/* Avatar */}
       <div className="flex flex-col items-center justify-center gap-3 pb-2">
         <div className="group relative">
-          <AppImage
-            name={name}
-            image={avatarUrl}
-            clickable={false}
-            className="size-24 text-2xl font-semibold"
-          />
-
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isSubmitting}
-            className="absolute right-0 bottom-0 flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow transition-transform hover:bg-primary/90 active:scale-95 disabled:opacity-50"
-            title="Upload avatar"
+            aria-label={avatarUrl ? "Change customer avatar" : "Upload customer avatar"}
+            className="group relative block size-24 overflow-hidden rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed"
           >
-            <Camera className="size-4" />
+            <AppImage
+              name={name}
+              image={avatarUrl}
+              clickable={false}
+              className="size-24 text-2xl font-semibold"
+            />
+            <span className="absolute inset-0 flex items-center justify-center bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+              {isUploading ? (
+                <span className="text-xs font-semibold">{progress}%</span>
+              ) : (
+                <Camera className="size-5" />
+              )}
+            </span>
           </button>
+
+
         </div>
 
         {isUploading && (
@@ -148,17 +155,6 @@ export function CustomerForm({
         )}
 
         <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isSubmitting}
-            className="h-8 text-xs"
-          >
-            {isUploading ? "Uploading..." : "Change Picture"}
-          </Button>
-
           {avatarUrl && (
             <Button
               type="button"
@@ -191,7 +187,7 @@ export function CustomerForm({
             name="name"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="customer-name">Full Name</FieldLabel>
+                <FieldLabel htmlFor="customer-name">Full Name <span className="text-destructive">*</span></FieldLabel>
 
                 <FieldContent>
                   <Input
@@ -216,7 +212,7 @@ export function CustomerForm({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="customer-email">
-                  Email Address
+                  Email Address <span className="text-destructive">*</span>
                   {customer?.isVerified && (
                     <span className="ml-1 text-xs text-muted-foreground">
                       (Verified)

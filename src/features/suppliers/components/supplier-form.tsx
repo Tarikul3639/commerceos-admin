@@ -56,7 +56,7 @@ export function SupplierForm({
             name={name}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={`supplier-${name}`}>{label}</FieldLabel>
+                <FieldLabel htmlFor={`supplier-${name}`}>{label}{name === "name" && <span className="text-destructive"> *</span>}</FieldLabel>
                 <Input
                   {...field}
                   id={`supplier-${name}`}
