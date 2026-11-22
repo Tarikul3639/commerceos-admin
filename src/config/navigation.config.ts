@@ -8,6 +8,7 @@ import {
   Heart,
   LayoutDashboard,
   Mail,
+  Megaphone,
   Package,
   ShoppingCart,
   CreditCard,
@@ -206,7 +207,7 @@ export const navigation: NavigationGroup[] = [
     ],
   },
   {
-    title: "Marketing",
+    title: "Features",
     items: [
       {
         title: "Banners",
@@ -214,6 +215,17 @@ export const navigation: NavigationGroup[] = [
         icon: LayoutDashboard,
         permission: Permission.BANNER_READ,
       },
+      {
+        title: "Announcement",
+        href: "/dashboard/features/announcement",
+        icon: Megaphone,
+        permission: Permission.SETTING_READ,
+      },
+    ],
+  },
+  {
+    title: "Marketing",
+    items: [
       {
         title: "Discounts",
         href: "/dashboard/discounts",
