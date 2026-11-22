@@ -1,15 +1,12 @@
 import type { PaginatedResponse } from "@/types/pagination"
 
-// Product status
 export type ProductStatus = "DRAFT" | "PROPOSED" | "PUBLISHED" | "REJECTED"
 
-// Relation summary
 export interface RelationSummary {
   id: string
   name: string
 }
 
-// Product
 export interface Product {
   id: string
   name: string
@@ -17,26 +14,20 @@ export interface Product {
   purchasePrice: string
   sellingPrice: string
   status: ProductStatus
-
+  isFeatured: boolean
   category: RelationSummary
   brand: RelationSummary | null
   sizeGuide: RelationSummary | null
-
   deletedAt: string | null
   createdAt: string
   updatedAt: string
 }
 
-// Product list item
 export interface ProductListItem extends Product {
   image: string | null
-  variants?: Array<{
-    sku: string
-    isActive: boolean
-  }>
+  variants?: Array<{ sku: string; isActive: boolean }>
 }
 
-// Product query parameters
 export interface ProductQueryParams {
   page?: number
   limit?: number
@@ -46,10 +37,8 @@ export interface ProductQueryParams {
   status?: ProductStatus
 }
 
-// Products response
 export type ProductsResponse = PaginatedResponse<ProductListItem>
 
-// Create product request
 export interface CreateProductRequest {
   name: string
   subDescription?: string
@@ -60,7 +49,14 @@ export interface CreateProductRequest {
   brandId?: string
   sizeGuideId?: string
   status?: ProductStatus
+  isFeatured?: boolean
+  productDiscount?: {
+    isActive: boolean
+    type: "PERCENTAGE" | "FIXED"
+    value: number
+    startsAt?: string | null
+    endsAt?: string | null
+  } | null
 }
 
-// Update product request
 export type UpdateProductRequest = Partial<CreateProductRequest>

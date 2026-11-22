@@ -10,6 +10,7 @@ export const productSchema = z.object({
   brandId: z.string().optional(),
   sizeGuideId: z.string().optional(),
   status: z.enum(["DRAFT", "PROPOSED", "PUBLISHED", "REJECTED"]).optional(),
+  isFeatured: z.boolean().optional(),
 })
 
 export type ProductFormValues = z.infer<typeof productSchema>

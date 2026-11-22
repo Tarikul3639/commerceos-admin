@@ -46,6 +46,15 @@ export interface ProductVariant {
 }
 
 // Product details
+export interface ProductDiscount {
+  id: string
+  type: "PERCENTAGE" | "FIXED"
+  value: string
+  isActive: boolean
+  startsAt: string | null
+  endsAt: string | null
+}
+
 export interface ProductDetails {
   id: string
   name: string
@@ -53,7 +62,9 @@ export interface ProductDetails {
   description: string | null
   purchasePrice: string
   sellingPrice: string
+  productDiscount: ProductDiscount | null
   status: ProductStatus
+  isFeatured: boolean
 
   categoryId: string
   category: RelationSummary

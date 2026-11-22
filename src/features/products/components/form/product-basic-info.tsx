@@ -3,6 +3,7 @@
 import { Controller, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Box, Tag, Layers, Save } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 import { productSchema } from "../../schemas/product.schema"
 import type { ProductFormValues } from "../../schemas/product.schema"
@@ -28,6 +29,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 
 export interface ProductBasicInfoOption {
   id: string
@@ -44,6 +46,8 @@ interface ProductBasicInfoProps {
   isSubmitting?: boolean
   defaultValues?: Partial<ProductFormValues>
   onSubmit: (values: ProductFormValues) => void | Promise<void>
+  showPricing?: boolean
+  onCancel?: () => void
 }
 
 function FieldError({ message }: { message?: string }) {
@@ -83,7 +87,10 @@ export function ProductBasicInfo({
   isSubmitting = false,
   defaultValues,
   onSubmit,
+  showPricing = true,
+  onCancel,
 }: ProductBasicInfoProps) {
+  const router = useRouter()
   const {
     register,
     control,
@@ -101,6 +108,7 @@ export function ProductBasicInfo({
       brandId: "",
       sizeGuideId: "",
       status: "DRAFT",
+      isFeatured: false,
       ...defaultValues,
     },
   })
@@ -174,53 +182,57 @@ export function ProductBasicInfo({
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Tag className="size-4 text-muted-foreground" />
-                Pricing
-              </CardTitle>
-              <CardDescription>
-                What you pay and what customers pay.
-              </CardDescription>
-            </CardHeader>
+          {showPricing && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Tag className="size-4 text-muted-foreground" />
+                  Pricing
+                </CardTitle>
+                <CardDescription>
+                  What you pay and what customers pay.
+                </CardDescription>
+              </CardHeader>
 
-            <CardContent className="space-y-5">
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="purchasePrice">
-                    Purchase Price <span className="text-destructive">*</span>
-                  </Label>
-                  <MoneyInput
-                    id="purchasePrice"
-                    {...register("purchasePrice", { valueAsNumber: true })}
-                  />
-                  <FieldError message={errors.purchasePrice?.message} />
+              <CardContent className="space-y-5">
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="purchasePrice">
+                      Purchase Price <span className="text-destructive">*</span>
+                    </Label>
+                    <MoneyInput
+                      id="purchasePrice"
+                      {...register("purchasePrice", { valueAsNumber: true })}
+                    />
+                    <FieldError message={errors.purchasePrice?.message} />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="sellingPrice">
+                      Selling Price <span className="text-destructive">*</span>
+                    </Label>
+                    <MoneyInput
+                      id="sellingPrice"
+                      {...register("sellingPrice", { valueAsNumber: true })}
+                    />
+                    <FieldError message={errors.sellingPrice?.message} />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="sellingPrice">
-                    Selling Price <span className="text-destructive">*</span>
-                  </Label>
-                  <MoneyInput
-                    id="sellingPrice"
-                    {...register("sellingPrice", { valueAsNumber: true })}
-                  />
-                  <FieldError message={errors.sellingPrice?.message} />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between rounded-lg border border-dashed px-4 py-3 text-sm">
-                <span className="text-muted-foreground">Estimated profit</span>
-                <span className="font-medium tabular-nums">
-                  ৳{profit.toFixed(2)}
-                  <span className="ml-2 text-muted-foreground">
-                    ({margin.toFixed(1)}%)
+                <div className="flex items-center justify-between rounded-lg border border-dashed px-4 py-3 text-sm">
+                  <span className="text-muted-foreground">
+                    Estimated profit
                   </span>
-                </span>
-              </div>
-            </CardContent>
-          </Card>
+                  <span className="font-medium tabular-nums">
+                    ৳{profit.toFixed(2)}
+                    <span className="ml-2 text-muted-foreground">
+                      ({margin.toFixed(1)}%)
+                    </span>
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* ---------- Right: sidebar ---------- */}
@@ -294,6 +306,37 @@ export function ProductBasicInfo({
               <div className="mt-2">
                 <FieldError message={errors.status?.message} />
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Homepage visibility</CardTitle>
+              <CardDescription>
+                Choose whether this product appears in the homepage Featured
+                Products section.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Controller
+                control={control}
+                name="isFeatured"
+                render={({ field }) => (
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <Label htmlFor="isFeatured">Feature on homepage</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Only published products are shown to store visitors.
+                      </p>
+                    </div>
+                    <Switch
+                      id="isFeatured"
+                      checked={field.value ?? false}
+                      onCheckedChange={field.onChange}
+                    />
+                  </div>
+                )}
+              />
             </CardContent>
           </Card>
 
@@ -422,15 +465,27 @@ export function ProductBasicInfo({
             Fields marked <span className="text-destructive">*</span> are
             required.
           </p>
-          <Button
-            type="submit"
-            size="sm"
-            disabled={isSubmitting || !isValid || !isDirty}
-            className="ml-auto"
-          >
-            <Save className="size-4" />
-            {isSubmitting ? "Saving..." : "Save Product"}
-          </Button>
+          <div className="ml-auto flex items-center gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="rounded-none"
+              disabled={isSubmitting}
+              onClick={() => (onCancel ? onCancel() : router.back())}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              size="sm"
+              disabled={isSubmitting || !isValid || !isDirty}
+              className="rounded-none"
+            >
+              <Save className="size-4" />
+              {isSubmitting ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </form>
