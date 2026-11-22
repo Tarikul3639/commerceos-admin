@@ -20,7 +20,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
@@ -103,10 +102,6 @@ function CategoryActionsCell({ category }: { category: Category }) {
 
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-
             <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
               <Info className="size-4" />
               Details
@@ -124,8 +119,6 @@ function CategoryActionsCell({ category }: { category: Category }) {
             <>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Danger</DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem
                   variant="destructive"
                   onClick={() => setIsDeleteDialogOpen(true)}

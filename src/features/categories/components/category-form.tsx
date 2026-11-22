@@ -1,4 +1,3 @@
-
 "use client"
 
 import { cn } from "@/lib/utils"
@@ -205,22 +204,34 @@ export function CategoryForm({
               </div>
             )}
 
-            {image && !isUploading && (
+            <div className="flex items-center gap-2">
               <Button
                 type="button"
-                size="icon-xs"
-                variant="destructive"
-                aria-label="Remove image"
-                title="Remove image"
-                onClick={removeImage}
+                size="xs"
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
                 disabled={isDisabled}
               >
-                <X className="size-3.5" />
+                {image ? "Change image" : "Upload image"}
               </Button>
-            )}
+
+              {image && (
+                <Button
+                  type="button"
+                  size="icon-xs"
+                  variant="destructive"
+                  aria-label="Remove image"
+                  title="Remove image"
+                  onClick={removeImage}
+                  disabled={isDisabled}
+                >
+                  <X className="size-3.5" />
+                </Button>
+              )}
+            </div>
 
             <p className="text-center text-xs text-muted-foreground">
-              Square image. JPG, PNG, WebP or AVIF.
+              Use a square image (1:1 aspect ratio) for the best result. JPG, PNG, WebP or AVIF.
             </p>
 
             {uploadError && (

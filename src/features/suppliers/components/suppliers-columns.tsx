@@ -19,7 +19,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
   DropdownMenuGroup,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
@@ -109,8 +108,6 @@ function SupplierActionsCell({ supplier }: { supplier: Supplier }) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="p-1">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
           <DropdownMenuGroup>
             <DropdownMenuItem onClick={() => setDetails(true)}>
               <Info className="size-4" />

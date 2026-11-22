@@ -12,7 +12,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -106,10 +105,7 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-38 pb-2">
-          {/* General */}
           <DropdownMenuGroup>
-            <DropdownMenuLabel>General</DropdownMenuLabel>
-
             <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
               <Info className="size-4" />
               Details
@@ -125,10 +121,7 @@ export function CustomerColumnActions({ customer }: CustomerActionsProps) {
 
           <DropdownMenuSeparator />
 
-          {/* Customer Danger zone */}
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Danger</DropdownMenuLabel>
-
             {!isDeleted && canDelete && (
               <DropdownMenuItem
                 variant="destructive"

@@ -131,10 +131,20 @@ export function BrandForm({
             accept="image/*"
             onChange={handleImageUpload}
             className="hidden"
+            disabled={isUploading || isLoading}
           />
         </div>
 
-        <FieldDescription>Profile image</FieldDescription>
+        <Button
+          type="button"
+          size="xs"
+          variant="outline"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading || isLoading}
+        >
+          {avatarUrl ? "Change image" : "Upload image"}
+        </Button>
+        <FieldDescription>Use a square image (1:1 aspect ratio) for the best result.</FieldDescription>
         {error && <FieldError>{error}</FieldError>}
       </FieldGroup>
 

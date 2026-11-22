@@ -32,7 +32,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -156,14 +155,7 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" className="w-40 p-1">
-            {/* General */}
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
-                General
-              </DropdownMenuLabel>
-
-              <DropdownMenuSeparator />
-
               <DropdownMenuItem onClick={() => setIsDetailOpen(true)}>
                 <Info className="h-4 w-4" />
                 Details
@@ -177,15 +169,8 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
               )}
             </DropdownMenuGroup>
 
-            <DropdownMenuSeparator />
-
-            {/* Status */}
             {canManageStatus && (
               <DropdownMenuGroup>
-                <DropdownMenuLabel className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
-                  Status
-                </DropdownMenuLabel>
-
                 {user.status === UserStatus.ACTIVE && (
                   <>
                     <DropdownMenuItem
@@ -256,16 +241,11 @@ export function UserActionsCell({ user }: UserActionsCellProps) {
               </DropdownMenuGroup>
             )}
 
-            {/* Danger Zone */}
             {canDelete && user.status !== UserStatus.DELETED && (
               <>
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuLabel className="px-2 py-1.5 text-xs font-medium text-destructive">
-                    Danger Zone
-                  </DropdownMenuLabel>
-
                   <DropdownMenuItem
                     variant="destructive"
                     onClick={() => setIsDeleteOpen(true)}

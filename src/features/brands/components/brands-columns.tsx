@@ -18,7 +18,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -114,10 +113,6 @@ function BrandActionsCell({ brand }: { brand: Brand }) {
 
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-
             <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
               <Info className="size-4" />
               Details

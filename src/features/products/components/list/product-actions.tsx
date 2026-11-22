@@ -20,7 +20,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -87,10 +86,6 @@ export function ProductActions({ product }: { product: ProductListItem }) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="p-1">
-          <DropdownMenuLabel>Product</DropdownMenuLabel>
-
-          <DropdownMenuSeparator />
-
           <DropdownMenuItem asChild>
             <Link href={`/dashboard/products/${product.id}`}>
               <Info className="size-4" />
@@ -118,7 +113,7 @@ export function ProductActions({ product }: { product: ProductListItem }) {
 
               {canDelete && (
                 <>
-                  {canUpdate && <DropdownMenuSeparator />}
+                  <DropdownMenuSeparator />
 
                   <DropdownMenuItem
                     variant="destructive"

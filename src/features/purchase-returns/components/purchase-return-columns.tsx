@@ -15,7 +15,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -185,7 +184,6 @@ function PurchaseReturnActions({
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-44 p-1">
-          <DropdownMenuLabel>Return actions</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link href={`/dashboard/purchase-returns/${purchaseReturn.id}`}>
@@ -197,7 +195,6 @@ function PurchaseReturnActions({
 
           {hasStatusAction && (
             <>
-              <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 {isPending && (
                   <>

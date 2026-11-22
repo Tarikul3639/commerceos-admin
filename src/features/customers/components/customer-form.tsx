@@ -155,6 +155,16 @@ export function CustomerForm({
         )}
 
         <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="xs"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isSubmitting}
+          >
+            {avatarUrl ? "Change avatar" : "Upload avatar"}
+          </Button>
+
           {avatarUrl && (
             <Button
               type="button"
@@ -170,12 +180,17 @@ export function CustomerForm({
           )}
         </div>
 
+        <p className="text-center text-xs text-muted-foreground">
+          Use a square image (1:1 aspect ratio) for the best result.
+        </p>
+
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={handleAvatarUpload}
           className="hidden"
+          disabled={isSubmitting}
         />
       </div>
 

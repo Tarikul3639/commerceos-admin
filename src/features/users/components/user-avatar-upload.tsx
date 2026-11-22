@@ -1,7 +1,7 @@
 "use client"
 
 import { Camera, ImagePlus, X } from "lucide-react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 import { toast } from "sonner"
 
@@ -25,6 +25,7 @@ export function UserAvatarUpload({
   disabled = false,
 }: UserAvatarUploadProps) {
   const [fileName, setFileName] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { upload, isUploading, progress } = useCloudinaryUpload()
 
@@ -103,7 +104,7 @@ export function UserAvatarUpload({
       <div className="group relative">
         <button
           type="button"
-          onClick={() => document.getElementById("user-avatar")?.click()}
+          onClick={() => fileInputRef.current?.click()}
           disabled={disabled || isUploading}
           aria-label={value ? "Change avatar" : "Upload avatar"}
           className="relative block rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed"
@@ -139,6 +140,7 @@ export function UserAvatarUpload({
 
       {/* File input */}
       <input
+        ref={fileInputRef}
         id="user-avatar"
         type="file"
         accept="image/jpeg,image/png,image/webp"
@@ -147,9 +149,19 @@ export function UserAvatarUpload({
         onChange={handleUpload}
       />
 
+      <Button
+        type="button"
+        size="xs"
+        variant="outline"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={disabled || isUploading}
+      >
+        {value ? "Change avatar" : "Upload avatar"}
+      </Button>
+
       {/* Description */}
       <p className="text-center text-xs text-muted-foreground">
-        Square image only. JPG, PNG or WebP. Maximum file size: 1MB.
+        Use a square image (1:1 aspect ratio) for the best result. JPG, PNG or WebP. Maximum file size: 1MB.
       </p>
 
       {/* File name */}

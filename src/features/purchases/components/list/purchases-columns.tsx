@@ -21,7 +21,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -190,8 +189,6 @@ function PurchaseActions({ purchase }: { purchase: Purchase }) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-44 p-1">
-          <DropdownMenuLabel>Purchase actions</DropdownMenuLabel>
-
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link href={`/dashboard/purchases/${purchase.id}`}>
@@ -217,31 +214,29 @@ function PurchaseActions({ purchase }: { purchase: Purchase }) {
             )}
           </DropdownMenuGroup>
 
-          {isPending && canUpdate && (
-            <>
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() => setConfirmAction("cancel")}
-              >
-                <XCircle className="size-4" />
-                Cancel
-              </DropdownMenuItem>
-            </>
-          )}
-
-          {isPending && canDelete && (
+          {isPending && (canUpdate || canDelete) && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => setConfirmAction("delete")}
-                >
-                  <Trash2 className="size-4" />
-                  Delete
-                </DropdownMenuItem>
+                {canUpdate && (
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => setConfirmAction("cancel")}
+                  >
+                    <XCircle className="size-4" />
+                    Cancel
+                  </DropdownMenuItem>
+                )}
+
+                {canDelete && (
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => setConfirmAction("delete")}
+                  >
+                    <Trash2 className="size-4" />
+                    Delete
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
             </>
           )}
