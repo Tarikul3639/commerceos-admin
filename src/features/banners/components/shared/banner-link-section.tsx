@@ -26,17 +26,6 @@ export function BannerLinkSection({ control }: BannerLinkSectionProps) {
         )}
       />
 
-      <Controller
-        name="buttonText"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor="banner-button-text">Button text</FieldLabel>
-            <Input {...field} id="banner-button-text" placeholder="Shop now" />
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-          </Field>
-        )}
-      />
     </>
   )
 }

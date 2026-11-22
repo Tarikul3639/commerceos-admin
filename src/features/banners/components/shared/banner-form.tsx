@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -44,7 +44,7 @@ function toDateTimeInput(value: string | null | undefined) {
     .slice(0, 16)
 }
 
-/** Shared create/update form for responsive multi-image banners. */
+/** Shared create/update form for desktop and optional mobile banner media. */
 export function BannerForm({
   banner,
   onSubmit,
@@ -57,21 +57,13 @@ export function BannerForm({
     resolver: zodResolver(bannerSchema),
     defaultValues: {
       title: banner?.title ?? "",
-      images: banner?.images?.length
-        ? banner.images
-        : banner?.imageUrl
-          ? [
-              {
-                imageUrl: banner.imageUrl,
-                publicId: banner.imagePublicId,
-                sortOrder: 0,
-              },
-            ]
-          : [],
+      imageUrl: banner?.imageUrl ?? "",
+      imagePublicId: banner?.imagePublicId ?? "",
+      mobileImageUrl: banner?.mobileImageUrl ?? "",
+      mobileImagePublicId: banner?.mobileImagePublicId ?? "",
       type: banner?.type ?? BannerType.PROMOTION,
       position: banner?.position ?? BannerPosition.HOME_TOP,
       link: banner?.link ?? "",
-      buttonText: banner?.buttonText ?? "",
       openInNewTab: banner?.openInNewTab ?? false,
       sortOrder: String(banner?.sortOrder ?? 0),
       isActive: banner?.isActive ?? true,
@@ -81,25 +73,18 @@ export function BannerForm({
   })
 
   const { isDirty } = form.formState
+  const desktopImageUrl = useWatch({ control: form.control, name: "imageUrl" })
 
   useEffect(() => {
     form.reset({
       title: banner?.title ?? "",
-      images: banner?.images?.length
-        ? banner.images
-        : banner?.imageUrl
-          ? [
-              {
-                imageUrl: banner.imageUrl,
-                publicId: banner.imagePublicId,
-                sortOrder: 0,
-              },
-            ]
-          : [],
+      imageUrl: banner?.imageUrl ?? "",
+      imagePublicId: banner?.imagePublicId ?? "",
+      mobileImageUrl: banner?.mobileImageUrl ?? "",
+      mobileImagePublicId: banner?.mobileImagePublicId ?? "",
       type: banner?.type ?? BannerType.PROMOTION,
       position: banner?.position ?? BannerPosition.HOME_TOP,
       link: banner?.link ?? "",
-      buttonText: banner?.buttonText ?? "",
       openInNewTab: banner?.openInNewTab ?? false,
       sortOrder: String(banner?.sortOrder ?? 0),
       isActive: banner?.isActive ?? true,
@@ -111,14 +96,13 @@ export function BannerForm({
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="mx-auto w-full max-w-3xl space-y-5"
+      className="mx-auto w-full max-w-5xl space-y-5"
     >
       <Card>
         <CardHeader>
           <CardTitle>Banner Images</CardTitle>
           <CardDescription>
-            Upload multiple images in one responsive size. They will be used on
-            both phones and desktop screens.
+            Upload one desktop image and an optional phone image. The storefront switches images by screen size.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -126,9 +110,9 @@ export function BannerForm({
             form={form}
             onUploadingChange={setIsMediaUploading}
           />
-          {form.formState.errors.images?.message && (
+          {form.formState.errors.imageUrl?.message && (
             <FieldError className="mt-3">
-              {form.formState.errors.images.message}
+              {form.formState.errors.imageUrl.message}
             </FieldError>
           )}
         </CardContent>
@@ -138,8 +122,7 @@ export function BannerForm({
         <CardHeader>
           <CardTitle>Banner Details</CardTitle>
           <CardDescription>
-            Configure the banner title, type, position, link, schedule, and
-            display settings.
+            Configure the banner title, type, position, link, schedule, and display settings.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -164,7 +147,10 @@ export function BannerForm({
         <Button
           type="submit"
           disabled={
-            isLoading || isMediaUploading || (Boolean(banner) && !isDirty)
+            isLoading ||
+            isMediaUploading ||
+            !desktopImageUrl ||
+            (Boolean(banner) && !isDirty)
           }
         >
           {isLoading

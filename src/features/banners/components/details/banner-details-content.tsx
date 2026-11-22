@@ -20,7 +20,6 @@ import {
   useDeleteBannerMutation,
   useGetBannerQuery,
 } from "../../api/banners.api"
-import type { BannerImage } from "../../types/banners.types"
 import { BannerActivityCard } from "./banner-activity-card"
 import { BannerInformationCard } from "./banner-information-card"
 import { BannerPreview } from "./banner-preview"
@@ -45,20 +44,6 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
     isError,
   } = useGetBannerQuery(bannerId, { skip: !canRead })
   const [deleteBanner, { isLoading: isDeleting }] = useDeleteBannerMutation()
-
-  // Preserve compatibility with older API responses that only expose imageUrl.
-  const images: BannerImage[] = banner?.images?.length
-    ? banner.images
-    : banner?.imageUrl
-      ? [
-          {
-            id: banner.id,
-            imageUrl: banner.imageUrl,
-            publicId: banner.imagePublicId,
-            sortOrder: 0,
-          },
-        ]
-      : []
 
   /** Deletes the banner after permission validation and returns to the list. */
   const handleDelete = async () => {
@@ -127,9 +112,7 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
                 {banner.isActive ? "Active" : "Inactive"}
               </Badge>
               <Badge variant="outline">{formatEnumLabel(banner.type)}</Badge>
-              <Badge variant="outline">
-                {formatEnumLabel(banner.position)}
-              </Badge>
+              <Badge variant="outline">{formatEnumLabel(banner.position)}</Badge>
             </div>
             <p className="text-xs text-muted-foreground">
               Last updated {formatDate(banner.updatedAt)}
@@ -138,15 +121,16 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
 
           <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,0.85fr)]">
             <div className="min-w-0 space-y-5">
-              <BannerPreview title={banner.title} images={images} />
+              <BannerPreview
+                title={banner.title}
+                imageUrl={banner.imageUrl}
+                mobileImageUrl={banner.mobileImageUrl}
+              />
               <BannerInformationCard banner={banner} />
             </div>
 
             <div className="min-w-0 space-y-5">
-              <BannerScheduleCard
-                startAt={banner.startAt}
-                endAt={banner.endAt}
-              />
+              <BannerScheduleCard startAt={banner.startAt} endAt={banner.endAt} />
               <BannerActivityCard banner={banner} />
             </div>
           </div>
@@ -160,8 +144,8 @@ export function BannerDetailsContent({ bannerId }: BannerDetailsContentProps) {
           title="Delete banner"
           description={
             <>
-              Delete <strong>{banner.title || "this banner"}</strong>? All
-              associated banner images will also be deleted.
+              Delete <strong>{banner.title || "this banner"}</strong>? Its desktop
+              and mobile images will also be deleted.
             </>
           }
           confirmLabel={isDeleting ? "Deleting..." : "Delete"}

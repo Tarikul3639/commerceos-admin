@@ -27,27 +27,16 @@ export type BannerActor = {
   email: string
 }
 
-export type BannerImage = {
-  id?: string
-  imageUrl: string
-  publicId: string
-  sortOrder: number
-}
-
 export type Banner = {
   id: string
   title: string | null
   imageUrl: string
   imagePublicId: string
-  images: BannerImage[]
-  /** @deprecated Legacy field retained for existing API records. */
   mobileImageUrl: string | null
-  /** @deprecated Legacy field retained for existing API records. */
   mobileImagePublicId: string | null
   type: BannerType
   position: BannerPosition
   link: string | null
-  buttonText: string | null
   openInNewTab: boolean
   sortOrder: number
   isActive: boolean
@@ -65,11 +54,13 @@ export type BannersResponse = PaginatedResponse<Banner>
 
 export type CreateBanner = {
   title?: string
-  images: Omit<BannerImage, "id">[]
+  imageUrl: string
+  imagePublicId: string
+  mobileImageUrl?: string | null
+  mobileImagePublicId?: string | null
   type: BannerType
   position: BannerPosition
   link?: string
-  buttonText?: string
   openInNewTab?: boolean
   sortOrder?: number
   isActive?: boolean
@@ -79,11 +70,13 @@ export type CreateBanner = {
 
 export type UpdateBanner = {
   title?: string | null
-  images?: Omit<BannerImage, "id">[]
+  imageUrl?: string
+  imagePublicId?: string
+  mobileImageUrl?: string | null
+  mobileImagePublicId?: string | null
   type?: BannerType
   position?: BannerPosition
   link?: string | null
-  buttonText?: string | null
   openInNewTab?: boolean
   sortOrder?: number
   isActive?: boolean

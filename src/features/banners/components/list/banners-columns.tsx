@@ -33,7 +33,7 @@ export const columns = helper.columns([
     cell: ({ row }) => (
       <AppImage
         name={row.original.title ?? "Banner"}
-        image={row.original.images?.[0]?.imageUrl ?? row.original.imageUrl}
+        image={row.original.imageUrl}
         className="h-12 w-20 rounded-md after:inset-0 after:rounded-md"
       />
     ),

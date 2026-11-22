@@ -2,8 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
-import { v4 as uuidv4 } from "uuid"
-import { CloudUpload, Upload, X } from "lucide-react"
+import { CloudUpload, Monitor, Smartphone, Upload, X } from "lucide-react"
 import type { UseFormReturn } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -19,263 +18,264 @@ interface BannerMediaSectionProps {
   onUploadingChange: (isUploading: boolean) => void
 }
 
-interface DraftImage {
-  id: string
+type ImageTarget = "desktop" | "mobile"
+
+interface ImageDraft {
+  target: ImageTarget
   file: File
   preview: string
 }
 
-/** Multi-image banner uploader, following the product image draft/preview workflow. */
+/** Uploads one desktop image and one optional mobile image to Cloudinary. */
 export function BannerMediaSection({
   form,
   onUploadingChange,
 }: BannerMediaSectionProps) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const draftsRef = useRef<DraftImage[]>([])
-  const [draftImages, setDraftImages] = useState<DraftImage[]>([])
-  const [uploadingIndex, setUploadingIndex] = useState(0)
+  const desktopInputRef = useRef<HTMLInputElement>(null)
+  const mobileInputRef = useRef<HTMLInputElement>(null)
+  const draftsRef = useRef<ImageDraft[]>([])
+  const [drafts, setDrafts] = useState<ImageDraft[]>([])
+  const [uploadingTarget, setUploadingTarget] = useState<ImageTarget | null>(
+    null
+  )
   const {
     upload,
     isUploading,
     progress,
     error: uploadError,
   } = useCloudinaryUpload()
-  const savedImages = form.watch("images") ?? []
-  const busy = isUploading || uploadingIndex > 0
+  const busy = isUploading || uploadingTarget !== null
+  const desktopImageUrl = form.watch("imageUrl")
+  const mobileImageUrl = form.watch("mobileImageUrl")
 
   useEffect(() => {
-    draftsRef.current = draftImages
-  }, [draftImages])
+    draftsRef.current = drafts
+  }, [drafts])
 
   useEffect(() => {
-    return () =>
-      draftsRef.current.forEach((image) => URL.revokeObjectURL(image.preview))
+    return () => {
+      draftsRef.current.forEach((draft) => URL.revokeObjectURL(draft.preview))
+    }
   }, [])
 
-  /** Add selected image files to the local preview queue. */
-  const addDraftImages = (files: File[]) => {
-    if (busy) return
-    const validFiles = files.filter((file) => file.type.startsWith("image/"))
-    if (validFiles.length !== files.length) {
-      toast.error("Some files were skipped", {
-        description: "Only image files are allowed.",
-      })
+  /** Keep one pending file per device target and replace its old preview. */
+  const addDraft = (target: ImageTarget, file?: File) => {
+    if (busy || !file) return
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select a valid image file")
+      return
     }
-    setDraftImages((current) => [
-      ...current,
-      ...validFiles.map((file) => ({
-        id: uuidv4(),
-        file,
-        preview: URL.createObjectURL(file),
-      })),
-    ])
-  }
 
-  /** Remove a not-yet-uploaded image and release its preview URL. */
-  const removeDraftImage = (id: string) => {
-    if (busy) return
-    setDraftImages((current) => {
-      const draft = current.find((image) => image.id === id)
-      if (draft) URL.revokeObjectURL(draft.preview)
-      return current.filter((image) => image.id !== id)
+    onUploadingChange(true)
+    setDrafts((current) => {
+      const previous = current.find((draft) => draft.target === target)
+      if (previous) URL.revokeObjectURL(previous.preview)
+      return [
+        ...current.filter((draft) => draft.target !== target),
+        { target, file, preview: URL.createObjectURL(file) },
+      ]
     })
   }
 
-  /** Remove an already-uploaded image from the form payload. */
-  const removeSavedImage = (index: number) => {
+  /** Remove a queued file or clear the uploaded image from form state. */
+  const removeImage = (target: ImageTarget) => {
     if (busy) return
-    form.setValue(
-      "images",
-      savedImages
-        .filter((_, imageIndex) => imageIndex !== index)
-        .map((image, sortOrder) => ({ ...image, sortOrder })),
-      { shouldDirty: true, shouldValidate: true }
-    )
-  }
+    const draft = drafts.find((item) => item.target === target)
+    if (draft) {
+      URL.revokeObjectURL(draft.preview)
+      const remainingDrafts = drafts.filter((item) => item.target !== target)
+      setDrafts(remainingDrafts)
+      onUploadingChange(remainingDrafts.length > 0)
+    }
 
-  /** Upload all queued files, then append their Cloudinary references to the form. */
-  const saveImages = async () => {
-    if (busy || draftImages.length === 0) return
-    onUploadingChange(true)
-    const uploadedImages = [...savedImages]
-    try {
-      for (let index = 0; index < draftImages.length; index++) {
-        setUploadingIndex(index + 1)
-        const result = await upload(draftImages[index].file, {
-          folder: "banners",
-        })
-        uploadedImages.push({
-          imageUrl: result.secure_url,
-          publicId: result.public_id,
-          sortOrder: uploadedImages.length,
-        })
-      }
-      form.setValue("images", uploadedImages, {
+    if (target === "desktop") {
+      form.setValue("imageUrl", "", { shouldDirty: true, shouldValidate: true })
+      form.setValue("imagePublicId", "", {
         shouldDirty: true,
         shouldValidate: true,
       })
-      draftImages.forEach((image) => URL.revokeObjectURL(image.preview))
-      setDraftImages([])
-      toast.success("Banner images uploaded successfully")
-    } catch (error) {
-      toast.error("Failed to upload banner images", {
-        description: getErrorMessage(error),
+    } else {
+      form.setValue("mobileImageUrl", "", {
+        shouldDirty: true,
+        shouldValidate: true,
       })
-    } finally {
-      setUploadingIndex(0)
-      onUploadingChange(false)
+      form.setValue("mobileImagePublicId", "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
     }
   }
 
-  /** Clear all queued local previews without changing saved images. */
-  const clearDrafts = () => {
-    if (busy) return
-    draftImages.forEach((image) => URL.revokeObjectURL(image.preview))
-    setDraftImages([])
+  /** Upload a selected image and save its URL and Cloudinary ID together. */
+  const uploadDraft = async (target: ImageTarget) => {
+    const draft = drafts.find((item) => item.target === target)
+    if (!draft || busy) return
+
+    onUploadingChange(true)
+    setUploadingTarget(target)
+    try {
+      const result = await upload(draft.file, { folder: "banners" })
+      if (target === "desktop") {
+        form.setValue("imageUrl", result.secure_url, {
+          shouldDirty: true,
+          shouldValidate: true,
+        })
+        form.setValue("imagePublicId", result.public_id, {
+          shouldDirty: true,
+          shouldValidate: true,
+        })
+      } else {
+        form.setValue("mobileImageUrl", result.secure_url, {
+          shouldDirty: true,
+          shouldValidate: true,
+        })
+        form.setValue("mobileImagePublicId", result.public_id, {
+          shouldDirty: true,
+          shouldValidate: true,
+        })
+      }
+      URL.revokeObjectURL(draft.preview)
+      setDrafts((current) => current.filter((item) => item.target !== target))
+      onUploadingChange(drafts.some((item) => item.target !== target))
+      toast.success(
+        `${target === "desktop" ? "Desktop" : "Mobile"} image uploaded`
+      )
+    } catch (error) {
+      toast.error("Failed to upload banner image", {
+        description: getErrorMessage(error),
+      })
+    } finally {
+      setUploadingTarget(null)
+      onUploadingChange(drafts.some((item) => item.target !== target))
+    }
+  }
+
+  /** Render one image picker with its own preview and upload action. */
+  const renderImageField = (
+    target: ImageTarget,
+    label: string,
+    description: string,
+    recommendedSize: string,
+    imageUrl: string,
+    inputRef: React.RefObject<HTMLInputElement | null>
+  ) => {
+    const draft = drafts.find((item) => item.target === target)
+    const preview = draft?.preview ?? imageUrl
+    const previewAspectClass =
+      target === "desktop"
+        ? "aspect-16/11 sm:aspect-2/1 lg:aspect-32/9"
+        : "aspect-16/11"
+
+    return (
+      <div className="min-w-0 space-y-3 rounded-lg border p-4">
+        <div className="flex items-center gap-2">
+          {target === "desktop" ? (
+            <Monitor className="size-4 text-muted-foreground" />
+          ) : (
+            <Smartphone className="size-4 text-muted-foreground" />
+          )}
+          <div className="min-w-0">
+            <p className="text-sm font-semibold">{label}</p>
+            <p className="text-xs text-muted-foreground">{description}</p>
+          </div>
+          {target === "desktop" && (
+            <span className="ml-auto text-xs text-destructive">Required</span>
+          )}
+        </div>
+
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          disabled={busy}
+          onChange={(event) => {
+            addDraft(target, event.currentTarget.files?.[0])
+            event.currentTarget.value = ""
+          }}
+        />
+
+        {preview ? (
+          <div className={`relative overflow-hidden rounded-md border bg-muted ${previewAspectClass}`}>
+            <Image
+              src={preview}
+              alt={label}
+              fill
+              unoptimized
+              className="object-cover"
+            />
+            <button
+              type="button"
+              aria-label={`Remove ${label.toLowerCase()}`}
+              onClick={() => removeImage(target)}
+              disabled={busy}
+              className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-full bg-black/65 text-white hover:bg-black/80 disabled:cursor-not-allowed"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+            className={`flex w-full flex-col items-center justify-center gap-2 rounded-md border border-dashed bg-muted/20 text-sm text-muted-foreground transition-colors hover:border-primary hover:bg-muted/40 disabled:cursor-not-allowed ${previewAspectClass}`}
+          >
+            <Upload className="size-5" />
+            <span>Select {label.toLowerCase()}</span>
+            <span className="text-xs text-muted-foreground">
+              Recommended size: {recommendedSize}
+            </span>
+          </button>
+        )}
+
+        {draft && (
+          <Button
+            type="button"
+            size="sm"
+            className="w-full"
+            onClick={() => void uploadDraft(target)}
+            disabled={busy}
+          >
+            <CloudUpload className="size-4" />
+            {uploadingTarget === target
+              ? `Uploading ${progress}%`
+              : `Upload ${label}`}
+          </Button>
+        )}
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-4">
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        disabled={busy}
-        onChange={(event) => {
-          addDraftImages(Array.from(event.currentTarget.files ?? []))
-          event.currentTarget.value = ""
-        }}
-      />
-
-      <div
-        role="button"
-        tabIndex={busy ? -1 : 0}
-        aria-disabled={busy}
-        onClick={() => !busy && inputRef.current?.click()}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault()
-            if (!busy) inputRef.current?.click()
-          }
-        }}
-        onDragOver={(event) => event.preventDefault()}
-        onDrop={(event) => {
-          event.preventDefault()
-          if (!busy) addDraftImages(Array.from(event.dataTransfer.files))
-        }}
-        className={`group flex min-h-36 flex-col items-center justify-center rounded-lg border border-dashed bg-muted/20 px-4 py-5 text-center transition-colors ${
-          busy
-            ? "cursor-not-allowed opacity-60"
-            : "cursor-pointer hover:border-primary hover:bg-muted/40"
-        }`}
-      >
-        <div className="mb-2 flex size-11 items-center justify-center rounded-full bg-muted group-hover:bg-primary/10">
-          <Upload className="size-5 text-muted-foreground group-hover:text-primary" />
-        </div>
-        <p className="text-sm font-semibold">Click or drop banner images</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Select multiple images. One responsive image size works on desktop and
-          mobile.
-        </p>
+    <div className="space-y-3">
+      <div className="grid gap-4">
+        {renderImageField(
+          "desktop",
+          "Desktop image",
+          "Wide image used on desktop and as fallback.",
+          "1920 × 540 px (32:9)",
+          desktopImageUrl,
+          desktopInputRef
+        )}
+        {renderImageField(
+          "mobile",
+          "Mobile image",
+          "Optional image optimized for phone screens.",
+          "900 × 620 px (16:11)",
+          mobileImageUrl,
+          mobileInputRef
+        )}
       </div>
-
-      {(savedImages.length > 0 || draftImages.length > 0) && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-          {savedImages.map((image, index) => (
-            <div
-              key={image.publicId}
-              className="group relative aspect-2/1 overflow-hidden rounded-lg border bg-muted"
-            >
-              <Image
-                src={image.imageUrl}
-                alt={`Banner image ${index + 1}`}
-                fill
-                unoptimized
-                className="object-cover"
-              />
-              <span className="absolute bottom-1 left-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
-                Image {index + 1}
-              </span>
-              <button
-                type="button"
-                aria-label={`Remove banner image ${index + 1}`}
-                onClick={() => removeSavedImage(index)}
-                disabled={busy}
-                className="absolute top-1 right-1 flex size-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 disabled:cursor-not-allowed md:opacity-0 md:group-hover:opacity-100"
-              >
-                <X className="size-3.5" />
-              </button>
-            </div>
-          ))}
-
-          {draftImages.map((image, index) => (
-            <div
-              key={image.id}
-              className="group relative aspect-3/1 overflow-hidden rounded-lg border bg-muted"
-            >
-              <Image
-                src={image.preview}
-                alt={image.file.name}
-                fill
-                unoptimized
-                className="object-cover"
-              />
-              <button
-                type="button"
-                aria-label={`Remove ${image.file.name}`}
-                onClick={() => removeDraftImage(image.id)}
-                disabled={busy}
-                className="absolute top-1 right-1 flex size-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 disabled:cursor-not-allowed"
-              >
-                <X className="size-3.5" />
-              </button>
-              {uploadingIndex === index + 1 && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                  <span className="text-xs font-semibold text-white">
-                    {progress}%
-                  </span>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
       {uploadError && <FieldError>{uploadError}</FieldError>}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs text-muted-foreground">
-          {savedImages.length} uploaded · {draftImages.length} ready to upload
-        </p>
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={clearDrafts}
-            disabled={busy || draftImages.length === 0}
-          >
-            Clear selection
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => void saveImages()}
-            disabled={busy || draftImages.length === 0}
-          >
-            <CloudUpload className="size-4" />
-            {busy
-              ? `Uploading ${uploadingIndex}/${draftImages.length}`
-              : "Upload images"}
-          </Button>
-        </div>
-      </div>
-      {savedImages.length === 0 && (
-        <FieldError>
-          At least one banner image is required before saving.
-        </FieldError>
-      )}
+      {!desktopImageUrl &&
+        !drafts.some((draft) => draft.target === "desktop") && (
+          <FieldError>A desktop banner image is required.</FieldError>
+        )}
+      <p className="text-xs text-muted-foreground">
+        Upload one image for each device size. If no mobile image is provided,
+        the desktop image is used.
+      </p>
     </div>
   )
 }

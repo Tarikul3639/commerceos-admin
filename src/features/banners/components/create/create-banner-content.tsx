@@ -23,11 +23,13 @@ export function CreateBannerContent() {
     try {
       const banner = await createBanner({
         title: values.title || undefined,
-        images: values.images,
+        imageUrl: values.imageUrl,
+        imagePublicId: values.imagePublicId,
+        mobileImageUrl: values.mobileImageUrl || null,
+        mobileImagePublicId: values.mobileImagePublicId || null,
         type: values.type,
         position: values.position,
         link: values.link.trim() || undefined,
-        buttonText: values.buttonText.trim() || undefined,
         openInNewTab: values.openInNewTab,
         sortOrder: Number(values.sortOrder),
         isActive: values.isActive,

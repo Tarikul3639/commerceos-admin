@@ -59,10 +59,6 @@ export function BannerInformationCard({ banner }: BannerInformationCardProps) {
           )}
         </div>
         <InfoItem
-          label="Button text"
-          value={banner.buttonText || "No button text"}
-        />
-        <InfoItem
           label="Open in new tab"
           value={banner.openInNewTab ? "Yes" : "No"}
         />
