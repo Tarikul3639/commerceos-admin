@@ -29,7 +29,7 @@ export function ErrorState({
 
       {onRetry && (
         <Button type="button" variant="outline" size="sm" onClick={onRetry}>
-          <RefreshCw className="mr-2 size-4" />
+          <RefreshCw className="size-4" />
           Try again
         </Button>
       )}

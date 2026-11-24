@@ -39,7 +39,9 @@ export function CompanyInformation({ control }: CompanyInformationProps) {
             name="companyName"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Company name <span className="text-destructive">*</span></FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Company name <span className="text-destructive">*</span>
+                </FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -56,7 +58,9 @@ export function CompanyInformation({ control }: CompanyInformationProps) {
             name="companyEmail"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Company email <span className="text-destructive">*</span></FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Company email <span className="text-destructive">*</span>
+                </FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -74,7 +78,9 @@ export function CompanyInformation({ control }: CompanyInformationProps) {
             name="companyPhone"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Phone number <span className="text-destructive">*</span></FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Phone number <span className="text-destructive">*</span>
+                </FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -95,7 +101,9 @@ export function CompanyInformation({ control }: CompanyInformationProps) {
                 className="sm:col-span-2"
                 data-invalid={fieldState.invalid}
               >
-                <FieldLabel htmlFor={field.name}>Company address <span className="text-destructive">*</span></FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Company address <span className="text-destructive">*</span>
+                </FieldLabel>
                 <Textarea
                   {...field}
                   id={field.name}

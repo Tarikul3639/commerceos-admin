@@ -42,7 +42,13 @@ export function ViewCategoryDialog({
         <div className="space-y-5">
           {category.image && (
             <div className="relative h-56 overflow-hidden rounded-xl border bg-muted">
-              <Image src={category.image} alt={category.name} fill sizes="(max-width: 640px) 100vw, 512px" className="object-cover" />
+              <Image
+                src={category.image}
+                alt={category.name}
+                fill
+                sizes="(max-width: 640px) 100vw, 512px"
+                className="object-cover"
+              />
             </div>
           )}
           <div className="space-y-1">

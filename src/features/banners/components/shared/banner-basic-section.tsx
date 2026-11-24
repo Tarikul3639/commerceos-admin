@@ -36,7 +36,9 @@ export function BannerBasicSection({ control }: BannerBasicSectionProps) {
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Type <span className="text-destructive">*</span></FieldLabel>
+              <FieldLabel>
+                Type <span className="text-destructive">*</span>
+              </FieldLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />
@@ -59,7 +61,9 @@ export function BannerBasicSection({ control }: BannerBasicSectionProps) {
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Position <span className="text-destructive">*</span></FieldLabel>
+              <FieldLabel>
+                Position <span className="text-destructive">*</span>
+              </FieldLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select position" />

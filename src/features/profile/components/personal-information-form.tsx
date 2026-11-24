@@ -128,7 +128,9 @@ export function PersonalInformationForm({
           <Separator />
 
           <div className="space-y-2">
-            <Label htmlFor="profile-name">Full name <span className="text-destructive">*</span></Label>
+            <Label htmlFor="profile-name">
+              Full name <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="profile-name"
               placeholder="Enter your full name"

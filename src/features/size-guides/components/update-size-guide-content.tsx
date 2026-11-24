@@ -87,7 +87,7 @@ export function UpdateSizeGuideContent() {
                 PRODUCT CATALOG
               </p>
               <h2 className="mt-2 text-xl font-semibold tracking-tight">
-                Edit size guide
+                Update size guide
               </h2>
               <p className="mt-1 text-sm leading-6 text-muted-foreground">
                 Update the guide information or adjust its measurement chart.

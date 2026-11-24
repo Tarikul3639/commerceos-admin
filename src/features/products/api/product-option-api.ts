@@ -5,7 +5,10 @@ import type {
   ProductOption,
   UpdateProductOptionRequest,
 } from "../types/product-option.types"
-import type { ProductVariant } from "../types/product-variant.types"
+import type {
+  GeneratedVariantRequest,
+  ProductVariant,
+} from "../types/product-variant.types"
 
 const productOptionTags = (productId: string) => [
   "Product" as const,
@@ -38,11 +41,7 @@ export const productOptionApi = baseApi.injectEndpoints({
 
     updateProductOption: builder.mutation<
       ProductOption,
-      {
-        productId: string
-        optionId: string
-        data: UpdateProductOptionRequest
-      }
+      { productId: string; optionId: string; data: UpdateProductOptionRequest }
     >({
       query: ({ optionId, data }) => ({
         url: `/admin/product-options/${optionId}`,
@@ -65,12 +64,16 @@ export const productOptionApi = baseApi.injectEndpoints({
         productOptionTags(productId),
     }),
 
-    generateProductVariants: builder.mutation<ProductVariant[], string>({
-      query: (productId) => ({
+    generateProductVariants: builder.mutation<
+      ProductVariant[],
+      { productId: string; variants: GeneratedVariantRequest[] }
+    >({
+      query: ({ productId, variants }) => ({
         url: `/admin/product-options/${productId}/generate-variants`,
         method: "POST",
+        body: { variants },
       }),
-      invalidatesTags: (_result, _error, productId) =>
+      invalidatesTags: (_result, _error, { productId }) =>
         productOptionTags(productId),
     }),
   }),

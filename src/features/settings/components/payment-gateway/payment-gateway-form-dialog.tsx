@@ -104,7 +104,7 @@ export function PaymentGatewayFormDialog({
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
           <DialogHeader className="shrink-0 gap-0.5 border-b px-5 py-4 pr-12 text-left">
             <DialogTitle className="text-base">
-              {config ? "Edit payment gateway" : "Add payment gateway"}
+              {config ? "Update payment gateway" : "Add payment gateway"}
             </DialogTitle>
             <DialogDescription className="text-xs">
               Configure provider availability and environment mode.
@@ -114,7 +114,9 @@ export function PaymentGatewayFormDialog({
           <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-4">
             {/* Provider */}
             <div className="space-y-1.5">
-              <Label htmlFor="gateway-provider">Provider <span className="text-destructive">*</span></Label>
+              <Label htmlFor="gateway-provider">
+                Provider <span className="text-destructive">*</span>
+              </Label>
               <Select
                 value={provider}
                 onValueChange={(value) => setProvider(value as PaymentProvider)}
@@ -148,7 +150,9 @@ export function PaymentGatewayFormDialog({
 
             {/* Display name */}
             <div className="space-y-1.5">
-              <Label htmlFor="gateway-name">Display name <span className="text-destructive">*</span></Label>
+              <Label htmlFor="gateway-name">
+                Display name <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="gateway-name"
                 value={displayName}

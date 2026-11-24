@@ -25,7 +25,6 @@ export function BannerLinkSection({ control }: BannerLinkSectionProps) {
           </Field>
         )}
       />
-
     </>
   )
 }

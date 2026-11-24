@@ -102,7 +102,8 @@ export function BannerForm({
         <CardHeader>
           <CardTitle>Banner Images</CardTitle>
           <CardDescription>
-            Upload one desktop image and an optional phone image. The storefront switches images by screen size.
+            Upload one desktop image and an optional phone image. The storefront
+            switches images by screen size.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -122,7 +123,8 @@ export function BannerForm({
         <CardHeader>
           <CardTitle>Banner Details</CardTitle>
           <CardDescription>
-            Configure the banner title, type, position, link, schedule, and display settings.
+            Configure the banner title, type, position, link, schedule, and
+            display settings.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -135,7 +137,7 @@ export function BannerForm({
         </CardContent>
       </Card>
 
-      <div className="sticky bottom-0 z-20 flex justify-end gap-2 border-t bg-background/95 -mx-4 py-3 backdrop-blur supports-backdrop-filter:bg-background/80">
+      <div className="sticky bottom-0 z-20 -mx-4 flex justify-end gap-2 border-t bg-background/95 py-3 backdrop-blur supports-backdrop-filter:bg-background/80">
         <Button
           type="button"
           variant="outline"

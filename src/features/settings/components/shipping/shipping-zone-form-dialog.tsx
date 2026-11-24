@@ -73,7 +73,9 @@ export function ShippingZoneFormDialog({
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="shipping-district-city">District / city name <span className="text-destructive">*</span></Label>
+            <Label htmlFor="shipping-district-city">
+              District / city name <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="shipping-district-city"
               value={districtCity}
@@ -87,7 +89,9 @@ export function ShippingZoneFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="shipping-rate">Flat rate (৳) <span className="text-destructive">*</span></Label>
+            <Label htmlFor="shipping-rate">
+              Flat rate (৳) <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="shipping-rate"
               type="number"

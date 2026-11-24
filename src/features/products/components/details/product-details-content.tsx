@@ -35,6 +35,8 @@ export function ProductDetailsContent({
     isError,
   } = useGetProductDetailsQuery(productId, { skip: !canRead })
 
+  console.log(product)
+
   if (!canRead) return <PermissionDenied />
 
   if (isLoading) {
@@ -74,9 +76,9 @@ export function ProductDetailsContent({
       pageHeaderAction={
         <div className="flex items-center">
           {canUpdate && (
-            <Button asChild variant="outline" size="sm">
+            <Button asChild variant="outline" size="xs">
               <Link href={`/dashboard/products/${product.id}/update`}>
-                <SquarePen className="size-4" />
+                <SquarePen className="size-3" />
                 Update
               </Link>
             </Button>

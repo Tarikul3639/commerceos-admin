@@ -1,7 +1,15 @@
 "use client"
 
+import Link from "next/link"
+import { View } from "lucide-react"
 import { useParams } from "next/navigation"
 import { PageContainer } from "@/components/layout/page-container"
+import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { PermissionDenied } from "@/components/shared/permission-denied"
 import { usePermission } from "@/hooks/use-permission"
 import { Permission } from "@/config/permissions.config"
@@ -51,6 +59,18 @@ export function UpdateProductContent() {
           href: `/dashboard/products/${productId}/update`,
         },
       ]}
+      pageHeaderAction={
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button asChild variant="outline" size="icon" aria-label="View product details">
+              <Link href={`/dashboard/products/${productId}`}>
+                <View className="size-4" />
+              </Link>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>View product details</TooltipContent>
+        </Tooltip>
+      }
     >
       <UpdateProductForm productId={productId} product={product} />
     </PageContainer>

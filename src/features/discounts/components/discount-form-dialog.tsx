@@ -158,7 +158,9 @@ export function DiscountFormDialog({ open, onOpenChange, discount }: Props) {
         <form onSubmit={form.handleSubmit(submit)} className="space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field data-invalid={!!form.formState.errors.code}>
-              <Label htmlFor="discount-code">Coupon code <span className="text-destructive">*</span></Label>
+              <Label htmlFor="discount-code">
+                Coupon code <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="discount-code"
                 {...form.register("code")}
@@ -183,7 +185,9 @@ export function DiscountFormDialog({ open, onOpenChange, discount }: Props) {
               name="type"
               render={({ field }) => (
                 <Field>
-                  <Label>Discount type <span className="text-destructive">*</span></Label>
+                  <Label>
+                    Discount type <span className="text-destructive">*</span>
+                  </Label>
                   <Select
                     value={field.value}
                     onValueChange={field.onChange}
@@ -205,7 +209,8 @@ export function DiscountFormDialog({ open, onOpenChange, discount }: Props) {
               <Label htmlFor="discount-value">
                 {discountType === "PERCENTAGE"
                   ? "Percentage (%)"
-                  : "Amount (৳)"} <span className="text-destructive">*</span>
+                  : "Amount (৳)"}{" "}
+                <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="discount-value"
@@ -223,7 +228,10 @@ export function DiscountFormDialog({ open, onOpenChange, discount }: Props) {
             </Field>
 
             <Field data-invalid={!!form.formState.errors.minOrderAmount}>
-              <Label htmlFor="discount-minimum">Minimum order amount (৳) <span className="text-destructive">*</span></Label>
+              <Label htmlFor="discount-minimum">
+                Minimum order amount (৳){" "}
+                <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="discount-minimum"
                 type="number"

@@ -241,7 +241,7 @@ export function BannerMediaSection({
               <span className="font-medium text-foreground">
                 Uploading {lowerLabel}...
               </span>
-              <span className="tabular-nums text-muted-foreground">
+              <span className="text-muted-foreground tabular-nums">
                 {progress}%
               </span>
             </div>

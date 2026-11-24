@@ -1,22 +1,12 @@
-import type { ProductOptionType } from "./product-option.types"
-
-export interface ProductVariantOption {
-  id: string
-  value: string
-  colorHex: string | null
-  optionId: string
-  optionName: string
-  optionType: ProductOptionType
-}
+export type VariantOptions = Record<string, string>
 
 export interface ProductVariant {
   id: string
   productId: string
-  title: string | null
   sku: string
   barcode: string | null
   stock: number
-  options: ProductVariantOption[]
+  options: VariantOptions
   isActive: boolean
   deletedAt: string | null
   createdAt: string
@@ -25,10 +15,19 @@ export interface ProductVariant {
 
 export interface CreateProductVariantRequest {
   productId: string
-  title?: string
   sku: string
-  barcode?: string
-  optionValueIds?: string[]
+  barcode: string
+  options: VariantOptions
 }
 
-export type UpdateProductVariantRequest = Partial<CreateProductVariantRequest>
+export interface GeneratedVariantRequest {
+  sku: string
+  barcode: string
+  options: VariantOptions
+}
+
+export type UpdateProductVariantRequest = Partial<
+  Pick<CreateProductVariantRequest, "sku" | "barcode" | "options">
+> & {
+  isActive?: boolean
+}

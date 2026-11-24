@@ -89,7 +89,9 @@ export function ChangePasswordForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {fields.map((field) => (
             <div key={field.name} className="space-y-2">
-              <Label htmlFor={field.name}>{field.label} <span className="text-destructive">*</span></Label>
+              <Label htmlFor={field.name}>
+                {field.label} <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id={field.name}
                 placeholder={`Enter ${field.label.toLowerCase()}`}

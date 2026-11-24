@@ -121,7 +121,9 @@ export function ResetPasswordContent() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="password">New password <span className="text-destructive">*</span></Label>
+                <Label htmlFor="password">
+                  New password <span className="text-destructive">*</span>
+                </Label>
 
                 <div className="relative">
                   <LockKeyhole className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -159,7 +161,9 @@ export function ResetPasswordContent() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm password <span className="text-destructive">*</span></Label>
+                <Label htmlFor="confirmPassword">
+                  Confirm password <span className="text-destructive">*</span>
+                </Label>
 
                 <div className="relative">
                   <LockKeyhole className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />

@@ -120,7 +120,7 @@ export function UpdateProductForm({
       onValueChange={setActiveTab}
       className="w-full space-y-6"
     >
-      <TabsList className="grid h-auto! w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+      <TabsList className="grid h-auto! w-full grid-cols-2 gap-2 max-sm:py-2 sm:grid-cols-3 lg:grid-cols-5">
         <TabsTrigger value="basic-info">
           <Info />
           Basic Info
@@ -185,7 +185,7 @@ export function UpdateProductForm({
       </TabsContent>
 
       <TabsContent value="variants" className="mt-0">
-        <ProductVariants productId={product.id} />
+        <ProductVariants productId={product.id} productName={product.name} />
       </TabsContent>
     </Tabs>
   )

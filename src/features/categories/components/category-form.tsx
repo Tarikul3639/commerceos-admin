@@ -118,15 +118,10 @@ export function CategoryForm({
   }
 
   return (
-    <form
-      onSubmit={form.handleSubmit(onSubmit)}
-      className="space-y-6"
-    >
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <div className="max-h-[65vh] space-y-6 overflow-y-auto px-2">
-
         {/* Image Upload */}
         <section className="flex flex-col items-center gap-4 sm:flex-row">
-
           <input
             ref={fileInputRef}
             type="file"
@@ -143,23 +138,17 @@ export function CategoryForm({
               onClick={() => fileInputRef.current?.click()}
               disabled={isDisabled}
               aria-label={
-                image
-                  ? "Replace category image"
-                  : "Choose category image"
+                image ? "Replace category image" : "Choose category image"
               }
               className={cn(
-                "group relative size-32 overflow-hidden rounded-sm border bg-muted/30 outline-none transition-colors",
+                "group relative size-32 overflow-hidden rounded-sm border bg-muted/30 transition-colors outline-none",
                 "hover:border-primary/60 focus-visible:ring-[3px] focus-visible:ring-primary/60 disabled:cursor-not-allowed disabled:opacity-60",
                 !image && "border-dashed"
               )}
             >
               {image ? (
                 <AppImage
-                  name={
-                    category?.name ||
-                    form.getValues("name") ||
-                    "Category"
-                  }
+                  name={category?.name || form.getValues("name") || "Category"}
                   image={image}
                   clickable={false}
                   className="size-full rounded-sm after:rounded-sm"
@@ -178,19 +167,17 @@ export function CategoryForm({
 
               {/* Hover replace overlay */}
               {image && !isUploading && (
-                <div className="absolute inset-0 hidden items-center justify-center rounded-sm bg-background/80 group-hover:flex pointer-events-none">
+                <div className="pointer-events-none absolute inset-0 hidden items-center justify-center rounded-sm bg-background/80 group-hover:flex">
                   <span className="text-muted-foreground transition-colors group-hover:text-primary">
                     <Repeat1 className="size-6" />
                   </span>
                 </div>
               )}
-
             </button>
           </div>
 
           {/* Upload Info */}
-          <div className="flex min-w-0 flex-col items-center sm:items-start gap-2">
-
+          <div className="flex min-w-0 flex-col items-center gap-2 sm:items-start">
             {isUploading && (
               <div
                 className="flex w-full max-w-xs items-center gap-3"
@@ -198,7 +185,7 @@ export function CategoryForm({
                 aria-live="polite"
               >
                 <Progress value={progress} className="h-1.5" />
-                <span className="text-xs tabular-nums text-muted-foreground">
+                <span className="text-xs text-muted-foreground tabular-nums">
                   {progress}%
                 </span>
               </div>
@@ -231,12 +218,11 @@ export function CategoryForm({
             </div>
 
             <p className="text-center text-xs text-muted-foreground">
-              Use a square image (1:1 aspect ratio) for the best result. JPG, PNG, WebP or AVIF.
+              Use a square image (1:1 aspect ratio) for the best result. JPG,
+              PNG, WebP or AVIF.
             </p>
 
-            {uploadError && (
-              <FieldError>{uploadError}</FieldError>
-            )}
+            {uploadError && <FieldError>{uploadError}</FieldError>}
           </div>
         </section>
 
@@ -248,8 +234,7 @@ export function CategoryForm({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="category-name">
-                  Category name{" "}
-                  <span className="text-destructive">*</span>
+                  Category name <span className="text-destructive">*</span>
                 </FieldLabel>
 
                 <Input
@@ -260,9 +245,7 @@ export function CategoryForm({
                   aria-invalid={fieldState.invalid}
                 />
 
-                {fieldState.error && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.error && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
@@ -273,8 +256,7 @@ export function CategoryForm({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="category-slug">
-                  URL slug{" "}
-                  <span className="text-destructive">*</span>
+                  URL slug <span className="text-destructive">*</span>
                 </FieldLabel>
 
                 <Input
@@ -285,9 +267,7 @@ export function CategoryForm({
                   aria-invalid={fieldState.invalid}
                 />
 
-                {fieldState.error && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.error && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
@@ -318,9 +298,7 @@ export function CategoryForm({
                 here.
               </FieldDescription>
 
-              {fieldState.error && (
-                <FieldError errors={[fieldState.error]} />
-              )}
+              {fieldState.error && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
@@ -330,10 +308,7 @@ export function CategoryForm({
           name="isActive"
           control={form.control}
           render={({ field }) => (
-            <Field
-              orientation="horizontal"
-              className="rounded-sm border p-4"
-            >
+            <Field orientation="horizontal" className="rounded-sm border p-4">
               <div className="flex-1 space-y-1">
                 <FieldLabel>Category visibility</FieldLabel>
 
@@ -355,7 +330,7 @@ export function CategoryForm({
       </div>
 
       {/* Form Actions */}
-      <div className="flex gap-2 border-t pt-4 justify-end">
+      <div className="flex justify-end gap-2 border-t pt-4">
         <Button
           type="button"
           variant="outline"
@@ -365,15 +340,8 @@ export function CategoryForm({
           Cancel
         </Button>
 
-        <Button
-          type="submit"
-          disabled={isDisabled}
-        >
-          {isLoading
-            ? "Saving..."
-            : isUploading
-              ? "Uploading..."
-              : submitLabel}
+        <Button type="submit" disabled={isDisabled}>
+          {isLoading ? "Saving..." : isUploading ? "Uploading..." : submitLabel}
         </Button>
       </div>
     </form>

@@ -24,7 +24,9 @@ export const bannerSchema = z
     endAt: z.string(),
   })
   .superRefine((values, context) => {
-    if (Boolean(values.mobileImageUrl) !== Boolean(values.mobileImagePublicId)) {
+    if (
+      Boolean(values.mobileImageUrl) !== Boolean(values.mobileImagePublicId)
+    ) {
       context.addIssue({
         code: "custom",
         path: ["mobileImageUrl"],

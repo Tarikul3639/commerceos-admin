@@ -39,7 +39,9 @@ export function RegionalPreferences({ control }: RegionalPreferencesProps) {
             name="currency"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Currency <span className="text-destructive">*</span></FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Currency <span className="text-destructive">*</span>
+                </FieldLabel>
 
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger
@@ -68,7 +70,9 @@ export function RegionalPreferences({ control }: RegionalPreferencesProps) {
             name="timezone"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Timezone <span className="text-destructive">*</span></FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Timezone <span className="text-destructive">*</span>
+                </FieldLabel>
 
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger

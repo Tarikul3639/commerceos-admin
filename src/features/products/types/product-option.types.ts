@@ -1,13 +1,10 @@
 export type ProductOptionType =
-  "COLOR" | "SIZE" | "MATERIAL" | "STYLE" | "CUSTOM"
+  "COLOR" | "SIZE" | "STORAGE" | "CAPACITY" | "CUSTOM"
 
 export interface ProductOptionValue {
   id: string
-  value: string
-  colorHex: string | null
-  optionId: string
-  createdAt: string
-  updatedAt: string
+  label: string
+  colorCode?: string
 }
 
 export interface ProductOption {
@@ -16,22 +13,19 @@ export interface ProductOption {
   type: ProductOptionType
   productId: string
   values: ProductOptionValue[]
+  sortOrder: number
   createdAt: string
   updatedAt: string
-}
-
-export interface CreateProductOptionValueRequest {
-  value: string
-  colorHex?: string
 }
 
 export interface CreateProductOptionRequest {
   productId: string
   name: string
   type: ProductOptionType
-  values: CreateProductOptionValueRequest[]
+  values: ProductOptionValue[]
+  sortOrder?: number
 }
 
 export type UpdateProductOptionRequest = Partial<
-  Omit<CreateProductOptionRequest, "productId" | "values">
+  Pick<CreateProductOptionRequest, "name" | "type" | "values" | "sortOrder">
 >

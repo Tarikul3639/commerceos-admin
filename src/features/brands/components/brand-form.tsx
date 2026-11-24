@@ -124,7 +124,6 @@ export function BrandForm({
             </span>
           </button>
 
-
           <input
             ref={fileInputRef}
             type="file"
@@ -144,7 +143,9 @@ export function BrandForm({
         >
           {avatarUrl ? "Change image" : "Upload image"}
         </Button>
-        <FieldDescription>Use a square image (1:1 aspect ratio) for the best result.</FieldDescription>
+        <FieldDescription>
+          Use a square image (1:1 aspect ratio) for the best result.
+        </FieldDescription>
         {error && <FieldError>{error}</FieldError>}
       </FieldGroup>
 
@@ -154,7 +155,9 @@ export function BrandForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="brand-name">Name <span className="text-destructive">*</span></FieldLabel>
+              <FieldLabel htmlFor="brand-name">
+                Name <span className="text-destructive">*</span>
+              </FieldLabel>
 
               <Input
                 {...field}
@@ -173,7 +176,9 @@ export function BrandForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="brand-slug">Slug <span className="text-destructive">*</span></FieldLabel>
+              <FieldLabel htmlFor="brand-slug">
+                Slug <span className="text-destructive">*</span>
+              </FieldLabel>
 
               <Input
                 {...field}

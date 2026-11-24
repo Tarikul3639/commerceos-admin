@@ -294,7 +294,9 @@ export function PurchaseReturnForm({
               name="purchaseId"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Purchase <span className="text-destructive">*</span></FieldLabel>
+                  <FieldLabel>
+                    Purchase <span className="text-destructive">*</span>
+                  </FieldLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button

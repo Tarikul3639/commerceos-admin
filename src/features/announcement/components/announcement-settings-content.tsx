@@ -123,11 +123,13 @@ export function AnnouncementSettingsContent() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <Card>
               <CardHeader className="flex flex-row items-start gap-3 space-y-0">
-                <span className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary ring-1 ring-primary/10">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary ring-1 ring-primary/10 sm:size-11">
                   <Megaphone className="size-4 sm:size-5" />
                 </span>
                 <div className="min-w-0">
-                  <CardTitle className="line-clamp-1">Announcement message</CardTitle>
+                  <CardTitle className="line-clamp-1">
+                    Announcement message
+                  </CardTitle>
                   <CardDescription className="line-clamp-2">
                     Keep it concise so it remains readable on mobile screens.
                   </CardDescription>

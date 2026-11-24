@@ -1,7 +1,12 @@
 "use client"
 
 import Image from "next/image"
-import { ExternalLink, Image as ImageIcon, Monitor, Smartphone } from "lucide-react"
+import {
+  ExternalLink,
+  Image as ImageIcon,
+  Monitor,
+  Smartphone,
+} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -76,7 +81,9 @@ function PreviewItem({
         )}
       </div>
       {imageUrl ? (
-        <div className={`relative overflow-hidden rounded-lg border bg-muted ${aspectClass}`}>
+        <div
+          className={`relative overflow-hidden rounded-lg border bg-muted ${aspectClass}`}
+        >
           <Image
             src={imageUrl}
             alt={`${title || "Banner"} ${label.toLowerCase()} preview`}
@@ -98,7 +105,9 @@ function PreviewItem({
           </Button>
         </div>
       ) : (
-        <div className={`flex items-center justify-center rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground ${aspectClass}`}>
+        <div
+          className={`flex items-center justify-center rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground ${aspectClass}`}
+        >
           <ImageIcon className="mr-2 size-5" />
           No image uploaded
         </div>

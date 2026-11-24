@@ -1,165 +1,129 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
-
-import {
-  Loader2,
-  Save,
-  Trash2,
-  X,
-  SquarePen,
-  SavePlus,
-  Sparkles,
-} from "lucide-react"
+import { Loader2, Plus, Sparkles } from "lucide-react"
 import { toast } from "sonner"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
-import {
-  useCreateProductVariantMutation,
   useDeleteProductVariantMutation,
   useGetProductVariantsQuery,
-  useUpdateProductVariantMutation,
 } from "../../api/product-variant-api"
 import {
-  useGetProductOptionsQuery,
   useGenerateProductVariantsMutation,
+  useGetProductOptionsQuery,
 } from "../../api/product-option-api"
 
+import { getErrorMessage } from "@/lib/utils/error"
+import type { ProductOption } from "../../types/product-option.types"
 import type {
-  CreateProductVariantRequest,
+  GeneratedVariantRequest,
   ProductVariant,
+  VariantOptions,
 } from "../../types/product-variant.types"
+import {
+  generateInternalBarcode,
+  generateSku,
+} from "../../utils/variant-identifiers"
+import { VariantEditDialog } from "./variant-edit-dialog"
+import { VariantList } from "./variant-list"
 
-type ProductVariantsProps = {
+type Props = {
   productId: string
+  productName: string
 }
 
-type VariantForm = {
-  title: string
-  sku: string
-  barcode: string
-  optionValueIds: string[]
+const sameCombination = (
+  first: VariantOptions,
+  second: VariantOptions,
+  optionIds: string[]
+) => optionIds.every((id) => first[id] === second[id])
+
+const getCombinations = (options: ProductOption[]): VariantOptions[] => {
+  if (options.length === 0) return [{}]
+
+  return options.reduce<VariantOptions[]>(
+    (combinations, option) =>
+      combinations.flatMap((combination) =>
+        option.values.map((value) => ({
+          ...combination,
+          [option.id]: value.id,
+        }))
+      ),
+    [{}]
+  )
 }
 
-type EditableVariant = {
-  title: string
-  sku: string
-  barcode: string
-  optionValueIds: string[]
-}
+export function ProductVariants({ productId, productName }: Props) {
+  const searchParams = useSearchParams()
+  const targetSku = searchParams.get("sku")
 
-const emptyForm: VariantForm = {
-  title: "",
-  sku: "",
-  barcode: "",
-  optionValueIds: [],
-}
-
-function getErrorMessage(error: unknown): string {
-  if (error && typeof error === "object" && "data" in error) {
-    const data = error.data
-
-    if (data && typeof data === "object" && "message" in data) {
-      const message = data.message
-
-      if (typeof message === "string") return message
-      if (Array.isArray(message)) return message.join(", ")
-    }
-  }
-
-  return "Something went wrong. Please try again."
-}
-
-function toEditableVariant(variant: ProductVariant): EditableVariant {
-  return {
-    title: variant.title ?? "",
-    sku: variant.sku,
-    barcode: variant.barcode ?? "",
-    optionValueIds: [],
-  }
-}
-
-export function ProductVariants({ productId }: ProductVariantsProps) {
   const {
     data: productOptions = [],
     isLoading: isLoadingOptions,
     isError: isOptionsError,
   } = useGetProductOptionsQuery(productId)
+
   const {
     data: variants = [],
-    isLoading,
+    isLoading: isLoadingVariants,
     isError: isVariantsError,
+    refetch: refetchVariants,
   } = useGetProductVariantsQuery(productId)
 
   const [generateVariants, { isLoading: isGenerating }] =
     useGenerateProductVariantsMutation()
-  const [createVariant, { isLoading: isCreating }] =
-    useCreateProductVariantMutation()
-  const [updateVariant, { isLoading: isUpdating }] =
-    useUpdateProductVariantMutation()
   const [deleteVariant] = useDeleteProductVariantMutation()
 
-  const [form, setForm] = useState<VariantForm>(emptyForm)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editForm, setEditForm] = useState<EditableVariant | null>(null)
-  const [savingId, setSavingId] = useState<string | null>(null)
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [editingVariant, setEditingVariant] = useState<ProductVariant | null>(
+    null
+  )
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [search, setSearch] = useState("")
 
-  const searchParams = useSearchParams()
-  const targetSku = searchParams.get("sku")
+  const optionIds = useMemo(
+    () => productOptions.map((option) => option.id),
+    [productOptions]
+  )
+  const allCombinationsGenerated = useMemo(() => {
+    if (
+      productOptions.length === 0 ||
+      productOptions.some((option) => option.values.length === 0)
+    )
+      return false
+
+    const combinations = getCombinations(productOptions)
+    return (
+      combinations.length > 0 &&
+      combinations.every((combination) =>
+        variants.some((variant) =>
+          sameCombination(variant.options, combination, optionIds)
+        )
+      )
+    )
+  }, [productOptions, variants, optionIds])
 
   useEffect(() => {
-    if (!targetSku || isLoading) return
+    if (!targetSku || isLoadingVariants) return
 
     let timeout: number | undefined
     const frame = requestAnimationFrame(() => {
-      const targetRow = document.getElementById(`variant-${targetSku}`)
+      const row = document.getElementById(`variant-${targetSku}`)
+      if (!row) return
 
-      if (!targetRow) return
-
-      targetRow.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      })
-
-      targetRow.classList.add("bg-primary/10", "outline", "outline-primary/40")
-
+      row.scrollIntoView({ behavior: "smooth", block: "center" })
+      row.classList.add("bg-primary/10", "outline", "outline-primary/40")
       timeout = window.setTimeout(() => {
-        targetRow.classList.remove(
-          "bg-primary/10",
-          "outline",
-          "outline-primary/40"
-        )
-        // Remove the "sku" query parameter from the URL after highlighting
+        row.classList.remove("bg-primary/10", "outline", "outline-primary/40")
         const url = new URL(window.location.href)
         url.searchParams.delete("sku")
         window.history.replaceState({}, "", url.toString())
@@ -170,501 +134,162 @@ export function ProductVariants({ productId }: ProductVariantsProps) {
       cancelAnimationFrame(frame)
       if (timeout !== undefined) window.clearTimeout(timeout)
     }
-  }, [targetSku, isLoading, variants])
+  }, [targetSku, isLoadingVariants, variants])
 
-  function handleGenerateVariants() {
-    generateVariants(productId)
-      .unwrap()
-      .then(() => {
-        toast.success("Variants generated successfully")
-      })
-      .catch((error) => {
-        toast.error(getErrorMessage(error))
-      })
-  }
-
-  function updateForm<K extends keyof VariantForm>(
-    key: K,
-    value: VariantForm[K]
-  ) {
-    setForm((current) => ({ ...current, [key]: value }))
-  }
-
-  function selectOptionValue(optionIndex: number, valueId: string) {
-    setForm((current) => {
-      const selected = [...current.optionValueIds]
-
-      if (valueId) {
-        selected[optionIndex] = valueId
-      } else {
-        selected.splice(optionIndex, 1)
-      }
-
-      return {
-        ...current,
-        optionValueIds: selected,
-      }
-    })
-  }
-
-  function selectEditOptionValue(optionIndex: number, valueId: string) {
-    setEditForm((current) => {
-      if (!current) return current
-      const optionValueIds = [...current.optionValueIds]
-      optionValueIds[optionIndex] = valueId
-      return { ...current, optionValueIds }
-    })
-  }
-
-  async function handleCreate() {
-    const sku = form.sku.trim()
-
-    if (!sku) {
-      toast.error("SKU is required")
-      return
-    }
-
-    const optionValueIds = form.optionValueIds.filter(Boolean)
-
-    if (
-      productOptions.some(
-        (option, index) => option.values.length > 0 && !optionValueIds[index]
+  const createIdentifierPreview = (selection: VariantOptions) => {
+    const labels = productOptions.flatMap((option) => {
+      const selected = option.values.find(
+        (value) => value.id === selection[option.id]
       )
-    ) {
-      toast.error("Please select a value for each product option")
-      return
-    }
-
-    const payload: CreateProductVariantRequest = {
-      productId,
-      title: form.title.trim() || undefined,
-      sku,
-      barcode: form.barcode.trim() || undefined,
-      optionValueIds,
-    }
-
-    try {
-      await createVariant(payload).unwrap()
-      toast.success("Variant created successfully")
-      setForm(emptyForm)
-    } catch (error) {
-      toast.error(getErrorMessage(error))
+      return selected ? [selected.label] : []
+    })
+    return {
+      sku: generateSku(productName, labels),
+      barcode: generateInternalBarcode(),
     }
   }
 
-  function startEditing(variant: ProductVariant) {
-    setEditingId(variant.id)
-    const editable = toEditableVariant(variant)
-    editable.optionValueIds = productOptions.map(
-      (option) =>
-        variant.options.find((selected) => selected.optionId === option.id)
-          ?.id ?? ""
-    )
-    setEditForm(editable)
-  }
-
-  function cancelEditing() {
-    setEditingId(null)
-    setEditForm(null)
-  }
-
-  async function saveEditing(variant: ProductVariant) {
-    if (!editForm) return
-
-    const sku = editForm.sku.trim()
-
-    if (!sku) {
-      toast.error("SKU is required")
-      return
-    }
-
-    const optionValueIds = editForm.optionValueIds.filter(Boolean)
-    if (
-      productOptions.some(
-        (option, index) =>
-          option.values.length > 0 && !editForm.optionValueIds[index]
-      )
-    ) {
-      toast.error("Please select a value for each product option")
-      return
-    }
-
-    setSavingId(variant.id)
-
-    try {
-      await updateVariant({
-        productId,
-        variantId: variant.id,
-        data: {
-          title: editForm.title.trim() || undefined,
-          sku,
-          barcode: editForm.barcode.trim() || undefined,
-          optionValueIds,
-        },
-      }).unwrap()
-
-      toast.success("Variant updated successfully")
-      cancelEditing()
-    } catch (error) {
-      toast.error(getErrorMessage(error))
-    } finally {
-      setSavingId(null)
-    }
-  }
-
-  async function confirmDelete(variant: ProductVariant) {
+  const handleDelete = async (variant: ProductVariant) => {
     setDeletingId(variant.id)
-
     try {
-      await deleteVariant({
-        productId,
-        variantId: variant.id,
-      }).unwrap()
-
-      toast.success("Variant deleted successfully")
-
-      if (editingId === variant.id) {
-        cancelEditing()
-      }
+      await deleteVariant({ productId, variantId: variant.id }).unwrap()
+      toast.success("Variant deleted")
     } catch (error) {
-      toast.error(getErrorMessage(error))
+      toast.error("Unable to delete variant", {
+        description: getErrorMessage(error),
+      })
     } finally {
       setDeletingId(null)
     }
   }
 
-  function getOptionSummary(variant: ProductVariant) {
-    return variant.options
-      .map((option) => `${option.optionName}: ${option.value}`)
-      .join(" · ")
+  const handleGenerate = async () => {
+    if (productOptions.some((option) => option.values.length === 0)) {
+      toast.error(
+        "Add at least one value to every option before generating variants"
+      )
+      return
+    }
+
+    const combinations = getCombinations(productOptions)
+    const missing = combinations.filter(
+      (combination) =>
+        !variants.some((variant) =>
+          sameCombination(variant.options, combination, optionIds)
+        )
+    )
+
+    if (missing.length === 0) {
+      toast.info("All available combinations already exist")
+      return
+    }
+    if (missing.length > 500) {
+      toast.error("You can generate up to 500 variants at a time")
+      return
+    }
+
+    const generated: GeneratedVariantRequest[] = missing.map((combination) => ({
+      ...createIdentifierPreview(combination),
+      options: combination,
+    }))
+
+    try {
+      await generateVariants({ productId, variants: generated }).unwrap()
+      toast.success(`${generated.length} variants generated`)
+    } catch (error) {
+      toast.error("Unable to generate variants", {
+        description: getErrorMessage(error),
+      })
+    }
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Add Variant</CardTitle>
-          <CardDescription>
-            Select values from existing product options and create a variant.
-            New variants start at 0 stock; manage quantities in Stock.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {isLoadingOptions ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 animate-spin" />
-              Loading product options...
-            </div>
-          ) : isOptionsError ? (
-            <Alert variant="destructive">
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                Unable to load product options. Please refresh and try again.
-              </AlertDescription>
-            </Alert>
-          ) : productOptions.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {productOptions.map((option, index) => (
-                <div key={option.id} className="space-y-2">
-                  <Label>{option.name}</Label>
-                  <Select
-                    value={form.optionValueIds[index] ?? ""}
-                    onValueChange={(value) =>
-                      selectOptionValue(index, value === "all" ? "" : value)
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={`Select ${option.name}`} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Select {option.name}</SelectItem>
-                      {option.values.map((value) => (
-                        <SelectItem key={value.id} value={value.id}>
-                          {value.value}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              No product options are configured. You can create a variant
-              without option values.
-            </p>
-          )}
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-2">
-              <Label>Title (optional)</Label>
-              <Input
-                value={form.title}
-                onChange={(event) => updateForm("title", event.target.value)}
-                placeholder="e.g. Custom configuration"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>SKU *</Label>
-              <Input
-                value={form.sku}
-                onChange={(event) => updateForm("sku", event.target.value)}
-                placeholder="Enter SKU"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>Barcode</Label>
-              <Input
-                value={form.barcode}
-                onChange={(event) => updateForm("barcode", event.target.value)}
-                placeholder="Enter barcode"
-              />
-            </div>
+    <div className="space-y-5">
+      {isLoadingOptions ? (
+        <div className="flex items-center gap-2 rounded-lg border p-4 text-sm text-muted-foreground">
+          <Loader2 className="size-4 animate-spin" />
+          Loading product options...
+        </div>
+      ) : isOptionsError ? (
+        <Alert variant="destructive">
+          <AlertTitle>Options could not be loaded</AlertTitle>
+          <AlertDescription>
+            Refresh the page before creating variants.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-muted-foreground">
+            {variants.length} {variants.length === 1 ? "variant" : "variants"}
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => void handleGenerate()}
+                  disabled={
+                    isGenerating ||
+                    isLoadingVariants ||
+                    productOptions.length === 0 ||
+                    allCombinationsGenerated
+                  }
+                  aria-label="Generate missing combinations"
+                >
+                  {isGenerating ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="size-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Generate missing combinations</p>
+              </TooltipContent>
+            </Tooltip>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setIsCreateOpen(true)}
+              disabled={isLoadingVariants}
+            >
+              <Plus className="size-4" />
+              Create variant
+            </Button>
           </div>
-        </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button onClick={handleCreate} disabled={isCreating}>
-            {isCreating ? (
-              <Loader2 className="mr-2 size-4 animate-spin" />
-            ) : (
-              <SavePlus />
-            )}
-            {isCreating ? "Creating..." : "Create"}
-          </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      )}
 
-      <Card>
-        <CardHeader className="flex items-center justify-between">
-          <div className="min-w-0 flex-1">
-            <CardTitle className="truncate">Product Variants</CardTitle>
+      <VariantList
+        variants={variants}
+        productOptions={productOptions}
+        isLoading={isLoadingVariants}
+        isError={isVariantsError}
+        search={search}
+        deletingId={deletingId}
+        editingId={editingVariant?.id ?? null}
+        onSearchChange={setSearch}
+        onRetry={() => void refetchVariants()}
+        onEdit={setEditingVariant}
+        onDelete={(variant) => void handleDelete(variant)}
+      />
 
-            <CardDescription className="truncate">
-              {variants.length} variant{variants.length === 1 ? "" : "s"} total.
-              Edit values directly in the table.
-            </CardDescription>
-          </div>
-
-          <Button
-            size="sm"
-            onClick={() => handleGenerateVariants()}
-            disabled={isGenerating || isLoading || isCreating || isUpdating}
-          >
-            <Sparkles />
-            Auto Generate
-          </Button>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="size-6 animate-spin" />
-            </div>
-          ) : isVariantsError ? (
-            <Alert variant="destructive">
-              <AlertTitle>Unable to load product variants</AlertTitle>
-              <AlertDescription>
-                Refresh the page and try again.
-              </AlertDescription>
-            </Alert>
-          ) : variants.length === 0 ? (
-            <div className="rounded-lg border border-dashed p-10 text-center">
-              <p className="font-medium">No variants yet</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Select option values above and create your first variant.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto rounded-lg border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Options</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>SKU</TableHead>
-                    <TableHead>Barcode</TableHead>
-                    <TableHead>Stock</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-
-                <TableBody>
-                  {variants.map((variant) => {
-                    const isEditing = editingId === variant.id
-                    const isSaving = savingId === variant.id
-
-                    return (
-                      <TableRow
-                        key={variant.id}
-                        id={`variant-${variant.sku}`}
-                        className="transition-colors duration-300"
-                      >
-                        <TableCell className="min-w-56">
-                          {isEditing && editForm ? (
-                            <div className="space-y-2">
-                              {productOptions.map((option, optionIndex) => (
-                                <Select
-                                  key={option.id}
-                                  value={
-                                    editForm.optionValueIds[optionIndex] ?? ""
-                                  }
-                                  onValueChange={(value) =>
-                                    selectEditOptionValue(
-                                      optionIndex,
-                                      value === "all" ? "" : value
-                                    )
-                                  }
-                                >
-                                  <SelectTrigger className="h-8 w-full text-xs">
-                                    <SelectValue
-                                      placeholder={`Select ${option.name}`}
-                                    />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="all">
-                                      Select {option.name}
-                                    </SelectItem>
-                                    {option.values.map((value) => (
-                                      <SelectItem
-                                        key={value.id}
-                                        value={value.id}
-                                      >
-                                        {option.name}: {value.value}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              ))}
-                            </div>
-                          ) : (
-                            getOptionSummary(variant) || (
-                              <span className="text-muted-foreground">
-                                No options
-                              </span>
-                            )
-                          )}
-                        </TableCell>
-
-                        <TableCell className="min-w-36">
-                          {isEditing && editForm ? (
-                            <Input
-                              value={editForm.title}
-                              onChange={(event) =>
-                                setEditForm({
-                                  ...editForm,
-                                  title: event.target.value,
-                                })
-                              }
-                              placeholder="Title"
-                            />
-                          ) : (
-                            variant.title || "—"
-                          )}
-                        </TableCell>
-
-                        <TableCell className="min-w-36">
-                          {isEditing && editForm ? (
-                            <Input
-                              value={editForm.sku}
-                              onChange={(event) =>
-                                setEditForm({
-                                  ...editForm,
-                                  sku: event.target.value,
-                                })
-                              }
-                            />
-                          ) : (
-                            variant.sku
-                          )}
-                        </TableCell>
-
-                        <TableCell className="min-w-36">
-                          {isEditing && editForm ? (
-                            <Input
-                              value={editForm.barcode}
-                              onChange={(event) =>
-                                setEditForm({
-                                  ...editForm,
-                                  barcode: event.target.value,
-                                })
-                              }
-                              placeholder="Barcode"
-                            />
-                          ) : (
-                            variant.barcode || "—"
-                          )}
-                        </TableCell>
-
-                        <TableCell className="min-w-24">
-                          {variant.stock}
-                        </TableCell>
-
-                        <TableCell>
-                          <div className="flex justify-end gap-2">
-                            {isEditing ? (
-                              <>
-                                <Button
-                                  size="sm"
-                                  onClick={() => saveEditing(variant)}
-                                  disabled={isSaving || isUpdating}
-                                >
-                                  {isSaving ? (
-                                    <Loader2 className="mr-1 size-4 animate-spin" />
-                                  ) : (
-                                    <Save className="mr-1 size-4" />
-                                  )}
-                                  Save
-                                </Button>
-
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={cancelEditing}
-                                  disabled={isSaving}
-                                >
-                                  <X className="mr-1 size-4" />
-                                  Cancel
-                                </Button>
-                              </>
-                            ) : (
-                              <>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => startEditing(variant)}
-                                  disabled={!!editingId}
-                                >
-                                  <SquarePen className="size-4" />
-                                  Update
-                                </Button>
-
-                                <Button
-                                  size="icon"
-                                  variant="destructive"
-                                  aria-label="Delete variant"
-                                  onClick={() => void confirmDelete(variant)}
-                                  disabled={deletingId === variant.id}
-                                >
-                                  {deletingId === variant.id ? (
-                                    <Loader2 className="size-4 animate-spin" />
-                                  ) : (
-                                    <Trash2 className="size-4" />
-                                  )}
-                                </Button>
-                              </>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <VariantEditDialog
+        productId={productId}
+        productName={productName}
+        variant={editingVariant}
+        variants={variants}
+        productOptions={productOptions}
+        open={isCreateOpen || !!editingVariant}
+        onOpenChange={(open) => {
+          if (!open) {
+            setIsCreateOpen(false)
+            setEditingVariant(null)
+          }
+        }}
+      />
     </div>
   )
 }

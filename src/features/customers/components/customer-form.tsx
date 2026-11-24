@@ -123,7 +123,9 @@ export function CustomerForm({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isSubmitting}
-            aria-label={avatarUrl ? "Change customer avatar" : "Upload customer avatar"}
+            aria-label={
+              avatarUrl ? "Change customer avatar" : "Upload customer avatar"
+            }
             className="group relative block size-24 overflow-hidden rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed"
           >
             <AppImage
@@ -140,8 +142,6 @@ export function CustomerForm({
               )}
             </span>
           </button>
-
-
         </div>
 
         {isUploading && (
@@ -202,7 +202,9 @@ export function CustomerForm({
             name="name"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="customer-name">Full Name <span className="text-destructive">*</span></FieldLabel>
+                <FieldLabel htmlFor="customer-name">
+                  Full Name <span className="text-destructive">*</span>
+                </FieldLabel>
 
                 <FieldContent>
                   <Input
@@ -324,7 +326,7 @@ export function CustomerForm({
         <Button type="submit" disabled={isSubmitting} className="min-w-[90px]">
           {isLoading ? (
             <>
-              <Loader2 className="mr-2 size-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
               Saving...
             </>
           ) : (
