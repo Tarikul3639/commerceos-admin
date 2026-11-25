@@ -68,7 +68,7 @@ export function CreateBrandDialog({
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <Button variant="default">
+              <Button variant="default" size="sm">
                 <Plus className="h-4 w-4" />
                 Create
               </Button>
@@ -80,7 +80,7 @@ export function CreateBrandDialog({
         </Tooltip>
       </TooltipProvider>
 
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Brand</DialogTitle>
           <DialogDescription>

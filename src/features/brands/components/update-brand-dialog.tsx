@@ -42,7 +42,8 @@ export function UpdateBrandDialog({
           name: data.name,
           slug: data.slug,
           description: data.description || undefined,
-          image: data.image || undefined,
+          image: data.image || null,
+          publicId: data.publicId || null,
           isActive: data.isActive,
         },
       }).unwrap()
@@ -59,7 +60,7 @@ export function UpdateBrandDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Update Brand</DialogTitle>
           <DialogDescription>Update the brand information.</DialogDescription>

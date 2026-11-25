@@ -23,7 +23,13 @@ export type CreateBrand = {
   isActive?: boolean
 }
 
-export type UpdateBrand = Partial<CreateBrand>
+export type UpdateBrand = Omit<
+  Partial<CreateBrand>,
+  "image" | "publicId"
+> & {
+  image?: string | null
+  publicId?: string | null
+}
 
 export type BrandQueryParams = {
   page?: number
