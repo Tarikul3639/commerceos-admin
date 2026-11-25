@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Bell, CheckCheck, Moon, Search, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
-import { GlobalSearch } from "@/components/components/search/global-search"
+import { GlobalSearch } from "@/features/search/components/search/global-search"
 
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
